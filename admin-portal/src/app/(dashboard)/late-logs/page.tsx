@@ -152,7 +152,7 @@ export default function LateLogsPage() {
             Critical Offenders
           </h3>
           <p className="text-headline-lg font-headline-lg text-on-surface font-bold">08</p>
-          <p className="text-caption text-on-surface-variant mt-4">Employees with >3 late marks this week</p>
+          <p className="text-caption text-on-surface-variant mt-4">Employees with &gt;3 late marks this week</p>
         </div>
       </div>
 
@@ -351,24 +351,3 @@ export default function LateLogsPage() {
     </div>
   )
 }
-
-</parameter>
-<task_progress>
-- [x] Check current folder contents
-- [x] Explore project structure
-- [x] Read admin portal plan
-- [x] Review current implementation status
-- [x] Create org-provider.tsx for multi-tenant architecture
-- [x] Update layout to include OrgProvider
-- [x] Create TypeScript types for database tables
-- [x] Check Vercel configuration
-- [x] Verify build works
-- [x] Stage changes
-- [x] Commit changes
-- [x] Push to GitHub
-- [x] Verify Vercel auto-deployment setup
-- [x] Review late management design files
-- [x] Compare design with current implementation
-- [ ] Update late-logs page to match design
-</task_progress>
-</write_to_file>
