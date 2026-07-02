@@ -3,8 +3,9 @@ import { AuthProvider } from "@/providers/auth-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "eazihr — Admin Portal",
+  title: "EasyHR - Admin Portal",
   description: "Manage your workforce with executive precision.",
+  icons: { icon: "/logo.svg" },
 }
 
 export default function RootLayout({
