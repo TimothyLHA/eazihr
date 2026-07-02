@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "cd admin-portal && npm run build",
+    "vercel-build": "cd admin-portal && npm install && npm run build"
+  }
+}
