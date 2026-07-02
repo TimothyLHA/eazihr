@@ -39,7 +39,7 @@ export default function LoginPage() {
         <div className="flex justify-between items-center w-full px-10 py-4 max-w-[1440px] mx-auto">
           <div className="flex items-center gap-2 text-xl font-semibold text-on-surface">
             <Shield className="w-6 h-6 text-primary" fill="currentColor" />
-            HR Portal
+            eazihr
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#" className="text-sm text-on-surface-variant hover:text-primary transition-colors">Support</a>
@@ -60,7 +60,7 @@ export default function LoginPage() {
                 <Shield className="w-6 h-6 text-white" fill="currentColor" />
               </div>
               <h1 className="text-[32px] font-semibold tracking-tight text-on-surface text-center mb-2">
-                Sign in to HR Portal
+                Sign in to eazihr
               </h1>
               <p className="text-sm text-on-surface-variant text-center">
                 Manage your workforce with executive precision.
@@ -168,7 +168,7 @@ export default function LoginPage() {
       <footer className="bg-surface border-t border-outline-variant/50">
         <div className="flex flex-col md:flex-row justify-between items-center w-full px-10 py-8 max-w-[1440px] mx-auto">
           <div className="text-xs font-semibold tracking-widest uppercase text-on-surface mb-4 md:mb-0">
-            HR Portal Enterprise
+            eazihr Enterprise
           </div>
           <div className="flex flex-col items-center gap-4">
             <div className="flex gap-6">
@@ -183,7 +183,7 @@ export default function LoginPage() {
               </a>
             </div>
             <div className="text-xs text-on-surface-variant opacity-60">
-              &copy; 2024 HR Portal Enterprise. All rights reserved.
+              &copy; 2026 eazihr. All rights reserved.
             </div>
           </div>
           <div className="hidden md:block" />

@@ -16,7 +16,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-surface">
       <Shield className="w-16 h-16 text-primary mb-6" />
       <h1 className="text-3xl font-semibold text-on-surface mb-2">
-        Welcome to EasyHR
+        Welcome to eazihr
       </h1>
       <p className="text-on-surface-variant">
         {user.email}
