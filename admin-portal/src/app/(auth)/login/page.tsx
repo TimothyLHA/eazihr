@@ -59,11 +59,11 @@ function LoginForm() {
         <div className="w-full max-w-[440px] animate-[fadeIn_0.7s_ease]">
           <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-8 md:p-10 shadow-[0_4px_40px_-10px_rgba(15,23,42,0.05)]">
             <div className="flex flex-col items-center mb-8">
-              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-2xl text-white" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
+                <div className="w-14 h-14 rounded-2xl bg-surface-container-low flex items-center justify-center mb-6 overflow-hidden">
+                <img src="/web_logo.svg" alt="EaziHR logo" className="h-full w-full object-contain" />
               </div>
               <h1 className="text-[32px] font-semibold tracking-tight text-on-surface text-center mb-2">
-                Sign in to eazihr
+                Sign in to EaziHR
               </h1>
               <p className="text-sm text-on-surface-variant text-center">
                 Manage your workforce with executive precision.
