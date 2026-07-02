@@ -19,3 +19,6 @@ build/
 # Node
 node_modules/
 .next/
+
+# Supabase CLI temp
+supabase/.temp/
