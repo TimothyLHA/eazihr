@@ -39,10 +39,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="fixed left-0 top-0 h-screen w-72 bg-surface-container border-r border-outline-variant overflow-y-auto z-20">
         <div className="p-6 flex flex-col gap-8 h-full">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="material-symbols-outlined text-2xl text-on-primary">corporate_fare</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container-low overflow-hidden">
+              <img src="/web_logo.svg" alt="EaziHR logo" className="h-full w-full object-contain" />
             </div>
-            <h1 className="font-bold text-xl text-primary">eazihr</h1>
+            <h1 className="font-bold text-xl text-primary">EaziHR</h1>
           </div>
 
           <nav className="flex flex-col gap-1">

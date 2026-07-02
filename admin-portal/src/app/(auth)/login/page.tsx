@@ -41,8 +41,8 @@ function LoginForm() {
       <header className="bg-surface fixed top-0 w-full z-50">
         <div className="flex justify-between items-center w-full px-10 py-4 max-w-[1440px] mx-auto">
           <div className="flex items-center gap-2 text-xl font-semibold text-on-surface">
-            <span className="material-symbols-outlined text-2xl text-primary" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
-            eazihr
+            <img src="/web_logo.svg" alt="EaziHR logo" className="h-8 w-8 object-contain" />
+            EaziHR
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#" className="text-sm text-on-surface-variant hover:text-primary transition-colors">Support</a>
