@@ -223,23 +223,23 @@ Tab 4: Settings     (icon: settings)
 ## Phases
 
 ### Phase 1: Project Setup & Theme
-- [ ] `flutter create --org com.easyhr admin_app`
-- [ ] Add dependencies: `supabase_flutter`, `go_router`, `flutter_riverpod`, `intl`, `shimmer`, `cached_network_image`, `fl_chart`
-- [ ] Set up project structure
-- [ ] Create theme from design tokens
-- [ ] Set up Supabase client initialization
-- [ ] Create GoRouter with all routes placeholder
-- [ ] Build splash screen with auto-navigation
+- [x] `flutter create --org com.easyhr admin_app`
+- [x] Add dependencies: `supabase_flutter`, `go_router`, `flutter_riverpod`, `intl`, `google_fonts`
+- [x] Set up project structure (`lib/core/`, `lib/data/`, `lib/features/`, `lib/router/`)
+- [x] Create theme from design tokens (`app_theme.dart`)
+- [x] Set up Supabase client initialization (`supabase_client.dart`)
+- [x] Create GoRouter with all routes placeholder (`app_router.dart`)
+- [x] Build splash screen with auto-navigation (`splash_screen.dart`)
 - [ ] Set up bottom navigation shell
 - [ ] **Create OrganizationModel + OrganizationRepository** (fetch org config)
 
 ### Phase 2: Authentication (Multi-Tenant)
-- [ ] Build login screen (email, password, sign in button)
-- [ ] Create auth repository — extracts `organization_id` from session's JWT
-- [ ] Create auth provider — exposes org_id + user role
+- [x] Build login screen (email, password, sign in button) (`login_screen.dart`)
+- [x] Create auth repository — extracts `organization_id` from session's JWT (`auth_repository.dart`)
+- [x] Create auth provider — exposes org_id + user role (`auth_provider.dart`)
 - [ ] **Create OrganizationProvider** — fetches org settings after login
-- [ ] Handle session persistence
-- [ ] Handle auth errors
+- [x] Handle session persistence (via `onAuthStateChange`)
+- [x] Handle auth errors (SnackBar on login failure)
 - [ ] Password reset flow (link to web)
 
 ### Phase 3: Dashboard

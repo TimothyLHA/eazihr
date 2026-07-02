@@ -199,22 +199,22 @@ Tab 4: Team/Profile (icon: groups)         → Profile screen
 ## Phases
 
 ### Phase 1: Project Setup & Theme
-- [ ] `flutter create --org com.easyhr employee_app`
-- [ ] Add dependencies: `supabase_flutter`, `go_router`, `flutter_riverpod`, `intl`, `shimmer`, `cached_network_image`, `fl_chart`, `geolocator`, `google_maps_flutter`
-- [ ] Set up project structure
-- [ ] Create theme from design tokens
-- [ ] Set up Supabase client
-- [ ] Create GoRouter with all routes
+- [x] `flutter create --org com.easyhr employee_app`
+- [x] Add dependencies: `supabase_flutter`, `go_router`, `flutter_riverpod`, `intl`, `google_fonts`
+- [x] Set up project structure (`lib/core/`, `lib/data/`, `lib/features/`, `lib/router/`)
+- [x] Create theme from design tokens (`app_theme.dart`)
+- [x] Set up Supabase client (`supabase_client.dart`)
+- [x] Create GoRouter with all routes (`app_router.dart`)
 - [ ] Set up bottom navigation shell (4 tabs)
 - [ ] **Create OrganizationModel + OrganizationRepository** (read-only, fetch org name + config)
 
 ### Phase 2: Authentication (Multi-Tenant)
-- [ ] Build login screen (email, password, sign in button)
-- [ ] Create auth repository — extracts `organization_id` + `user_id` from JWT
-- [ ] Create auth provider — exposes user_id, org_id, role
+- [x] Build login screen (email, password, sign in button) (`login_screen.dart`)
+- [x] Create auth repository — extracts `organization_id` + `user_id` from JWT (`auth_repository.dart`)
+- [x] Create auth provider — exposes user_id, org_id, role (`auth_provider.dart`)
 - [ ] **Create OrganizationProvider** — fetches org name + config (read-only)
-- [ ] Session persistence & auto-login
-- [ ] Error handling
+- [x] Session persistence & auto-login (via `onAuthStateChange`)
+- [x] Error handling (SnackBar on login failure)
 
 ### Phase 3: Dashboard
 - [ ] Check In/Out card with:

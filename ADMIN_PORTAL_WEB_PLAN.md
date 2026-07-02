@@ -230,23 +230,23 @@ admin-portal/
 ## Phases
 
 ### Phase 1: Project Initialization
-- [ ] `npx create-next-app@latest admin-portal --typescript --tailwind --eslint --app --src-dir`
-- [ ] Install deps: `@supabase/supabase-js`, `@supabase/ssr`, `lucide-react`, `date-fns`, `recharts`, `sonner`, `zod`
-- [ ] Configure Tailwind with design tokens from code.html
-- [ ] Set up folder structure
-- [ ] Create Supabase client (browser + server)
-- [ ] Set up auth provider wrapper
+- [x] `npx create-next-app@latest admin-portal --typescript --tailwind --eslint --app --src-dir`
+- [x] Install deps: `@supabase/supabase-js`, `@supabase/ssr`, `lucide-react`, `sonner`, `zod`
+- [x] Configure Tailwind with design tokens from code.html (`globals.css`)
+- [x] Set up folder structure (`lib/supabase/`, `providers/`, `hooks/`, `components/ui/`)
+- [x] Create Supabase client (browser + server) (`client.ts`, `server.ts`, `middleware.ts`)
+- [x] Set up auth provider wrapper (`auth-provider.tsx`)
 - [ ] **Set up org-provider.tsx** — reads org_id from JWT, fetches org settings
 - [ ] Create TypeScript types for all tables (with organization_id)
 
 ### Phase 2: Auth & Layout (Multi-Tenant)
-- [ ] Build login page with email/password, remember me, forgot password
-- [ ] **Login flow**: After auth, read `organization_id` from JWT claim → scope all queries
-- [ ] Create auth middleware for protected routes
+- [x] Build login page with email/password, remember me, forgot password (`login/page.tsx`)
+- [x] **Login flow**: After auth, read `organization_id` from JWT claim → scope all queries (in auth-provider)
+- [x] Create auth middleware for protected routes (`middleware.ts`)
 - [ ] Build sidebar navigation
 - [ ] Build topbar with org name display + org switcher (super admin only)
 - [ ] Build responsive layout
-- [ ] Create logout flow
+- [x] Create logout flow (`auth.ts` signOut server action)
 - [ ] **Super admin**: special route to list all orgs and switch between them
 
 ### Phase 3: Dashboard

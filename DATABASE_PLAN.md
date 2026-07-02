@@ -14,7 +14,8 @@
 ```
 supabase/
 ├── migrations/
-│   └── 20260702000000_initial_schema.sql   # Combined initial schema
+│   ├── 20260702000000_initial_schema.sql   # Combined initial schema
+│   └── 20260702000001_auth_trigger.sql     # handle_new_user trigger (run manually)
 ├── functions/
 │   ├── calculate_payroll.sql
 │   └── generate_payslip.sql
@@ -34,7 +35,8 @@ supabase/
 
 **Auth Setup:**
 - `email + password` sign-up enabled by default on Supabase
-- `handle_new_user()` trigger on `auth.users` — **script created but needs manual execution** in Supabase SQL Editor (Management API cannot create triggers on `auth` schema)
+- `handle_new_user()` trigger on `auth.users` (`20260702000001_auth_trigger.sql`) — **script created, needs manual execution** in Supabase SQL Editor (Management API cannot create triggers on `auth` schema)
+- `seed_org_lookup.sql` — helper to get org ID for user signup metadata
 
 ### ✅ Phase 2: Profiles & Employees
 
