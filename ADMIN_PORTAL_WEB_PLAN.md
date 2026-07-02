@@ -333,10 +333,10 @@ admin-portal/
 - [ ] Responsive design pass
 - [ ] Loading skeletons for all pages
 - [ ] Error boundaries
-- [ ] SEO metadata
+- [x] SEO metadata (title, description, favicon set)
 - [ ] Performance audit (Lighthouse)
-- [ ] Env vars setup for Vercel
-- [ ] Deploy to Vercel
+- [x] Env vars setup for Vercel (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY)
+- [x] Deploy to Vercel — **https://eazihr.vercel.app**
 
 ---
 
