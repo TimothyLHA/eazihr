@@ -1,29 +1,37 @@
 'use client'
 
-import { useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Shield, ArrowRight, Mail, Lock, HelpCircle, Check } from 'lucide-react'
+import { Shield, Mail, Lock, User, Building2, ArrowRight, Check } from 'lucide-react'
 
-function LoginForm() {
+export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [orgId, setOrgId] = useState('45d4e8fd-bd88-4ae3-be50-b801ac86e18d')
+  const [role, setRole] = useState('org_admin')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const searchParams = useSearchParams()
-  const registered = searchParams.get('registered')
   const router = useRouter()
   const supabase = createClient()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          organization_id: orgId,
+          role,
+          full_name: fullName,
+        },
+      },
     })
 
     if (error) {
@@ -32,7 +40,7 @@ function LoginForm() {
       return
     }
 
-    router.push('/dashboard')
+    router.push('/login?registered=true')
     router.refresh()
   }
 
@@ -63,14 +71,32 @@ function LoginForm() {
                 <Shield className="w-6 h-6 text-white" fill="currentColor" />
               </div>
               <h1 className="text-[32px] font-semibold tracking-tight text-on-surface text-center mb-2">
-                Sign in to eazihr
+                Create Account
               </h1>
               <p className="text-sm text-on-surface-variant text-center">
-                Manage your workforce with executive precision.
+                Set up your admin account for LynnSys.
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleSignup} className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold tracking-wider text-on-surface-variant" htmlFor="fullName">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <input
+                    id="fullName"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe"
+                    required
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline/50 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="block text-xs font-semibold tracking-wider text-on-surface-variant" htmlFor="email">
                   Email Address
@@ -82,7 +108,7 @@ function LoginForm() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@company.com"
+                    placeholder="admin@lynnsys.com"
                     required
                     className="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline/50 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                   />
@@ -100,29 +126,45 @@ function LoginForm() {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
+                    placeholder="Min. 6 characters"
+                    required
+                    minLength={6}
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline/50 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold tracking-wider text-on-surface-variant" htmlFor="orgId">
+                  Organization ID
+                </label>
+                <div className="relative">
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <input
+                    id="orgId"
+                    type="text"
+                    value={orgId}
+                    onChange={(e) => setOrgId(e.target.value)}
                     required
                     className="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline/50 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between py-1">
-                <label className="flex items-center cursor-pointer group">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      className="peer w-5 h-5 cursor-pointer appearance-none rounded border border-outline-variant bg-white checked:bg-primary checked:border-primary transition-all duration-200"
-                    />
-                    <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-                  <span className="ml-2 text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">
-                    Remember Me
-                  </span>
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold tracking-wider text-on-surface-variant" htmlFor="role">
+                  Role
                 </label>
-                <a href="#" className="text-sm text-primary font-semibold hover:underline">
-                  Forgot Password?
-                </a>
+                <select
+                  id="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+                >
+                  <option value="org_admin">Org Admin</option>
+                  <option value="hr_manager">HR Manager</option>
+                  <option value="employee">Employee</option>
+                </select>
               </div>
 
               {error && (
@@ -140,42 +182,18 @@ function LoginForm() {
                   <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    Sign In
+                    Create Account
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </button>
             </form>
 
-            {registered === 'true' && (
-              <div className="mt-6 text-sm text-secondary bg-secondary-container rounded-lg px-4 py-3 text-center">
-                Account created! Check your email to confirm, then sign in.
-              </div>
-            )}
-
             <div className="mt-6 text-center">
-              <span className="text-sm text-on-surface-variant">Don't have an account? </span>
-              <Link href="/signup" className="text-sm text-primary font-semibold hover:underline">
-                Create Account
+              <span className="text-sm text-on-surface-variant">Already have an account? </span>
+              <Link href="/login" className="text-sm text-primary font-semibold hover:underline">
+                Sign In
               </Link>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-outline-variant/30 text-center">
-              <a href="#" className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-2">
-                <HelpCircle className="w-[18px] h-[18px]" />
-                Trouble logging in? Contact IT Support
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-8 flex justify-center gap-6 opacity-40 grayscale hover:opacity-80 transition-opacity">
-            <div className="flex items-center gap-1 text-xs font-semibold tracking-wider text-on-surface">
-              <Shield className="w-4 h-4" />
-              SOC2 COMPLIANT
-            </div>
-            <div className="flex items-center gap-1 text-xs font-semibold tracking-wider text-on-surface">
-              <Shield className="w-4 h-4" />
-              SSL SECURED
             </div>
           </div>
         </div>
@@ -206,13 +224,5 @@ function LoginForm() {
         </div>
       </footer>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
   )
 }
