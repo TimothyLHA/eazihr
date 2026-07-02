@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Shield, LayoutDashboard, Users, CalendarClock, Clock, Wallet, Settings, LogOut, ChevronDown, Bell, Search } from 'lucide-react'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/employees', label: 'Employees', icon: Users },
   { href: '/dashboard/leave', label: 'Leave', icon: CalendarClock },
   { href: '/dashboard/attendance', label: 'Attendance', icon: Clock },
@@ -25,7 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="min-h-screen flex bg-surface-container-low">
       <aside className="w-64 bg-primary text-white flex flex-col shrink-0">
         <div className="p-6 border-b border-white/10">
-          <Link href="/dashboard" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" fill="currentColor" />
             </div>
