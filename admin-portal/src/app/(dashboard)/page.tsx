@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/providers/auth-provider'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useEffect } from 'react'
 
 const employees = [
@@ -59,6 +60,41 @@ export default function DashboardPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <Link href="/loans" className="group rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 hover:border-primary hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-on-surface">Loans</p>
+            <span className="material-symbols-outlined text-2xl text-primary">account_balance_wallet</span>
+          </div>
+          <p className="text-3xl font-black text-on-surface">12</p>
+          <p className="text-xs text-on-surface-variant mt-2">Pending review and approval.</p>
+        </Link>
+        <Link href="/incentives" className="group rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 hover:border-primary hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-on-surface">Incentives</p>
+            <span className="material-symbols-outlined text-2xl text-primary">emoji_events</span>
+          </div>
+          <p className="text-3xl font-black text-on-surface">$82.4K</p>
+          <p className="text-xs text-on-surface-variant mt-2">Active payout pools.</p>
+        </Link>
+        <Link href="/payslips" className="group rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 hover:border-primary hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-on-surface">Payslips</p>
+            <span className="material-symbols-outlined text-2xl text-primary">receipt_long</span>
+          </div>
+          <p className="text-3xl font-black text-on-surface">1,124</p>
+          <p className="text-xs text-on-surface-variant mt-2">Issued this cycle.</p>
+        </Link>
+        <Link href="/tracking" className="group rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 hover:border-primary hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-on-surface">Tracking</p>
+            <span className="material-symbols-outlined text-2xl text-primary">place</span>
+          </div>
+          <p className="text-3xl font-black text-on-surface">218</p>
+          <p className="text-xs text-on-surface-variant mt-2">Active devices monitored.</p>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

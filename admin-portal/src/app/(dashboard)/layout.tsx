@@ -12,7 +12,11 @@ const navItems = [
   { href: '/attendance', label: 'Attendance', icon: 'calendar_today' },
   { href: '/leave', label: 'Leave Balance', icon: 'event_busy' },
   { href: '/overtime', label: 'Overtime', icon: 'more_time' },
-  { href: '/late-logs', label: 'Late', icon: 'schedule' },
+  { href: '/late-logs', label: 'Late Logs', icon: 'schedule' },
+  { href: '/tracking', label: 'Tracking', icon: 'place' },
+  { href: '/loans', label: 'Loans', icon: 'account_balance_wallet' },
+  { href: '/incentives', label: 'Incentives', icon: 'emoji_events' },
+  { href: '/payslips', label: 'Payslips', icon: 'receipt_long' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
