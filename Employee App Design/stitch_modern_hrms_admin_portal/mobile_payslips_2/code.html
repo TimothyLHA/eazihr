@@ -1,0 +1,283 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Employee Payslips | Executive HR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#6ffbbe",
+                        "outline-variant": "#c6c6cd",
+                        "background": "#f8f9ff",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-variant": "#d3e4fe",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "tertiary": "#000000",
+                        "surface-container": "#e5eeff",
+                        "surface-container-low": "#eff4ff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-container": "#2a1700",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "on-background": "#0b1c30",
+                        "on-surface-variant": "#45464d",
+                        "inverse-surface": "#213145",
+                        "surface-dim": "#cbdbf5",
+                        "secondary-container": "#6cf8bb",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed": "#2a1700",
+                        "primary-container": "#131b2e",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-container": "#7c839b",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary": "#006c49",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "40px",
+                        "container-max": "1440px",
+                        "sidebar-width": "280px",
+                        "unit": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "caption": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "title-md": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-bright shadow-sm flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution close-up portrait of a corporate executive in a light-filled office. The individual is wearing a charcoal suit with a crisp white shirt, radiating confidence and trustworthiness. The background is a blurred modern workspace with soft daylight, maintaining the sophisticated, minimalist HR tech aesthetic of the Executive HR platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKSEcXDuTz53DMzxHiAiiEtnAKuwmhXFNeyeOAAiBy-4wfJ3_jxIudonZrAaGdksSdoa5H1ucUH1CJHp6xpIkVXz8tWljNUIW4n4osKiyN-qG8fCt4DwotwuO9fe3tjYTN__MOH--X189XaTUGt_ecbFm-CLP6MCKxR1cyKOQjBcecm4MuCBfIzl5mtHNaCDeX3zQMzyGIYymRjcBJCIhVPhCH63SUwnZoEEgbddGGCIgMhL8_8CWIj-AU_lS1LWUJypea_nJTgI">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Executive HR</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-20 pb-24 px-4 max-w-md mx-auto w-full">
+<!-- Welcome & Date Section -->
+<section class="mb-6">
+<h2 class="font-title-md text-title-md text-on-surface">Your Payslips</h2>
+<p class="font-body-md text-on-surface-variant">Financial overview for 2024</p>
+</section>
+<!-- Latest Payslip Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_20px_rgba(0,0,0,0.03)] mb-6 transition-transform hover:scale-[1.01]">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="font-label-md text-label-md text-on-secondary-container bg-secondary-container px-2 py-1 rounded-full uppercase tracking-wider">Latest</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile mt-2">August 2024</h3>
+<p class="font-body-md text-on-surface-variant">Paid on Aug 28, 2024</p>
+</div>
+<div class="bg-primary-container p-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+</div>
+<div class="mb-6">
+<span class="font-label-md text-label-md text-outline uppercase">Net Salary</span>
+<div class="flex items-baseline gap-1">
+<span class="font-display-lg text-display-lg text-primary">$</span>
+<span class="font-display-lg text-display-lg text-primary tracking-tight">8,420.00</span>
+</div>
+</div>
+<!-- Simple Chart Visualization -->
+<div class="space-y-3 mb-6">
+<div class="flex justify-between text-label-md font-label-md">
+<span class="text-on-surface">Earnings ($10,200)</span>
+<span class="text-error">Deductions ($1,780)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full flex overflow-hidden">
+<div class="h-full bg-secondary" style="width: 82%"></div>
+<div class="h-full bg-error" style="width: 18%"></div>
+</div>
+</div>
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                DOWNLOAD PAYSLIP
+            </button>
+</div>
+<!-- Breakdown Tabs (Decorative/Functional interaction) -->
+<div class="flex gap-2 mb-6 overflow-x-auto hide-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 bg-primary text-on-primary rounded-full font-label-md text-label-md">Detailed Breakdown</button>
+<button class="whitespace-nowrap px-4 py-2 bg-surface-container-low text-on-surface-variant border border-outline-variant rounded-full font-label-md text-label-md">Tax Documents</button>
+<button class="whitespace-nowrap px-4 py-2 bg-surface-container-low text-on-surface-variant border border-outline-variant rounded-full font-label-md text-label-md">YTD Summary</button>
+</div>
+<!-- History Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-title-md text-title-md text-on-surface">History</h4>
+<button class="text-on-secondary-container font-label-md text-label-md">Filter by Year</button>
+</div>
+<!-- List Item -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<!-- July -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant last:border-0">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">July 2024</p>
+<p class="font-caption text-caption text-on-surface-variant">Paid on Jul 28</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface font-semibold">$8,420.00</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+<!-- June -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant last:border-0">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">June 2024</p>
+<p class="font-caption text-caption text-on-surface-variant">Paid on Jun 27</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface font-semibold">$8,420.00</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+<!-- May -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant last:border-0">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">May 2024</p>
+<p class="font-caption text-caption text-on-surface-variant">Paid on May 28</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface font-semibold">$8,420.00</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+<!-- April -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant last:border-0">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">April 2024</p>
+<p class="font-caption text-caption text-on-surface-variant">Paid on Apr 28</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface font-semibold">$8,150.00</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+</div>
+<button class="w-full text-center py-4 text-on-surface-variant font-label-md text-label-md hover:underline">View Older Records</button>
+</section>
+<!-- Informational Banner -->
+<div class="mt-8 bg-surface-container p-4 rounded-xl flex gap-3 items-center">
+<span class="material-symbols-outlined text-on-secondary-container">security</span>
+<p class="font-caption text-caption text-on-surface-variant">All documents are encrypted and secure. If you notice any discrepancies, please contact the <span class="font-semibold text-primary">HR Finance Helpdesk</span>.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-2 pb-safe bg-surface shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="font-label-md text-label-md mt-1">Leave</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-md text-label-md mt-1">Payslips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-low transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for list items
+        document.querySelectorAll('.group.cursor-pointer').forEach(item => {
+            item.addEventListener('click', () => {
+                const ripple = document.createElement('div');
+                ripple.className = 'absolute inset-0 bg-primary/5 pointer-events-none opacity-0 transition-opacity duration-300';
+                item.style.position = 'relative';
+                item.appendChild(ripple);
+                setTimeout(() => ripple.style.opacity = '1', 0);
+                setTimeout(() => ripple.style.opacity = '0', 300);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body></html>

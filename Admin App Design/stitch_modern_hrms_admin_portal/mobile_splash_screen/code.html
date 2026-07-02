@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ExecutiveHR | Secure Portal Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#000000",
+                        "tertiary-fixed": "#ffddb8",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#2a1700",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed": "#002113",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "secondary": "#006c49",
+                        "outline-variant": "#c6c6cd",
+                        "on-surface-variant": "#45464d",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-container": "#00714d",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-container": "#131b2e",
+                        "tertiary": "#000000",
+                        "surface-container": "#e5eeff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface": "#0b1c30",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#76777d",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-high": "#dce9ff",
+                        "inverse-surface": "#213145",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "inverse-primary": "#bec6e0",
+                        "surface-container-low": "#eff4ff",
+                        "background": "#f8f9ff",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#7c839b",
+                        "on-secondary-fixed-variant": "#005236"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-page": "40px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .logo-reveal {
+            animation: logo-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes logo-reveal {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .progress-bar-container {
+            width: 240px;
+            height: 2px;
+            background: #e2e8f0;
+            overflow: hidden;
+            border-radius: 999px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #000000;
+            width: 0%;
+            animation: progress-fill 3.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        @keyframes progress-fill {
+            0% { width: 0%; }
+            20% { width: 30%; }
+            50% { width: 45%; }
+            75% { width: 85%; }
+            100% { width: 100%; }
+        }
+
+        .text-fade {
+            animation: text-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes text-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .subtle-grid {
+            background-image: radial-gradient(#000000 0.5px, transparent 0.5px);
+            background-size: 32px 32px;
+            opacity: 0.03;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<div class="relative flex flex-col items-center justify-center min-h-screen px-margin-page">
+<!-- Atmospheric Background Element -->
+<div class="absolute inset-0 subtle-grid pointer-events-none"></div>
+<!-- Decorative Ambient Light -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<!-- Brand Canvas -->
+<div class="z-10 flex flex-col items-center logo-reveal">
+<!-- Shield Logo Icon -->
+<div class="mb-6 flex items-center justify-center w-20 h-20 rounded-2xl bg-primary text-on-primary shadow-xl shadow-primary/10">
+<span class="material-symbols-outlined !text-[44px]" style="font-variation-settings: 'FILL' 1;">
+                    shield_person
+                </span>
+</div>
+<!-- Brand Identity -->
+<h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-primary tracking-tight mb-2">
+                ExecutiveHR
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant/80 tracking-wide">
+                Enterprise Human Capital Management
+            </p>
+</div>
+<!-- Loading Module -->
+<div class="absolute bottom-20 flex flex-col items-center w-full z-10 px-margin-page">
+<div class="progress-bar-container mb-4">
+<div class="progress-bar-fill"></div>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] animate-spin">
+                    sync
+                </span>
+<p class="font-label-md text-label-md text-on-surface-variant text-fade uppercase tracking-[0.1em]">
+                    Connecting to secure servers...
+                </p>
+</div>
+</div>
+<!-- Security Footer Badge -->
+<div class="absolute bottom-8 flex items-center gap-1 opacity-40">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+<span class="font-caption text-caption">256-bit AES Encryption Active</span>
+</div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        // Simple redirection simulation after loading completes
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.progress-bar-fill');
+            
+            progressBar.addEventListener('animationend', () => {
+                // In a real app, this would trigger the route transition to the dashboard
+                console.log('Handshake complete. Transitioning to dashboard...');
+                
+                // Visual feedback for completion
+                setTimeout(() => {
+                    const statusText = document.querySelector('.font-label-md');
+                    statusText.textContent = 'Authenticated. Entering Portal...';
+                    statusText.classList.remove('text-fade');
+                    statusText.classList.add('text-secondary');
+                    
+                    document.querySelector('.progress-bar-fill').classList.add('bg-secondary');
+                }, 200);
+            });
+        });
+    </script>
+</body></html>

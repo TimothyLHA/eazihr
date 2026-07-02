@@ -1,0 +1,315 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ExecutiveHR - Employee Directory</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#213145",
+                        "on-primary-container": "#7c839b",
+                        "on-surface-variant": "#45464d",
+                        "on-background": "#0b1c30",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container": "#e5eeff",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006c49",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary": "#000000",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-container": "#6cf8bb",
+                        "primary-container": "#131b2e",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-highest": "#d3e4fe",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dae2fd",
+                        "on-surface": "#0b1c30",
+                        "outline": "#76777d",
+                        "tertiary-container": "#2a1700",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-variant": "#d3e4fe",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-fixed": "#002113",
+                        "primary": "#000000",
+                        "secondary-fixed": "#6ffbbe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "sidebar-width": "280px",
+                        "unit": "8px",
+                        "margin-page": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "caption": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .employee-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .employee-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 bg-surface dark:bg-surface-dim shadow-sm z-50 sticky">
+<div class="flex justify-between items-center px-4 py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior HR manager in a minimalist office setting. The person has a warm, confident expression, wearing professional attire. The background is softly blurred with clean white walls and a hint of a green plant, reflecting a high-end SaaS aesthetic with soft, natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxggRMWuxNtCSTHzhL-oQlD9RNmpjeuj43tBuVgrmuOJIeo07uXEhIR5OCwCCkm45R2Nl3M-kRQ3v0QrHZKe9x6ihe2YpVwX8sBfucFPDZlr9V2v2RWAK_2xrrInBcNAUx2Tf5iyOUjiBnAmicKFOBznLRmdgp0BO7yMvCHCGPvFTLKatI_BgXdLCDMEUEv8ecXzdphIiaWAX5bFMTmObJgBhOrd8N0pFV6mpHflz7IXXRG4LJMsv5DxWbME0pYcD1bdY45qoB_kg">
+</div>
+<h1 class="font-title-md text-title-md font-bold text-primary dark:text-inverse-primary">ExecutiveHR</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-4 pt-6 max-w-md mx-auto">
+<!-- Search Section -->
+<div class="mb-8 space-y-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Employee Directory</h2>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-4 pl-12 pr-4 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all shadow-sm" placeholder="Search by name, role or department..." type="text">
+</div>
+<!-- Filters Chips -->
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full font-label-md whitespace-nowrap active:scale-95 transition-transform">All Employees</button>
+<button class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md whitespace-nowrap hover:bg-surface-container-highest active:scale-95 transition-transform">Product</button>
+<button class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md whitespace-nowrap hover:bg-surface-container-highest active:scale-95 transition-transform">Engineering</button>
+<button class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md whitespace-nowrap hover:bg-surface-container-highest active:scale-95 transition-transform">Marketing</button>
+</div>
+</div>
+<!-- Directory List -->
+<div class="space-y-4">
+<!-- Employee Card 1: Active -->
+<div class="employee-card bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male software engineer with glasses, looking professional and friendly. He is set against a clean, minimalist studio background with subtle cool-toned lighting. The image style is polished and high-fidelity, suitable for a premium corporate HR directory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0wfTscTO8DbHwbu9UlAEpTGVz57HcFeTD-7nb5i2fwm5HP8-ZUwHpbzn6tt6JZDdKRqwtStWNWLRbLmxmCJ8wmp7f7df7DEuzJg_VI61SmTmsz1XqI271XK0IApH2M6XnzAlaIpvY8HDo9idbZblB726jtQ6zNy9frQxx4IKzuFUCBIETPOB5QzRK0vjZUeWyK4z6lyoTVvnlroraJCoulQIdF2fd0qCrXMZgPBc0qlKcS5QRmnGnsd_DqEz3KU3NHwr4uNoHhN4">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Alex Rivera</h3>
+<p class="font-body-md text-on-surface-variant">Senior Frontend Lead</p>
+<p class="font-caption text-caption text-on-primary-container mt-0.5">Engineering Department</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md">Active</span>
+</div>
+<div class="flex gap-3 mt-4 pt-4 border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-md hover:opacity-90 transition-opacity active:scale-95">View Profile</button>
+<button class="w-12 h-10 flex items-center justify-center bg-surface-container-high text-primary rounded-lg hover:bg-surface-container-highest active:scale-95">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 2: Remote -->
+<div class="employee-card bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A studio portrait of a woman in her 30s with professional makeup and a smart blazer, representing a Product Designer. The lighting is soft and even, highlighting her features against a soft grey background. The aesthetic is clean, professional, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVg8QPYxnucV9ap58SVy0CvzLg4-WlB726c-zS-KN2iyaNMO60xJyUTOMTjQhR3_aYqB24__Hd3wDDDV5Ji2YNMXPVxy1Ra32LHh9jKvgyNttq9ScTPCE9XIOaNHWLAYLqABhHebvy7zlrl7IHac4Yu4CP7Fs7f8iYK51M3sBVU_qMrq-6RYro0GJeQYOLsL-YSzizDg93zBTgQ4qKLiVbofePhnlQpPU9EG3wvtFYQ1l0f9PCNR9jZ4aWcxyiKtTze3u-E2H0ROI">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Sarah Chen</h3>
+<p class="font-body-md text-on-surface-variant">Lead Product Designer</p>
+<p class="font-caption text-caption text-on-primary-container mt-0.5">Product &amp; Design</p>
+</div>
+</div>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full font-label-md">Remote</span>
+</div>
+<div class="flex gap-3 mt-4 pt-4 border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-md hover:opacity-90 transition-opacity active:scale-95">View Profile</button>
+<button class="w-12 h-10 flex items-center justify-center bg-surface-container-high text-primary rounded-lg hover:bg-surface-container-highest active:scale-95">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 3: On Leave -->
+<div class="employee-card bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-start mb-4 opacity-75">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden shadow-sm grayscale-[0.5]">
+<img class="w-full h-full object-cover" data-alt="A portrait of a senior professional male with grey hair, wearing a high-quality navy sweater. He has a calm, experienced expression. The image is shot with a shallow depth of field in a contemporary office environment. Minimalist and authoritative vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQArkcjoIXB2XYJ4VETDYPN6APfpMwowjDQAg8_g7KLSR37s1FBYt68kN3nnmZL9i73SWBbHl2v1qhgXx25KVmn5iYA7vysv5pJlBK2IYDgvofm3J5C031nxz6vigFNYVd7Xz4PwC78slzHwXF5ghg77R1h0fUPCh1RXAjTPAHW3yAaUTukMZswYu81CVpCu25IIcqMbrZBAAp6L3MjEUq5RivWN82GPQm9O3BCoDoYxic6Dhnaxt1q33AS4ayw93r01eoWL_FJR4">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Marcus Thorne</h3>
+<p class="font-body-md text-on-surface-variant">Marketing Director</p>
+<p class="font-caption text-caption text-on-primary-container mt-0.5">Marketing &amp; PR</p>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full font-label-md">On Leave</span>
+</div>
+<div class="flex gap-3 mt-4 pt-4 border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-md hover:opacity-90 transition-opacity active:scale-95">View Profile</button>
+<button class="w-12 h-10 flex items-center justify-center bg-surface-container-high text-primary rounded-lg hover:bg-surface-container-highest active:scale-95">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 4: Active -->
+<div class="employee-card bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A headshot of a young professional woman with a bright smile, representing a junior HR associate. She is standing in a light-filled corridor with modern architectural details. The lighting is airy and optimistic, maintaining the brand's premium minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMrLrOdKWhEx7wOtnzD_uUILoQAGD9eFwNBDsg1JKz-zS8TV8N-FxPk_K33loy33wroOIy6xF-eMVTWVK8H97Z0J5LjgZG0wrNgltOyE7sF-dPUVomykT8bXq3k2mGq5jPTD2sNGDX827WvYEMkDPwDTZt4C0LyT4h48eECTbkY811XYPZfFy8uahmAVOPZysY3sMet4ea0geh84koVVWKkwmRrI60qXs1Jl9zdogd_JLWJTeBeXMc_1SHy8UkNJZe_xzRckpWpyo">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Elena Rodriguez</h3>
+<p class="font-body-md text-on-surface-variant">HR Coordinator</p>
+<p class="font-caption text-caption text-on-primary-container mt-0.5">Human Resources</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md">Active</span>
+</div>
+<div class="flex gap-3 mt-4 pt-4 border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-md hover:opacity-90 transition-opacity active:scale-95">View Profile</button>
+<button class="w-12 h-10 flex items-center justify-center bg-surface-container-high text-primary rounded-lg hover:bg-surface-container-highest active:scale-95">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe bg-surface-container-lowest border-t border-outline-variant shadow-lg rounded-t-xl">
+  <a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-label-md text-label-md">Dashboard</span>
+  </a>
+  <a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-150" href="#">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+    <span class="font-label-md text-label-md">Employees</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">event_available</span>
+    <span class="font-label-md text-label-md">Attendance</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">payments</span>
+    <span class="font-label-md text-label-md">Payroll</span>
+  </a>
+</nav>
+<!-- Interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.querySelector('input[type="text"]');
+            const cards = document.querySelectorAll('.employee-card');
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                cards.forEach(card => {
+                    const name = card.querySelector('h3').textContent.toLowerCase();
+                    const role = card.querySelector('p').textContent.toLowerCase();
+                    if (name.includes(term) || role.includes(term)) {
+                        card.style.display = 'block';
+                        card.style.opacity = '1';
+                    } else {
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            if (card.style.opacity === '0') card.style.display = 'none';
+                        }, 200);
+                    }
+                });
+            });
+
+            // Ripple-like effect on buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = '10px';
+                    ripple.style.height = '10px';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.pointerEvents = 'none';
+                    
+                    this.style.position = 'relative';
+                    this.style.</script>
+
+</body></html>

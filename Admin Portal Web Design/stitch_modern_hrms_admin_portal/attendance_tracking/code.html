@@ -1,0 +1,470 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>HRMS Portal - Attendance &amp; Tracking</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "surface-variant": "#d3e4fe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#000000",
+                        "tertiary-container": "#2a1700",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-background": "#0b1c30",
+                        "on-tertiary-fixed": "#2a1700",
+                        "primary": "#000000",
+                        "secondary-fixed": "#6ffbbe",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container": "#e5eeff",
+                        "on-secondary-container": "#00714d",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "secondary": "#006c49",
+                        "secondary-container": "#6cf8bb",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-container": "#7c839b",
+                        "outline": "#76777d",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-fixed": "#002113",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline-variant": "#c6c6cd",
+                        "surface-container-highest": "#d3e4fe",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-surface-variant": "#45464d",
+                        "primary-fixed": "#dae2fd",
+                        "primary-fixed-dim": "#bec6e0",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#b87500",
+                        "surface": "#f8f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "40px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "caption": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        
+        .bento-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+        }
+        .emerald-pill { background: rgba(16, 185, 129, 0.1); color: #059669; }
+        .amber-pill { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-container-lowest dark:bg-primary-container shadow-sm flex flex-col py-unit z-50">
+<div class="px-gutter mb-10 flex items-center gap-3"><div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-outlined">corporate_fare</span></div><h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">HR Portal</h1></div>
+<nav class="flex-1 px-4 space-y-1 custom-scrollbar overflow-y-auto"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">groups</span><span class="font-body-md text-body-md">Employees</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-secondary-fixed-dim font-bold border-r-4 border-primary dark:border-secondary-fixed-dim bg-surface-container dark:bg-inverse-surface" href="#"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-md text-body-md">Attendance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">event_busy</span><span class="font-body-md text-body-md">Leave Balance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">more_time</span><span class="font-body-md text-body-md">Overtime</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">schedule</span><span class="font-body-md text-body-md">Late</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">payments</span><span class="font-body-md text-body-md">Loans</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">stars</span><span class="font-body-md text-body-md">Incentives</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="font-body-md text-body-md">Payroll</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="font-body-md text-body-md">Payslips</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">location_on</span><span class="font-body-md text-body-md">Tracking</span></a></nav>
+<div class="px-4 mt-auto pt-6 border-t border-outline-variant/30 space-y-1"><button class="w-full bg-primary text-white font-label-md text-label-md py-3 rounded-lg transition-transform active:scale-95 mb-4 shadow-md">Generate Report</button><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="font-body-md text-body-md">Settings</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all" href="#"><span class="material-symbols-outlined">logout</span><span class="font-body-md text-body-md">Logout</span></a></div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface dark:bg-background border-b border-outline-variant dark:border-outline z-40 flex items-center justify-between px-gutter ml-sidebar-width">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary/10" placeholder="Search employee attendance or logs..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-on-surface">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 pl-2 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-label-md leading-none text-on-surface">Alex Sterling</p>
+<p class="font-caption text-caption text-on-surface-variant">Enterprise Admin</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary/10" data-alt="A professional headshot of a high-level HR administrator in a sleek corporate environment. The background is a blurred high-end office with soft blue and grey tones. The subject is wearing a tailored charcoal suit and has a warm but authoritative expression. Soft, diffused lighting creates a premium, expert persona consistent with an enterprise management portal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNW9p13OCy6yMstHTKSdoE7Xmn65F-dmpBEr-KRyl8_zBJ1Vk7xNrWLveBIfQxR9ljqkbz_MKVlCcTO30OWklJ4pabNx4schyWFcsdehuCighHkaf0TJeQU6D6xigpQkhx8k-E1iAHbuoh1fijtgspI2tCSk8Zx32Ug2C_Ny1aNH26Iis5BoMcDN6UNmcKDWgVEF056xL0ixUcQK9XSYyy_vLMN2Jo6XmRk5QPD9xMRfmHtbHhhVyROtKBvUKZYykEEF5EPWrB4E">
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[280px] mt-16 p-gutter min-h-[calc(100vh-64px)]">
+<div class="max-w-container-max mx-auto space-y-6">
+<!-- Page Header -->
+<div class="flex items-end justify-between">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Attendance &amp; Tracking</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time oversight of personnel movement and precision logging.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg bg-white font-label-md text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-body-lg">download</span> Export CSV
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-label-md text-label-md shadow-sm hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-body-lg">add</span> New Manual Entry
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Section -->
+<div class="grid grid-cols-12 gap-6">
+<!-- 1. Daily Attendance Chart (Col-8) -->
+<div class="col-span-12 lg:col-span-8 bento-card p-6 flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Weekly Attendance Trends</h3>
+<p class="font-caption text-caption text-on-surface-variant">Daily comparison of check-ins versus late arrivals.</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-lg text-label-md font-label-md px-3 py-1.5 focus:ring-0">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="flex-1 flex items-end justify-between gap-4 h-64 px-4">
+<!-- Mock Bars -->
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-secondary-container rounded-t-lg h-[80%] transition-all hover:opacity-80"></div>
+<div class="w-full bg-tertiary-container/10 rounded-t-lg h-[20%] absolute bottom-0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Mon</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-secondary-container rounded-t-lg h-[95%] transition-all hover:opacity-80"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Tue</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-secondary-container rounded-t-lg h-[75%] transition-all hover:opacity-80"></div>
+<div class="w-full bg-amber-500 rounded-t-lg h-[15%] transition-all"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Wed</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-secondary-container rounded-t-lg h-[85%] transition-all hover:opacity-80"></div>
+<div class="w-full bg-amber-500 rounded-t-lg h-[5%] transition-all"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Thu</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-secondary-container rounded-t-lg h-[60%] transition-all hover:opacity-80"></div>
+<div class="w-full bg-amber-500 rounded-t-lg h-[25%] transition-all"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Fri</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-surface-container-low rounded-t-lg h-[20%]"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Sat</span>
+</div>
+<div class="flex-1 group relative flex flex-col justify-end items-center h-full">
+<div class="w-full bg-surface-container-low rounded-t-lg h-[15%]"></div>
+<span class="mt-2 font-caption text-caption text-on-surface-variant">Sun</span>
+</div>
+</div>
+<div class="mt-8 flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
+<span class="font-caption text-caption text-on-surface-variant">On-Time Check-ins</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-amber-500"></span>
+<span class="font-caption text-caption text-on-surface-variant">Late Arrivals</span>
+</div>
+</div>
+</div>
+<!-- 3. Late Logs Panel (Col-4) -->
+<div class="col-span-12 lg:col-span-4 bento-card p-6 overflow-hidden flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-md text-title-md text-on-surface">Today's Late Logs</h3>
+<span class="emerald-pill px-3 py-1 rounded-full text-label-md font-label-md">12 Alerts</span>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar pr-2">
+<!-- Late Entry Item -->
+<div class="p-4 rounded-xl border border-outline-variant bg-surface hover:border-amber-500 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined">timer_off</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Marcus Thorne</p>
+<p class="font-caption text-caption text-on-surface-variant">UI Designer • 15m late</p>
+</div>
+</div>
+<button class="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
+<span class="material-symbols-outlined text-body-md">notifications_active</span>
+</button>
+</div>
+<div class="mt-3 bg-white/50 rounded-lg p-2 flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant italic">"Traffic congestion on M1"</span>
+<span class="amber-pill px-2 py-0.5 rounded text-[10px] font-bold">UNEXCUSED</span>
+</div>
+</div>
+<div class="p-4 rounded-xl border border-outline-variant bg-surface hover:border-amber-500 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined">timer_off</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Sarah Jenkins</p>
+<p class="font-caption text-caption text-on-surface-variant">Dev Ops • 42m late</p>
+</div>
+</div>
+<button class="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
+<span class="material-symbols-outlined text-body-md">notifications_active</span>
+</button>
+</div>
+</div>
+<div class="p-4 rounded-xl border border-outline-variant bg-surface hover:border-amber-500 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined">timer_off</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Leo Grcic</p>
+<p class="font-caption text-caption text-on-surface-variant">Finance • 08m late</p>
+</div>
+</div>
+<button class="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
+<span class="material-symbols-outlined text-body-md">notifications_active</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 text-center font-label-md text-label-md text-primary hover:bg-surface-container-low rounded-lg transition-colors border border-dashed border-outline-variant">
+                        View All Late Logs
+                    </button>
+</div>
+<!-- 2. Attendance Table (Col-12) -->
+<div class="col-span-12 bento-card overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+<div class="flex items-center gap-6">
+<h3 class="font-title-md text-title-md text-on-surface">Attendance Records</h3>
+<nav class="flex gap-1 bg-surface-container-low p-1 rounded-lg">
+<button class="px-4 py-1.5 rounded-md bg-white shadow-sm font-label-md text-label-md text-primary">All Entries</button>
+<button class="px-4 py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">On-Site</button>
+<button class="px-4 py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">Remote</button>
+</nav>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined text-on-surface-variant">filter_list</span></button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined text-on-surface-variant">refresh</span></button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/30 border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Employee</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Date</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Check In</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Check Out</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Location Tracking</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[10px]">JD</div>
+<div>
+<p class="font-body-md text-body-md font-medium">Jane Doe</p>
+<p class="font-caption text-caption text-on-surface-variant">Engineer</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md font-mono text-on-surface">08:52:14</span>
+<p class="text-[10px] text-on-secondary-container font-bold">ON TIME</p>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md font-mono text-on-surface">17:35:02</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-body-lg text-secondary">location_on</span>
+<span class="font-caption text-caption">HQ - Floor 4 (Zone B)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="emerald-pill px-3 py-1 rounded-full text-[11px] font-bold">PRESENT</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-[10px]">AS</div>
+<div>
+<p class="font-body-md text-body-md font-medium">Alan Smith</p>
+<p class="font-caption text-caption text-on-surface-variant">Manager</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md font-mono text-on-surface">09:45:33</span>
+<p class="text-[10px] text-amber-600 font-bold">LATE (45m)</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-on-surface-variant/40">—</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-body-lg text-amber-500">home_pin</span>
+<span class="font-caption text-caption">Remote (Verified IP)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="emerald-pill px-3 py-1 rounded-full text-[11px] font-bold">ACTIVE</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A portrait of a senior developer in a bright, modern studio. The image has a very professional and clean aesthetic with high key lighting and a minimalist background of white wood and subtle green plants. The person has a friendly smile and is wearing a high-quality navy polo shirt. Sharp focus on the face with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc66vJw6pNpqlRdct72YVLsfZZYvKgt_gfgRn6BbWRic5WT-mu6ZS3MvLdayg5sicRoviLbT0ZUqjFDphh3n2XTTPWWh2jPC85bp-DM_yXtFvPM3ftxQOIiNc33RQZ7qTPYNV-L9rgJYlwEMCsExwQ5NvOg3zCwbNmKzPvGtU9rpGl9QUdE1FbXZ6bLyZCt24oS-HaJtH9OLr5gtATtmIxXnK1N8rW5ElyQeJhC7a6XckzQaZopeC9N3VPWZmc65bFQCT5S0aDgxc">
+<div>
+<p class="font-body-md text-body-md font-medium">Robert Wilson</p>
+<p class="font-caption text-caption text-on-surface-variant">Senior Dev</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md font-mono text-on-surface">08:02:10</span>
+<p class="text-[10px] text-on-secondary-container font-bold">EARLY</p>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md font-mono text-on-surface">18:05:44</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-body-lg text-secondary">location_on</span>
+<span class="font-caption text-caption">HQ - Floor 2 (Dev Lab)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="emerald-pill px-3 py-1 rounded-full text-[11px] font-bold">COMPLETED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant">Showing 1-10 of 422 entries</span>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple interactive state for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // In a real app, this would open details
+                console.log('Opening employee details...');
+                row.classList.add('bg-primary/5');
+                setTimeout(() => row.classList.remove('bg-primary/5'), 300);
+            });
+        });
+
+        // Trigger notification simulation
+        document.querySelectorAll('button[class*="notifications_active"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const icon = btn.querySelector('span');
+                icon.style.color = '#000';
+                icon.textContent = 'check_circle';
+                btn.classList.replace('text-amber-700', 'text-secondary');
+                alert('Automated late arrival notification sent to employee.');
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+</body></html>

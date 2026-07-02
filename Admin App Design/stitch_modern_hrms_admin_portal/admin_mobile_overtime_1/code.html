@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="en" style=""><head><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" class="">
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Admin Mobile Overtime Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              DEFAULT: '#1E293B',
+              dark: '#0F172A',
+            },
+            accent: {
+              green: '#22C55E',
+              mint: '#6EE7B7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #F8FAFC;
+    }
+    .safe-area-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .custom-shadow {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+    .fab-gradient {
+      background: linear-gradient(135deg, #6EE7B7 0%, #34D399 100%);
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+<!-- BEGIN: Main Container -->
+<div class="max-w-md mx-auto bg-slate-50 min-h-screen flex flex-col relative pb-24">
+<!-- BEGIN: TopAppBar -->
+<header class="sticky top-0 z-50 bg-white shadow-sm w-full" data-purpose="header"><div class="flex justify-between items-center px-6 py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-slate-200">
+<img class="w-full h-full object-cover" alt="Alex Sterling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjPyEIql9fEc-Df0WB-4FvY_RRlE_Px__DjGOgNi7fFZAQW8tgdUFs1enhM2bgHVzVE4qGe2774fPIAx6IN_MmUwcg4aAN87zBEbWtXm1OjyDdcj3K-wUs8ZXJ3u7bRagxPraVXuVLYjE03yx71Sw9CUhnjh2aeN79yKEijQtTE0iqc9biWBDQDaoUTfcIpJ52cYXmCrkTrCl2pbH1-3wR7WwdqjJ59KDNM4hC-so50evEfW9jHAZ5habrgXGdxlpCnqjoiv0EEfY">
+</div>
+<span class="text-lg font-bold text-slate-900">ExecutiveHR</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div></header>
+<!-- END: TopAppBar -->
+<!-- BEGIN: Main Content Area -->
+<main class="flex-1 p-4 space-y-6">
+<!-- BEGIN: Hero Stats Card -->
+<section class="bg-navy rounded-2xl p-6 text-white relative overflow-hidden custom-shadow" data-purpose="hero-stats">
+<!-- Abstract background decoration -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+<p class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Total Overtime (October)</p>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-5xl font-bold">428</span>
+<span class="text-xl text-slate-400">hrs</span>
+</div>
+<div class="flex items-center gap-1 mt-6 text-accent-mint text-sm font-medium">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">+12% vs last month</span>
+</div>
+</section>
+<!-- END: Hero Stats Card -->
+<!-- BEGIN: Secondary Stats Row -->
+<section class="grid grid-cols-2 gap-4" data-purpose="secondary-stats">
+<!-- Total Cost Card -->
+<div class="bg-white p-5 rounded-2xl border border-slate-100 custom-shadow">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Cost</p>
+<p class="text-2xl font-bold text-slate-800 mt-1">$18,450</p>
+<p class="text-[11px] font-medium text-emerald-600 mt-2">Within Budget</p>
+</div>
+<!-- Utilization Card -->
+<div class="bg-white p-5 rounded-2xl border border-slate-100 custom-shadow">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Utilization</p>
+<p class="text-2xl font-bold text-slate-800 mt-1">84%</p>
+<!-- Custom Progress Bar -->
+<div class="w-full bg-slate-100 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-navy h-full rounded-full" style="width: 84%"></div>
+</div>
+</div>
+</section>
+<!-- END: Secondary Stats Row -->
+<!-- BEGIN: Pending Requests Section -->
+<section class="space-y-4" data-purpose="pending-requests">
+<div class="flex items-center justify-between px-1">
+<h2 class="text-lg font-bold text-slate-800">Pending Requests</h2>
+<span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">3 New</span>
+</div>
+<!-- Request Card 1 -->
+<div class="bg-white rounded-2xl border border-slate-100 custom-shadow p-4 space-y-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold">JD</div>
+<div>
+<h3 class="font-bold text-slate-800">Jordan Davis</h3>
+<p class="text-xs text-slate-500">Product Design • Oct 24</p>
+</div>
+</div>
+<span class="text-xl font-bold text-slate-800">4.5h</span>
+</div>
+<p class="text-sm text-slate-600 italic leading-relaxed">
+            "Finalizing the high-fidelity mockups for the Q4 sprint release..."
+          </p>
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-bold active:bg-slate-50 uppercase tracking-tight">Reject</button>
+<button class="py-2.5 rounded-lg bg-navy text-white text-sm font-bold active:bg-navy-dark uppercase tracking-tight shadow-md">Approve</button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-white rounded-2xl border border-slate-100 custom-shadow p-4 space-y-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold">SM</div>
+<div>
+<h3 class="font-bold text-slate-800">Sarah Miller</h3>
+<p class="text-xs text-slate-500">Engineering • Oct 23</p>
+</div>
+</div>
+<span class="text-xl font-bold text-slate-800">2.0h</span>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-bold active:bg-slate-50 uppercase tracking-tight">Reject</button>
+<button class="py-2.5 rounded-lg bg-navy text-white text-sm font-bold active:bg-navy-dark uppercase tracking-tight shadow-md">Approve</button>
+</div>
+</div>
+</section>
+<!-- END: Pending Requests Section -->
+<!-- BEGIN: Recent Approvals Section -->
+<section class="space-y-4" data-purpose="recent-approvals">
+<h2 class="text-lg font-bold text-slate-800 px-1">Recent Approvals</h2>
+<div class="bg-white rounded-2xl border border-slate-100 custom-shadow overflow-hidden">
+<!-- Approval Item 1 -->
+<div class="flex items-center justify-between p-4 border-b border-slate-50 last:border-none active:bg-slate-50">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+<svg class="h-4 w-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-800">Alex Rivera</p>
+<p class="text-[11px] text-slate-500 font-medium uppercase tracking-tight">Yesterday • 3.5 hours</p>
+</div>
+</div>
+<svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Approval Item 2 -->
+<div class="flex items-center justify-between p-4 border-b border-slate-50 last:border-none active:bg-slate-50">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+<svg class="h-4 w-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-800">Elena Rodriguez</p>
+<p class="text-[11px] text-slate-500 font-medium uppercase tracking-tight">Oct 21 • 1.0 hour</p>
+</div>
+</div>
+<svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Approval Item 3 -->
+<div class="flex items-center justify-between p-4 border-b border-slate-50 last:border-none active:bg-slate-50">
+<div class="flex items-center gap-4">
+<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+<svg class="h-4 w-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-800">Marcus Chen</p>
+<p class="text-[11px] text-slate-500 font-medium uppercase tracking-tight">Oct 20 • 5.5 hours</p>
+</div>
+</div>
+<svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: Recent Approvals Section -->
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Floating Action Button -->
+<button aria-label="Request Overtime" class="fixed bottom-24 right-6 w-16 h-16 fab-gradient rounded-full shadow-lg shadow-emerald-200 flex items-center justify-center text-white z-30 transform active:scale-95 transition-transform">
+<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+</svg>
+</button>
+<!-- END: Floating Action Button -->
+<!-- BEGIN: BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-100 flex justify-around items-center px-2 pb-safe-area-bottom z-40 rounded-t-xl shadow-lg" data-purpose="bottom-nav"><!-- Dashboard -->
+<a href="#" class="flex flex-col items-center gap-1 py-3 px-2 group transition-all duration-200">
+  <span class="material-symbols-outlined text-slate-400 group-hover:text-navy">dashboard</span>
+  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Dashboard</span>
+</a>
+<!-- Employees (Active) -->
+<a href="#" class="flex flex-col items-center gap-1 py-3 px-2 relative transition-all duration-200">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-accent-mint rounded-b-full"></div>
+  <span class="material-symbols-outlined text-navy">group</span>
+  <span class="text-[10px] font-bold text-navy uppercase tracking-tight">Employees</span>
+</a>
+<!-- Attendance -->
+<a href="#" class="flex flex-col items-center gap-1 py-3 px-2 group transition-all duration-200">
+  <span class="material-symbols-outlined text-slate-400 group-hover:text-navy">event_available</span>
+  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Attendance</span>
+</a>
+<!-- Payroll -->
+<a href="#" class="flex flex-col items-center gap-1 py-3 px-2 group transition-all duration-200">
+  <span class="material-symbols-outlined text-slate-400 group-hover:text-navy">payments</span>
+  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Payroll</span>
+</a></nav>
+<!-- END: BottomNavBar -->
+</div>
+<!-- END: Main Container -->
+
+
+
+
+</body></html>

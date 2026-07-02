@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HR Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#cbdbf5",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#6ffbbe",
+                    "outline-variant": "#c6c6cd",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#0f172a",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary-container": "#2a1700",
+                    "on-tertiary-container": "#b87500",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface-tint": "#565e74",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dae2fd",
+                    "on-surface": "#0b1c30",
+                    "outline": "#76777d",
+                    "surface-bright": "#f8f9ff",
+                    "background": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary": "#000000",
+                    "surface": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "secondary": "#006c49",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed": "#131b2e",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#6cf8bb",
+                    "on-tertiary-fixed": "#2a1700",
+                    "primary-container": "#131b2e",
+                    "on-background": "#0b1c30",
+                    "inverse-primary": "#bec6e0",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#7c839b",
+                    "on-surface-variant": "#45464d",
+                    "on-secondary-container": "#00714d",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-container": "#e5eeff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: 100dvh;
+            background-color: #f8f9ff;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-full font-['Inter'] text-on-surface">
+<!-- Top Bar -->
+<header class="sticky top-0 z-50 bg-surface px-4 py-3 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDASu8fMoqTxTcrN2TP_E82ikCQlDNZ3_iiJ2BSPTj1BIAdJMgrmOrDHohI5duSjQu9UYf-1ZRnxw8m8usIGm_gkHV4KOsWx9tnMNMmC5LCbvDR_iGBz7DspR0uk2-aqkbAX6ScF51FJ2Y16AVhpLKeYNEDr2hQx_qtf1NNpXySElF-eptmbrb3XntniF9pYao8j9ixmf4i7X2wO4WZC9W8Q-dBLb2lrLsli5-TbbQViXNlM74tPXvzdhKtsfLBeEGs7v7gOpezPug"/>
+</div>
+<div>
+<p class="text-caption text-on-surface-variant leading-none">Welcome back,</p>
+<h1 class="text-title-md font-semibold text-on-surface">Alex Johnson</h1>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto px-4 py-6 pb-24 space-y-6">
+<!-- Overview Section -->
+<section class="space-y-1">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-lg-mobile font-bold text-on-surface">Overview</h2>
+<span class="text-caption font-medium text-primary bg-primary-fixed px-2 py-1 rounded-full">May 12, 2024</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Quick snapshot of today's operations.</p>
+</section>
+<!-- Key Metrics -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary">groups</span>
+<div>
+<p class="text-caption text-on-surface-variant">Active Workforce</p>
+<p class="text-title-md font-bold text-on-surface">1,248</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<div>
+<p class="text-caption text-on-surface-variant">Pending Loans</p>
+<p class="text-title-md font-bold text-on-surface">12</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant flex flex-col gap-2 col-span-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error">event_busy</span>
+<p class="text-caption text-on-surface-variant">Late Logs Today</p>
+</div>
+<p class="text-title-md font-bold text-on-surface">42</p>
+</div>
+</div>
+</div>
+<!-- Payroll Cycle Card -->
+<section class="bg-primary-container text-on-primary-container p-5 rounded-xl space-y-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-title-md font-semibold text-surface-container-lowest">Payroll Cycle</h3>
+<p class="text-caption text-on-primary-container opacity-80">May Monthly Cycle</p>
+</div>
+<span class="text-headline-lg font-bold text-secondary-fixed">85%</span>
+</div>
+<div class="w-full bg-on-primary-container/20 rounded-full h-2">
+<div class="bg-secondary-fixed h-2 rounded-full" style="width: 85%"></div>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="text-caption text-on-primary-container">Execution in progress</span>
+<button class="text-label-md font-semibold bg-surface-container-lowest text-primary px-4 py-2 rounded-lg">View Details</button>
+</div>
+</section>
+<!-- Action Buttons -->
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                Hire New
+            </button>
+<button class="flex-1 bg-surface-container-high text-on-surface py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold border border-outline-variant">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+                Approve Loan
+            </button>
+</div>
+<!-- Real-Time Tracking -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-title-md font-bold text-on-surface">Real-Time Tracking</h3>
+<button class="text-primary text-label-md font-medium">See All</button>
+</div>
+<div class="space-y-3">
+<!-- Employee Row -->
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary-container font-bold text-caption">JD</div>
+<div>
+<p class="text-body-md font-semibold leading-tight text-on-surface">John Doe</p>
+<p class="text-caption text-on-surface-variant">Product Designer</p>
+</div>
+</div>
+<span class="text-caption px-2 py-1 bg-secondary-container text-on-secondary-container rounded font-medium">On Time</span>
+</div>
+<!-- Employee Row -->
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary-container font-bold text-caption">AS</div>
+<div>
+<p class="text-body-md font-semibold leading-tight text-on-surface">Alice Smith</p>
+<p class="text-caption text-on-surface-variant">HR Manager</p>
+</div>
+</div>
+<span class="text-caption px-2 py-1 bg-error-container text-on-error-container rounded font-medium">Late</span>
+</div>
+<!-- Employee Row -->
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary-container font-bold text-caption">MB</div>
+<div>
+<p class="text-body-md font-semibold leading-tight text-on-surface">Mark Brown</p>
+<p class="text-caption text-on-surface-variant">Developer</p>
+</div>
+</div>
+<span class="text-caption px-2 py-1 bg-secondary-container text-on-secondary-container rounded font-medium">On Time</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant px-6 py-2 flex items-center justify-between safe-area-pb">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">how_to_reg</span>
+<span class="text-[10px] font-medium">Attendance</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Payroll</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</nav>
+</body></html>

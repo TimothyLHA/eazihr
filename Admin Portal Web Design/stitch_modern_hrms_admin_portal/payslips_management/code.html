@@ -1,0 +1,468 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>HRMS Portal - Payslips Module</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#b87500",
+                    "tertiary-fixed": "#ffddb8",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-secondary-fixed": "#002113",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-secondary": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface-dim": "#cbdbf5",
+                    "primary-container": "#131b2e",
+                    "on-tertiary": "#ffffff",
+                    "background": "#f8f9ff",
+                    "on-surface-variant": "#45464d",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#6cf8bb",
+                    "surface-container-highest": "#d3e4fe",
+                    "error": "#ba1a1a",
+                    "on-surface": "#0b1c30",
+                    "tertiary-container": "#2a1700",
+                    "secondary": "#006c49",
+                    "on-secondary-container": "#00714d",
+                    "tertiary": "#000000",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#131b2e",
+                    "secondary-fixed": "#6ffbbe",
+                    "primary-fixed": "#dae2fd",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-variant": "#d3e4fe",
+                    "outline-variant": "#c6c6cd",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "surface-container": "#e5eeff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-background": "#0b1c30",
+                    "surface-bright": "#f8f9ff",
+                    "primary": "#000000",
+                    "outline": "#76777d",
+                    "inverse-primary": "#bec6e0",
+                    "surface-tint": "#565e74",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#7c839b",
+                    "secondary-fixed-dim": "#4edea3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "40px",
+                    "container-max": "1440px",
+                    "unit": "8px",
+                    "sidebar-width": "280px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "title-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "caption": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .payslip-preview-scroll::-webkit-scrollbar { width: 6px; }
+        .payslip-preview-scroll::-webkit-scrollbar-track { background: transparent; }
+        .payslip-preview-scroll::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        .active-tab-indicator { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-container-lowest dark:bg-primary-container shadow-sm flex flex-col py-unit z-50"><div class="px-gutter mb-10 flex items-center gap-3"><div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-outlined">corporate_fare</span></div><div><h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">HR Portal</h1><p class="text-caption text-on-surface-variant -mt-1">Enterprise Admin</p></div></div><nav class="flex-1 px-4 space-y-1 custom-scrollbar overflow-y-auto"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">groups</span><span class="font-body-md text-body-md">Employees</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-md text-body-md">Attendance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">event_busy</span><span class="font-body-md text-body-md">Leave Balance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">more_time</span><span class="font-body-md text-body-md">Overtime</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">schedule</span><span class="font-body-md text-body-md">Late</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">payments</span><span class="font-body-md text-body-md">Loans</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">stars</span><span class="font-body-md text-body-md">Incentives</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="font-body-md text-body-md">Payroll</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-secondary-fixed-dim font-bold border-r-4 border-primary dark:border-secondary-fixed-dim bg-surface-container dark:bg-inverse-surface" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="font-body-md text-body-md">Payslips</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">location_on</span><span class="font-body-md text-body-md">Tracking</span></a></nav><div class="px-4 mt-auto pt-6 border-t border-outline-variant/30 space-y-1"><button class="w-full bg-primary text-white font-label-md text-label-md py-3 rounded-lg transition-transform active:scale-95 mb-4 shadow-md">Generate Report</button><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="font-body-md text-body-md">Settings</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all" href="#"><span class="material-symbols-outlined">logout</span><span class="font-body-md text-body-md">Logout</span></a><div class="flex items-center gap-3 mt-4 p-2 rounded-lg bg-surface-container-low"><img class="w-10 h-10 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmrli8IzSIYouvh5qMki-5r888z9MJ80NiQnMKc65nefMhG5Vhb3Y-__OKFkaASkl60_THoG3hyBvaWy_LZrkwPONl3y_eOoMy89BhDwMz-2j5T407YqPFgGjFVckIl4GunpkJTqJo0dpMqKq-DKgr288cA3nVMEmoUabLibUGn5bmNYON7DLqsHnHeW_IRG88goLsDpSYdkvqVGWqJmMJKY1KNSG-rMvHZurqDNI7AVPKzHbwjguRUcsBA9HGDF7zqQ9gtdup2xc" alt="Alex Sterling"><div class="overflow-hidden"><p class="font-label-md text-label-md truncate">Alex Sterling</p><p class="text-caption text-on-surface-variant truncate">Enterprise Admin</p></div></div></div></aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface dark:bg-background border-b border-outline-variant dark:border-outline flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-body-md focus:ring-2 focus:ring-primary/20" placeholder="Search employee name or ID..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right"><p class="font-label-md text-label-md leading-none text-on-surface">Alex Sterling</p><p class="font-caption text-caption text-on-surface-variant">Enterprise Admin</p></div>
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="Professional studio portrait of a corporate HR executive with a clean, modern aesthetic, soft rim lighting, and a neutral grey background. The person has a friendly but authoritative expression, wearing a tailored navy blazer. High-end editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmrli8IzSIYouvh5qMki-5r888z9MJ80NiQnMKc65nefMhG5Vhb3Y-__OKFkaASkl60_THoG3hyBvaWy_LZrkwPONl3y_eOoMy89BhDwMz-2j5T407YqPFgGjFVckIl4GunpkJTqJo0dpMqKq-DKgr288cA3nVMEmoUabLibUGn5bmNYON7DLqsHnHeW_IRG88goLsDpSYdkvqVGWqJmMJKY1KNSG-rMvHZurqDNI7AVPKzHbwjguRUcsBA9HGDF7zqQ9gtdup2xc">
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-24 pb-12 max-w-container-max mx-auto px-margin-page">
+<!-- Dashboard Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Payslips Archive</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage, generate, and review employee earnings records.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-white border border-outline-variant px-4 py-2.5 rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+                        Filter Archive
+                    </button>
+<button class="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all shadow-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="sync">sync</span>
+                        Run Bulk Generation
+                    </button>
+</div>
+</div>
+<!-- Main Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Column: Archive & Search (8 Columns) -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Quick Stats Row -->
+<div class="grid grid-cols-3 gap-gutter">
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-caption text-on-surface-variant uppercase tracking-wider mb-2">Total Disbursed</p>
+<h3 class="font-title-md text-title-md text-primary">$428,500.00</h3>
+<div class="mt-4 flex items-center text-secondary gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="text-caption font-bold">+2.4% vs last month</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-caption text-on-surface-variant uppercase tracking-wider mb-2">Generated Slips</p>
+<h3 class="font-title-md text-title-md text-primary">1,240</h3>
+<div class="mt-4 flex items-center text-on-surface-variant gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span>
+<span class="text-caption">100% Completed</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-caption text-on-surface-variant uppercase tracking-wider mb-2">Pending Review</p>
+<h3 class="font-title-md text-title-md text-primary">14</h3>
+<div class="mt-4 flex items-center text-on-tertiary-container gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span class="text-caption font-bold">Action required</span>
+</div>
+</div>
+</div>
+<!-- Search & Table Area -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<div class="flex gap-4">
+<select class="bg-surface-container-low border-none rounded-lg text-body-md py-2 px-4 focus:ring-primary/20">
+<option>October 2023</option>
+<option>September 2023</option>
+<option>August 2023</option>
+</select>
+<select class="bg-surface-container-low border-none rounded-lg text-body-md py-2 px-4 focus:ring-primary/20">
+<option>All Departments</option>
+<option>Engineering</option>
+<option>Design</option>
+<option>Sales</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-caption text-on-surface-variant">Showing 1-10 of 1,240</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">EMPLOYEE</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">PAY PERIOD</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">GROSS</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">STATUS</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-caption">JD</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Jane Doe</p>
+<p class="text-caption text-on-surface-variant">ID: EMP-0042</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Oct 01 - Oct 31, 2023</td>
+<td class="px-6 py-4 font-semibold text-body-md">$8,400.00</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Published
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="visibility">visibility</button>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors ml-2" data-icon="download">download</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary bg-surface-container-low/30">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-bold text-caption">MA</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Marcus Aurelius</p>
+<p class="text-caption text-on-surface-variant">ID: EMP-0091</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Oct 01 - Oct 31, 2023</td>
+<td class="px-6 py-4 font-semibold text-body-md">$12,200.00</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Published
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="visibility">visibility</button>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors ml-2" data-icon="download">download</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-bold text-caption">SL</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Sarah Lima</p>
+<p class="text-caption text-on-surface-variant">ID: EMP-0105</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Oct 01 - Oct 31, 2023</td>
+<td class="px-6 py-4 font-semibold text-body-md">$6,950.00</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-tertiary-fixed text-on-tertiary-fixed transition-colors"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-fixed animate-pulse"></span> Pending Review</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="visibility">visibility</button>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors ml-2" data-icon="download">download</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 bg-surface-container-low flex justify-between items-center">
+<button class="text-label-md font-label-md text-on-surface-variant hover:text-primary flex items-center gap-1 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span> Previous
+                            </button>
+<div class="flex gap-2">
+<span class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-caption font-bold shadow-sm">1</span>
+<span class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-on-surface-variant text-caption font-bold transition-colors cursor-pointer border border-transparent hover:border-outline-variant">2</span>
+<span class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-on-surface-variant text-caption font-bold transition-colors cursor-pointer border border-transparent hover:border-outline-variant">3</span>
+</div>
+<button class="text-label-md font-label-md text-on-surface-variant hover:text-primary flex items-center gap-1">
+                                Next <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Payslip Preview (4 Columns) -->
+<div class="col-span-12 lg:col-span-4">
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm sticky top-24 overflow-hidden flex flex-col max-h-[calc(100vh-140px)]">
+<div class="p-6 border-b border-outline-variant bg-surface-container-low">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-title-md text-title-md text-primary">Preview</h3>
+<p class="text-caption text-on-surface-variant">Last Generated: Oct 28, 2023</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 bg-white rounded-lg border border-outline-variant hover:bg-surface-container-lowest transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="print">print</span>
+</button>
+<button class="p-2 bg-white rounded-lg border border-outline-variant hover:bg-surface-container-lowest transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="share">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Scannable Payslip View -->
+<div class="flex-1 overflow-y-auto p-8 payslip-preview-scroll bg-white">
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-6 relative">
+<!-- Watermark Style Logo -->
+<div class="absolute top-6 right-6 opacity-10">
+<span class="material-symbols-outlined text-[64px]" data-icon="receipt_long">receipt_long</span>
+</div>
+<div class="mb-8">
+<p class="font-bold text-headline-lg text-primary leading-tight">HRMS PORTAL</p>
+<p class="text-caption text-on-surface-variant">Corporate Head Office, NY 10001</p>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-4 mb-6">
+<div>
+<p class="text-caption text-on-surface-variant uppercase tracking-tighter">EMPLOYEE</p>
+<p class="font-bold text-body-lg">Jane Doe</p>
+<p class="text-caption">Senior Product Designer</p>
+</div>
+<div class="text-right">
+<p class="text-caption text-on-surface-variant uppercase tracking-tighter">PAY DATE</p>
+<p class="font-bold text-body-lg">Oct 31, 2023</p>
+</div>
+</div>
+<!-- Earnings Section -->
+<div class="mb-6">
+<p class="font-label-md text-label-md text-on-surface-variant mb-3">EARNINGS</p>
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span class="">Basic Salary</span>
+<span class="font-semibold">$6,500.00</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="">House Rent Allowance</span>
+<span class="font-semibold">$1,200.00</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="">Performance Bonus</span>
+<span class="font-semibold">$700.00</span>
+</div>
+<div class="flex justify-between text-body-md pt-2 border-t border-outline-variant">
+<span class="font-bold">Gross Earnings</span>
+<span class="font-bold">$8,400.00</span>
+</div>
+</div>
+</div>
+<!-- Deductions Section -->
+<div class="mb-8">
+<p class="font-label-md text-label-md text-error mb-3">DEDUCTIONS</p>
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span class="">Income Tax (PAYE)</span>
+<span class="font-semibold">-$1,420.00</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="">Health Insurance</span>
+<span class="font-semibold">-$150.00</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="">Retirement Fund</span>
+<span class="font-semibold">-$310.00</span>
+</div>
+<div class="flex justify-between text-body-md pt-2 border-t border-outline-variant text-error">
+<span class="font-bold">Total Deductions</span>
+<span class="font-bold">-$1,880.00</span>
+</div>
+</div>
+</div>
+<!-- Net Pay Summary -->
+<div class="bg-primary text-white rounded-lg p-4 flex justify-between items-center">
+<div>
+<p class="text-caption text-white/70 uppercase">Net Take-Home Pay</p>
+<p class="text-[24px] font-bold">$6,520.00</p>
+</div>
+<span class="material-symbols-outlined text-[32px] text-white/50" data-icon="payments">payments</span>
+</div>
+</div>
+<div class="mt-8 flex flex-col gap-3">
+<button class="w-full bg-surface-container text-primary font-label-md text-label-md py-3 rounded-lg hover:bg-surface-container-high transition-colors">
+                                    Send to Employee Email
+                                </button>
+<button class="w-full border border-outline text-on-surface-variant font-label-md text-label-md py-3 rounded-lg hover:bg-surface-container-low transition-colors">
+                                    Void This Payslip
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Toast Notification (Hidden by Default) -->
+<div class="fixed bottom-8 right-8 bg-inverse-surface text-inverse-on-surface px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 translate-y-24 transition-all duration-500 z-50" id="toast">
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="check_circle">check_circle</span>
+<div class="font-body-md text-body-md">
+            Bulk generation for <strong>October 2023</strong> completed successfully.
+        </div>
+<button class="hover:text-white" onclick="hideToast()"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+</div>
+<script>
+        // Micro-interactions and Lightweight atmospheric effects
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-24');
+            toast.classList.add('translate-y-0');
+            setTimeout(hideToast, 5000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('translate-y-24');
+            toast.classList.remove('translate-y-0');
+        }
+
+        // Trigger simulation
+        document.querySelector('button.bg-primary.text-white.px-6').addEventListener('click', () => {
+            const btn = document.querySelector('button.bg-primary.text-white.px-6');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                showToast();
+            }, 2000);
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/10', 'bg-white');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/10', 'bg-white');
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Employee Loans Management | Executive Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d3e4fe",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-container": "#131b2e",
+                        "surface-container": "#e5eeff",
+                        "on-surface-variant": "#45464d",
+                        "primary": "#000000",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed": "#002113",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary": "#000000",
+                        "on-primary-fixed": "#131b2e",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline-variant": "#c6c6cd",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#b87500",
+                        "inverse-on-surface": "#eaf1ff",
+                        "error": "#ba1a1a",
+                        "secondary": "#006c49",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-low": "#eff4ff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#6cf8bb",
+                        "inverse-surface": "#213145",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-container": "#2a1700",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "on-primary-container": "#7c839b",
+                        "outline": "#76777d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation (Consistent with SCREEN_23) -->
+<aside class="w-64 border-r border-outline-variant bg-surface flex flex-col shrink-0"><div class="px-gutter mb-10 flex items-center gap-3"><div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-outlined">corporate_fare</span></div><h1 class="font-headline-lg text-headline-lg font-bold text-primary">HR Portal</h1></div><nav class="flex-1 px-4 space-y-1 overflow-y-auto"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">groups</span><span class="font-body-md text-body-md">Employees</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-md text-body-md">Attendance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">event_busy</span><span class="font-body-md text-body-md">Leave Balance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">more_time</span><span class="font-body-md text-body-md">Overtime</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">schedule</span><span class="font-body-md text-body-md">Late</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-secondary-fixed-dim font-bold border-r-4 border-primary dark:border-secondary-fixed-dim bg-surface-container dark:bg-inverse-surface" href="#"><span class="material-symbols-outlined">payments</span><span class="font-body-md text-body-md">Loans</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">stars</span><span class="font-body-md text-body-md">Incentives</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="font-body-md text-body-md">Payroll</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="font-body-md text-body-md">Payslips</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">location_on</span><span class="font-body-md text-body-md">Tracking</span></a></nav><div class="px-4 mt-auto pt-6 border-t border-outline-variant/30 space-y-1"><button class="w-full bg-primary text-white font-label-md text-label-md py-3 rounded-lg transition-transform active:scale-95 mb-4 shadow-md">Generate Report</button><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="font-body-md text-body-md">Settings</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all" href="#"><span class="material-symbols-outlined">logout</span><span class="font-body-md text-body-md">Logout</span></a><div class="flex items-center gap-3 p-2 mt-4 rounded-lg hover:bg-surface-container cursor-pointer"><img class="w-10 h-10 rounded-full object-cover border-2 border-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNW9p13OCy6yMstHTKSdoE7Xmn65F-dmpBEr-KRyl8_zBJ1Vk7xNrWLveBIfQxR9ljqkbz_MKVlCcTO30OWklJ4pabNx4schyWFcsdehuCighHkaf0TJeQU6D6xigpQkhx8k-E1iAHbuoh1fijtgspI2tCSk8Zx32Ug2C_Ny1aNH26Iis5BoMcDN6UNmcKDWgVEF056xL0ixUcQK9XSYyy_vLMN2Jo6XmRk5QPD9xMRfmHtbHhhVyROtKBvUKZYykEEF5EPWrB4E"><div><p class="text-sm font-bold">Alex Sterling</p><p class="text-xs text-on-surface-variant">Enterprise Admin</p></div></div></div></aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface-bright overflow-hidden">
+<!-- Top App Bar -->
+<header class="h-16 border-b border-outline-variant bg-surface flex items-center justify-between px-8 shrink-0"><div class="flex items-center flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span><input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary/10" placeholder="Search employee attendance or logs..." type="text"></div></div><div class="flex items-center gap-4"><button class="relative hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90"><span class="material-symbols-outlined text-on-surface">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-surface"></span></button><button class="hover:bg-surface-container-low rounded-full p-2 transition-transform active:scale-90"><span class="material-symbols-outlined text-on-surface">help_outline</span></button><div class="h-8 w-[1px] bg-outline-variant mx-2"></div><div class="flex items-center gap-3 pl-2 cursor-pointer hover:opacity-80 transition-opacity"><div class="text-right hidden sm:block"><p class="font-label-md text-label-md leading-none text-on-surface">Alex Sterling</p><p class="font-caption text-caption text-on-surface-variant">Enterprise Admin</p></div><img class="w-10 h-10 rounded-full object-cover border-2 border-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNW9p13OCy6yMstHTKSdoE7Xmn65F-dmpBEr-KRyl8_zBJ1Vk7xNrWLveBIfQxR9ljqkbz_MKVlCcTO30OWklJ4pabNx4schyWFcsdehuCighHkaf0TJeQU6D6xigpQkhx8k-E1iAHbuoh1fijtgspI2tCSk8Zx32Ug2C_Ny1aNH26Iis5BoMcDN6UNmcKDWgVEF056xL0ixUcQK9XSYyy_vLMN2Jo6XmRk5QPD9xMRfmHtbHhhVyROtKBvUKZYykEEF5EPWrB4E"></div></div></header>
+<!-- Scrollable Body -->
+<div class="flex-1 overflow-y-auto">
+<div class="max-w-7xl mx-auto px-8 py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h1 class="text-headline-lg text-on-surface font-black tracking-tight uppercase">Loan Management</h1>
+<p class="text-body-md text-on-surface-variant">Track employee loan applications, approvals, and repayment schedules.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">add_card</span>
+                            New Loan Request
+                        </button>
+</div>
+<!-- Dashboard Stats (Summary Row) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface border border-outline-variant rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-primary bg-surface-container p-2 rounded-lg">account_balance_wallet</span>
+<span class="text-xs font-bold text-secondary">+12.5%</span>
+</div>
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Total Disbursed</h4>
+<p class="text-2xl font-black text-on-surface">$1,240,500</p>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-primary bg-surface-container p-2 rounded-lg">pending_actions</span>
+<span class="text-xs font-bold text-error">4 urgent</span>
+</div>
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Pending Requests</h4>
+<p class="text-2xl font-black text-on-surface">18</p>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-primary bg-surface-container p-2 rounded-lg">event_repeat</span>
+<span class="text-xs font-bold text-secondary">On Track</span>
+</div>
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Active Repayments</h4>
+<p class="text-2xl font-black text-on-surface">84</p>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-primary bg-surface-container p-2 rounded-lg">emergency_home</span>
+</div>
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Collection Rate</h4>
+<p class="text-2xl font-black text-on-surface">99.2%</p>
+</div>
+</div>
+<!-- Filters Bar (Following SCREEN_23) -->
+<div class="bg-surface border border-outline-variant rounded-xl p-4 mb-8 shadow-sm">
+<div class="flex flex-col lg:flex-row gap-4">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm" placeholder="Search by employee name or loan ID..." type="text">
+</div>
+<div class="flex flex-wrap gap-4">
+<div class="relative min-w-[180px]">
+<select class="w-full pl-4 pr-10 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option>All Loan Types</option>
+<option>Personal Loan</option>
+<option>Salary Advance</option>
+<option>Emergency Loan</option>
+<option>Equipment Purchase</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+<div class="relative min-w-[150px]">
+<select class="w-full pl-4 pr-10 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option>Status: All</option>
+<option>Pending</option>
+<option>Approved</option>
+<option>Active</option>
+<option>Completed</option>
+<option>Overdue</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">filter_list</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Loan Cards Grid (Layout from SCREEN_23) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Loan Card 1 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+<div class="h-2 bg-secondary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img alt="Sarah Chen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0XoduiiuD9rdZ_KikNog0VqS3RKqxCkqV5p4H5bK3sccyQ_lA84GD3Hd7eabHrUPACOADG0JRNwWI-a_vOo4UjSq3SsrZKVlWZeMoJhDPMyWJ4wrEvaEI72Puhgk5NKs7JskDF5IBrfdGPYnRZWCK2oyi8hOVKHuov0yoawjfNZTRDADwYiei8Rvu1NhsXsBdsRRNV9y1vM9-glRmBMnCmZS4vvtmeFTfurUHXtJS_bf6mzTUwIrdiskKw1mCZq9w_CJwjvKqlJ4">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Active</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Sarah Chen</h4>
+<p class="text-xs text-outline font-medium mt-1">Salary Advance • ID: LN-4921</p>
+<div class="mt-6">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant font-medium">Repayment Progress</span>
+<span class="text-on-surface font-bold">60%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 60%"></div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-end">
+<div>
+<p class="text-[10px] text-outline font-bold uppercase">Balance</p>
+<p class="text-base font-black text-on-surface">$1,200.00</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-bold uppercase">Next Due</p>
+<p class="text-xs font-bold text-on-surface">Oct 28, 2023</p>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Schedule</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Loan Card 2 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img alt="Marcus Thorne" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW4YL-3vAhDEGQ8lPYg1L5L5rDIvsLif90WGGmCna0lPx0Cf9exiMdrafdzvaD6_tFXjM4rOkQBKyEyDO2caMZVivtDHs-zll-yJe2tt6qlf7lSYTfajpavAHYl8dMKMV5jnphofxnogOhtyRYN-HQN0-Fl2uY52X3g9UXR6mlJP-GjIRXWupCKOsNF4FomXOjzYEWDEf1846oWy4kb9MNzTfBoSatZ9zmFHbpiH6soU79HZc-G3hM0ofs97BOE7by5Q3k3e3FPiQ">
+</div>
+<span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase rounded tracking-wider">Pending</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Marcus Thorne</h4>
+<p class="text-xs text-outline font-medium mt-1">Personal Loan • ID: LN-5012</p>
+<div class="mt-6 p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="text-[10px] text-on-surface-variant font-medium">Applied Amount</p>
+<p class="text-lg font-black text-on-surface">$5,000.00</p>
+<p class="text-[10px] text-primary font-bold mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+                                        Awaiting HR Review
+                                    </p>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">Review Details</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Loan Card 3 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+<div class="h-2 bg-error w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img alt="Elena Rodriguez" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOSXFBeSbtRMqlgtYgePm0lyW9ef_sVZBKYKwWTyVDecvGjXMowOlnv5EGHJ2jaN-95SL-1Caj1Q4V7ZiaE_gFHPIFLilodpQqOJZYIC85QbcUZjLAuFWG8HmIaRyfsk8NwhYOYpI0924T_g8-7BbOR-ZtO9dzjC823mfrNQ1NcXlyF_To_1mhtWMyf_XjpFHfhHEnuMA9NaPDogBdnxAHrrzhaDpBhkSXHBWuVTNbNpr9yEbTluoiefA69sgT55H3GEWqPWjFazI">
+</div>
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold uppercase rounded tracking-wider">Overdue</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Elena Rodriguez</h4>
+<p class="text-xs text-outline font-medium mt-1">Housing Loan • ID: LN-4288</p>
+<div class="mt-6">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant font-medium">Progress</span>
+<span class="text-error font-bold">Delayed</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 25%"></div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-end">
+<div>
+<p class="text-[10px] text-outline font-bold uppercase">Arrears</p>
+<p class="text-base font-black text-error">$450.20</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-bold uppercase">Days Late</p>
+<p class="text-xs font-bold text-on-surface">12 Days</p>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">Send Reminder</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Add Loan Request Placeholder -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center p-8 bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">add</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Create New</p>
+<p class="text-xs text-on-surface-variant text-center mt-1">Manual loan entry</p>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex items-center justify-between border-t border-outline-variant pt-6">
+<p class="text-sm text-on-surface-variant">Showing <span class="font-bold text-on-surface">1-3</span> of <span class="font-bold text-on-surface">102</span> loan records</p>
+<div class="flex items-center gap-1">
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded bg-primary text-white text-sm font-bold">1</button>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface text-sm hover:bg-surface-container transition-colors">2</button>
+<span class="px-2 text-on-surface-variant">...</span>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.group');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-2px)';
+                    card.style.transition = 'transform 0.2s ease-out';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+</body></html>

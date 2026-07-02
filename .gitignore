@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Flutter/Dart
+.dart_tool/
+.pub-cache/
+.pub/
+build/
+*.lock
+.coverage/
+
+# Node
+node_modules/
+.next/

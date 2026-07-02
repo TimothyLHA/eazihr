@@ -1,0 +1,315 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Payslips Management | HR Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bento-card {
+            background: #ffffff;
+            border: 1px solid #e5eeff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
+        }
+        .glass-header {
+            backdrop-filter: blur(8px);
+            background: rgba(248, 249, 255, 0.8);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f8f9ff",
+                      "tertiary-fixed": "#ffddb8",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-secondary-fixed": "#002113",
+                      "background": "#f8f9ff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "primary-container": "#131b2e",
+                      "on-surface": "#0b1c30",
+                      "primary-fixed-dim": "#bec6e0",
+                      "primary": "#000000",
+                      "secondary": "#006c49",
+                      "secondary-fixed": "#6ffbbe",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#b87500",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "on-primary-container": "#7c839b",
+                      "surface-tint": "#565e74",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#131b2e",
+                      "inverse-primary": "#bec6e0",
+                      "surface-container-low": "#eff4ff",
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#dce9ff",
+                      "on-background": "#0b1c30",
+                      "tertiary-container": "#2a1700",
+                      "surface-dim": "#cbdbf5",
+                      "tertiary": "#000000",
+                      "outline": "#76777d",
+                      "secondary-fixed-dim": "#4edea3",
+                      "surface-variant": "#d3e4fe",
+                      "on-error-container": "#93000a",
+                      "surface": "#f8f9ff",
+                      "outline-variant": "#c6c6cd",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#6cf8bb",
+                      "on-surface-variant": "#45464d",
+                      "on-secondary-container": "#00714d",
+                      "surface-container-highest": "#d3e4fe",
+                      "surface-container": "#e5eeff",
+                      "primary-fixed": "#dae2fd",
+                      "error-container": "#ffdad6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#213145"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "caption": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface-bright text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface shadow-sm flex justify-between items-center px-4 h-16 w-full glass-header">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, professional close-up portrait of a corporate HR executive in a minimalist studio. High-key lighting highlights smooth textures and a sophisticated aesthetic. The background is a soft, neutral grey to maintain a light-mode SaaS interface look. The overall mood is authoritative yet approachable with high-end digital clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVhj6PGRb8iC74qIdyn8yalusKh4qJCtyJPuZgvX4mUhMYf_L1vKwx7agKxzeKa_n_UV4uVa9miRkVsId55KjnuvVmEvShlgqFDKpZUsFGNLjS61KGHVCSPTJhwLcumCDnPkaLshTYz28GKKa3_ItyW23Ix0KoeeFka8nA5Lcadl_vqmqijgb9UGd1xeb588Gqd41SZH2AAupGJuieI804OILwKezdysHAXQnVtGYOUVd6sMk0dEAnWucEsnB80lrOarg4RWqZq8I">
+</div>
+<h1 class="font-title-md text-title-md-mobile text-primary">HR Admin</h1>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-4 py-6 max-w-md mx-auto space-y-6">
+<!-- Welcome & Date -->
+<section>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Payroll Cycle: October 2023</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Payslips Management</h2>
+</section>
+<!-- Overview Bento Grid -->
+<section class="grid grid-cols-2 gap-4">
+<div class="bento-card p-4 col-span-2 relative overflow-hidden">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Total Payslips</p>
+<p class="text-3xl font-bold text-primary mt-1">1,248</p>
+</div>
+<div class="bg-primary-container text-on-primary-container p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-4">
+<span class="text-secondary font-semibold text-xs flex items-center">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+                        +12%
+                    </span>
+<span class="text-on-surface-variant font-caption text-caption">vs last month</span>
+</div>
+<!-- Abstract BG decoration -->
+<div class="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+<div class="bento-card p-4">
+<p class="font-label-md text-label-md text-on-surface-variant">Success Rate</p>
+<div class="flex items-baseline gap-1 mt-2">
+<p class="text-2xl font-bold text-primary">98</p>
+<p class="text-sm font-semibold text-on-surface-variant">%</p>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 98%"></div>
+</div>
+</div>
+<div class="bento-card p-4">
+<p class="font-label-md text-label-md text-on-surface-variant">Processing</p>
+<div class="flex items-baseline gap-1 mt-2">
+<p class="text-2xl font-bold text-primary">24</p>
+<p class="text-sm font-semibold text-on-surface-variant">Active</p>
+</div>
+<div class="flex items-center gap-1 mt-3">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span class="font-caption text-caption text-on-surface-variant">Real-time sync</span>
+</div>
+</div>
+</section>
+<!-- Search Bar -->
+<section class="relative">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<input class="w-full h-12 pl-10 pr-4 bg-white border border-outline-variant rounded-xl text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all shadow-sm" placeholder="Find employee or payslip ID..." type="text">
+</section>
+<!-- Recent Generations List -->
+<section>
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title-md text-title-md-mobile text-primary">Recent Generations</h3>
+<button class="text-primary font-label-md text-label-md hover:underline">View All</button>
+</div>
+<div class="space-y-3">
+<!-- List Item: Generated -->
+<div class="bento-card p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="text-primary font-bold">AS</span>
+</div>
+<div>
+<p class="font-title-md text-sm text-primary">Adrian Sterling</p>
+<p class="font-caption text-caption text-on-surface-variant">Finance • #PS-9921</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">$4,850.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-tighter">
+                            Generated
+                        </span>
+</div>
+</div>
+<!-- List Item: Pending -->
+<div class="bento-card p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="text-primary font-bold">EM</span>
+</div>
+<div>
+<p class="font-title-md text-sm text-primary">Elena Markov</p>
+<p class="font-caption text-caption text-on-surface-variant">Development • #PS-9922</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">$6,200.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase tracking-tighter">
+                            Pending
+                        </span>
+</div>
+</div>
+<!-- List Item: Failed -->
+<div class="bento-card p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] cursor-pointer border-l-4 border-error">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-error-container/30 flex items-center justify-center">
+<span class="text-error font-bold">JT</span>
+</div>
+<div>
+<p class="font-title-md text-sm text-primary">Julian Thorne</p>
+<p class="font-caption text-caption text-on-surface-variant">Design • #PS-9923</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">$5,100.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold uppercase tracking-tighter">
+                            Failed
+                        </span>
+</div>
+</div>
+<!-- List Item: Generated -->
+<div class="bento-card p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="text-primary font-bold">SC</span>
+</div>
+<div>
+<p class="font-title-md text-sm text-primary">Sarah Chen</p>
+<p class="font-caption text-caption text-on-surface-variant">Marketing • #PS-9924</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">$4,400.00</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-tighter">
+                            Generated
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bulk Action Placeholder -->
+<div class="pt-2">
+<button class="w-full h-14 bg-primary text-white rounded-xl font-semibold flex items-center justify-center gap-3 active:scale-95 transition-transform shadow-lg shadow-primary/20" onclick="handleBulkAction()">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+                Generate Bulk Payslips
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 bg-surface border-t border-outline-variant z-50 rounded-t-xl shadow-lg"><a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="dashboard">dashboard</span><span class="font-label-md text-label-md mt-1">Dashboard</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="group">group</span><span class="font-label-md text-label-md mt-1">Employees</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="event_available">event_available</span><span class="font-label-md text-label-md mt-1">Attendance</span></a><a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-3 py-1" href="#"><span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span><span class="font-label-md text-label-md mt-1">Payroll</span></a></nav>
+<script>
+        function handleBulkAction() {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing 1,248 Records...
+            `;
+            btn.disabled = true;
+            btn.classList.add('opacity-80');
+
+            setTimeout(() => {
+                btn.innerHTML = `
+                    <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                    Generation Complete
+                `;
+                btn.classList.remove('bg-primary');
+                btn.classList.add('bg-secondary');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-80', 'bg-secondary');
+                    btn.classList.add('bg-primary');
+                }, 3000);
+            }, 2500);
+        }
+
+        // Simple pull-to-refresh feel for bento cards
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('touchstart', () => card.classList.add('scale-[0.98]'));
+            card.addEventListener('touchend', () => card.classList.remove('scale-[0.98]'));
+        });
+    </script>
+</body></html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Employee Directory | Executive Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d3e4fe",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-container": "#131b2e",
+                        "surface-container": "#e5eeff",
+                        "on-surface-variant": "#45464d",
+                        "primary": "#000000",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed": "#002113",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary": "#000000",
+                        "on-primary-fixed": "#131b2e",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline-variant": "#c6c6cd",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#b87500",
+                        "inverse-on-surface": "#eaf1ff",
+                        "error": "#ba1a1a",
+                        "secondary": "#006c49",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-low": "#eff4ff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#6cf8bb",
+                        "inverse-surface": "#213145",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-container": "#2a1700",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "on-primary-container": "#7c839b",
+                        "outline": "#76777d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation (Shared Component Integration) -->
+<aside class="w-sidebar-width border-r border-outline-variant bg-surface flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3"><div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-outlined">corporate_fare</span></div><h1 class="text-headline-lg font-bold text-primary">HR Portal</h1></div>
+<nav class="flex-1 px-4 py-2 space-y-1"><div class="px-3 py-4"><h1 class="text-on-surface text-base font-medium">Admin Portal</h1><p class="text-on-surface-variant text-sm">Management Suite</p></div><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">dashboard</span><span class="text-sm font-medium">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container" href="#"><span class="material-symbols-outlined">groups</span><span class="text-sm font-medium">Employees</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">calendar_today</span><span class="text-sm font-medium">Attendance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">event_busy</span><span class="text-sm font-medium">Leave Balance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">more_time</span><span class="text-sm font-medium">Overtime</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">schedule</span><span class="text-sm font-medium">Late</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">payments</span><span class="text-sm font-medium">Loans</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">stars</span><span class="text-sm font-medium">Incentives</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-sm font-medium">Payroll</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="text-sm font-medium">Payslips</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">location_on</span><span class="text-sm font-medium">Tracking</span></a></nav>
+<div class="p-4 border-t border-outline-variant"><div class="mb-4 space-y-1"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="text-sm font-medium">Settings</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all" href="#"><span class="material-symbols-outlined">logout</span><span class="text-sm font-medium">Logout</span></a></div><div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container cursor-pointer"><div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB28V4PrCdT2XI3ZCb9VqQJaNcgda6T8qRAK7S_YTuDz_aBwd6-Ib6EZCxpeRiNjjhdvuvvZ6Xl-duiZ6u_I-q4QVo0V9ZAiji6kuC2y-pH6b_JQnBWna9sDrWrvTde5wiqzUuOK2GvD57BvQCCrz88YR5KPlG8EVCAkISYSc8Ck7XJEPDYCiUx410vjdTndB2W-SqUV2J9aKkVZs8IcG3_LSFD1Yiie7xLBNMi1JWOM3CISTWmEmDmyygzcfe07Csn80AgSL2T_jc')"></div><div><p class="text-sm font-bold">Alex Sterling</p><p class="text-xs text-on-surface-variant">Enterprise Admin</p></div></div></div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface-bright overflow-hidden">
+<!-- Top App Bar -->
+<header class="h-16 border-b border-outline-variant bg-surface flex items-center justify-between px-8 shrink-0">
+<div class="flex items-center gap-4">
+<h3 class="text-title-md text-on-surface">Overview</h3>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined">sell</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined">clear</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Body -->
+<div class="flex-1 overflow-y-auto">
+<div class="max-w-container-max mx-auto px-margin-page py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h1 class="text-headline-lg text-on-surface font-black tracking-tight">Employee Directory</h1>
+<p class="text-body-md text-on-surface-variant">Manage and organize your global workforce with precision.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                            Add New Employee
+                        </button>
+</div>
+<!-- Filters Bar -->
+<div class="bg-surface border border-outline-variant rounded-xl p-4 mb-8 shadow-sm">
+<div class="flex flex-col lg:flex-row gap-4">
+<!-- Search -->
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm" placeholder="Search by name, email, role, or ID..." type="text">
+</div>
+<div class="flex flex-wrap gap-4">
+<!-- Department Dropdown -->
+<div class="relative min-w-[180px]">
+<select class="w-full pl-4 pr-10 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option>All Departments</option>
+<option>Engineering</option>
+<option>Design</option>
+<option>Marketing</option>
+<option>Sales</option>
+<option>Operations</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+<!-- Status Dropdown -->
+<div class="relative min-w-[150px]">
+<select class="w-full pl-4 pr-10 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option>Active Status</option>
+<option>Active</option>
+<option>On Leave</option>
+<option>Remote</option>
+<option>Contractor</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">filter_list</span>
+</div>
+<!-- View Toggle -->
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="p-1.5 bg-surface rounded shadow-sm text-primary">
+<span class="material-symbols-outlined block">grid_view</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined block">view_list</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Directory Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Employee Card 1 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group" style="transform: translateY(0px);">
+<div class="h-2 bg-secondary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young female software engineer with glasses, wearing a casual navy blue sweater. She has a confident smile, looking directly at the camera. The background is a brightly lit modern tech office with soft wooden textures and lush green plants. High definition, professional corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0XoduiiuD9rdZ_KikNog0VqS3RKqxCkqV5p4H5bK3sccyQ_lA84GD3Hd7eabHrUPACOADG0JRNwWI-a_vOo4UjSq3SsrZKVlWZeMoJhDPMyWJ4wrEvaEI72Puhgk5NKs7JskDF5IBrfdGPYnRZWCK2oyi8hOVKHuov0yoawjfNZTRDADwYiei8Rvu1NhsXsBdsRRNV9y1vM9-glRmBMnCmZS4vvtmeFTfurUHXtJS_bf6mzTUwIrdiskKw1mCZq9w_CJwjvKqlJ4">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Active</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Sarah Chen</h4>
+<p class="text-sm text-on-surface-variant font-medium">Senior Frontend Engineer</p>
+<p class="text-xs text-outline font-medium mt-1">Engineering • San Francisco</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        s.chen@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +1 (555) 012-3456
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 2 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group" style="transform: translateY(0px);">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a mid-30s Caucasian male with short brown hair and a neat beard, wearing a tailored light blue oxford shirt. He is standing in a minimalist contemporary office lobby with large windows. The lighting is natural and bright, capturing a clean professional aesthetic with high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW4YL-3vAhDEGQ8lPYg1L5L5rDIvsLif90WGGmCna0lPx0Cf9exiMdrafdzvaD6_tFXjM4rOkQBKyEyDO2caMZVivtDHs-zll-yJe2tt6qlf7lSYTfajpavAHYl8dMKMV5jnphofxnogOhtyRYN-HQN0-Fl2uY52X3g9UXR6mlJP-GjIRXWupCKOsNF4FomXOjzYEWDEf1846oWy4kb9MNzTfBoSatZ9zmFHbpiH6soU79HZc-G3hM0ofs97BOE7by5Q3k3e3FPiQ">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Remote</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Marcus Thorne</h4>
+<p class="text-sm text-on-surface-variant font-medium">Creative Director</p>
+<p class="text-xs text-outline font-medium mt-1">Design • London</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        m.thorne@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +44 20 7946 0123
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 3 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group" style="transform: translateY(0px);">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a middle-aged Black woman with elegant braided hair, wearing a structured emerald green blazer. She exudes authority and warmth. Set against a background of a high-rise office window showing a soft-focus city skyline at dusk. Professional photography, vibrant colors, executive atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOSXFBeSbtRMqlgtYgePm0lyW9ef_sVZBKYKwWTyVDecvGjXMowOlnv5EGHJ2jaN-95SL-1Caj1Q4V7ZiaE_gFHPIFLilodpQqOJZYIC85QbcUZjLAuFWG8HmIaRyfsk8NwhYOYpI0924T_g8-7BbOR-ZtO9dzjC823mfrNQ1NcXlyF_To_1mhtWMyf_XjpFHfhHEnuMA9NaPDogBdnxAHrrzhaDpBhkSXHBWuVTNbNpr9yEbTluoiefA69sgT55H3GEWqPWjFazI">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Active</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Elena Rodriguez</h4>
+<p class="text-sm text-on-surface-variant font-medium">VP of Operations</p>
+<p class="text-xs text-outline font-medium mt-1">Management • New York</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        e.rod@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +1 (555) 987-6543
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Employee Card 4 -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group" style="transform: translateY(0px);">
+<div class="h-2 bg-tertiary-fixed-dim w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A cheerful East Asian man in his 20s, wearing a simple grey hoodie and headphones around his neck. He has a friendly expression, set in a creative studio environment with colorful art on the walls and warm lighting. Digital nomad style, professional yet approachable vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIG951dvTBuACqq0AV7G4TTj9o504bz2iAPGS53m6BrtzaZ9C5ahaY6PUbSG2rvK5iWaqTlKUJCjZhi7AikAzJ86YlRj6BfFz6cNKt6YoxB-eZd3RK_vBxchLSkkFC1tA4e7rs1WSgmte5b-sDypZLr2nbK0BadB0E8MC9S7CY4VUGqdkUetTHNJU0fMCOCeZr5X274n8jLZ9xiPWpJlJsUEVYyyPI-TppKHE1USutRD__mxf-u-3kp4d1qkRb9Gv4OO_fZaZpOyo">
+</div>
+<span class="px-2 py-1 bg-tertiary-fixed-dim text-on-tertiary-fixed-variant text-[10px] font-bold uppercase rounded tracking-wider">On Leave</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Yuki Tanaka</h4>
+<p class="text-sm text-on-surface-variant font-medium">Product Designer</p>
+<p class="text-xs text-outline font-medium mt-1">Design • Tokyo</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        y.tanaka@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +81 3 1234 5678
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Additional Cards for Grid Completeness -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+<div class="h-2 bg-secondary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a South Asian man in a smart-casual blazer over a polo shirt. He is smiling warmly in a co-working space with a brick wall background and industrial lighting. The aesthetic is modern, professional, and inviting. Light mode photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjLvi-eAFHcjxAJMlJzb8j3dojS7hVMwnTNi5LzXqVNyEsmfiktpVjsDW4_F-jSyNcNoNy_0TTdBqAw_IB-fuyZMloyw22cvGx0B6JAysviJXSXMhGyEkBYPCQWcDYJfnSkBZk-tc_9oTqwX-ysu5ujC3AKHRP44C2s8TgAbnSw0C5VpzvfJeuafIQiBthI-fZVLi1Ab3LbZ592HTaViUEAETbDOPQy-25aHCOb6F7l-B90VPEFJMPfW4sAhaBSwVgWtVwz1z-ZOo">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Active</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Arjun Varma</h4>
+<p class="text-sm text-on-surface-variant font-medium">Marketing Lead</p>
+<p class="text-xs text-outline font-medium mt-1">Marketing • Mumbai</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        a.varma@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +91 22 9876 5432
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A stylish young woman with short curly blonde hair wearing a bright yellow sweater and large artistic earrings. She is sitting in a minimalist cafe with high-key lighting. The style is modern, fashionable, and represents a creative agency professional. Sharp focus, clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCob4w_AG3sZ3OPBnrThROQFGspfT50E1sLz2IiJ9I3Yu4dlsGvFuCXorKNv0PQhOA-wefxbNeSFjub5r_QdpBNbPbEy67YrMKraWfJzDVEbopqUYp4O-exrGqhhiCHFXhrYzZvY3nknOAgt1u8U3TzpnS8s839squc89XHby-Tx-AFqZsF1e9miw_t7JD-0ljhlRLfccTQJSr5-AXfxC7GM6GXakeerwChN-pKklILz-NTYQlPo5OB-duVicJWhTgYNilgxGFwh28">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Active</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Sophie Mueller</h4>
+<p class="text-sm text-on-surface-variant font-medium">UX Researcher</p>
+<p class="text-xs text-outline font-medium mt-1">Design • Berlin</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        s.mueller@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +49 30 1234567
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group" style="transform: translateY(0px);">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a distinguished man in his 50s with salt-and-pepper hair, wearing a navy blue turtleneck. He is in a library-like setting with blurred bookshelves in the background. The mood is intellectual and seasoned. High-quality lighting, professional portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_HOxiLEifKqOXImr3ieHun_-1cVxPT3y7JDso_wMQZBMSiI3RFHx_LbOH2ruh_Uja3j3GgsAxTFZy0SbcN2-ddjgRoIYWoC5XSEhP5aIpCfKKmFdWJReneFnBbLTTui86IC3xsBpcBEALmCRco4vuVkm9y73TbAMG6MS0ba54lQ1w1oFYwslRUcRY0O_WP7po4zN18cJhRMtOg70lfNIFzgjDlOMoWhJXmlKtdJy0Ocm3_xGzMCGDpVqdBuzu08HnaAYubVg4JwI">
+</div>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded tracking-wider">Remote</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">David Foster</h4>
+<p class="text-sm text-on-surface-variant font-medium">Chief Security Officer</p>
+<p class="text-xs text-outline font-medium mt-1">Management • Washington DC</p>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                        d.foster@executive.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">call</span>
+                                        +1 (202) 555-0199
+                                    </div>
+</div>
+</div>
+<div class="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+<button class="text-xs font-bold text-primary hover:underline">View Profile</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Empty State/Add Placeholder -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center p-8 bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group" style="transform: translateY(0px);">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">add</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Add Member</p>
+<p class="text-xs text-on-surface-variant text-center mt-1">Expand your department</p>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex items-center justify-between border-t border-outline-variant pt-6">
+<p class="text-sm text-on-surface-variant">Showing <span class="font-bold text-on-surface">1-8</span> of <span class="font-bold text-on-surface">124</span> employees</p>
+<div class="flex items-center gap-1">
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded bg-primary text-white text-sm font-bold">1</button>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface text-sm hover:bg-surface-container transition-colors">2</button>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface text-sm hover:bg-surface-container transition-colors">3</button>
+<span class="px-2 text-on-surface-variant">...</span>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface text-sm hover:bg-surface-container transition-colors">16</button>
+<button class="w-9 h-9 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Quick Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dropdown interaction simulation
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.addEventListener('change', (e) => {
+                    console.log('Filter applied:', e.target.value);
+                });
+            });
+
+            // Card hover effect enhancement
+            const cards = document.querySelectorAll('.group');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

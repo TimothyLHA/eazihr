@@ -1,0 +1,267 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-glow {
+            box-shadow: 0 0 15px rgba(111, 251, 190, 0.4);
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(248, 249, 255, 0.9) 0%, rgba(248, 249, 255, 0) 15%, rgba(248, 249, 255, 0) 85%, rgba(248, 249, 255, 1) 100%);
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: contain;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d3e4fe",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed-variant": "#005236",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-container": "#2a1700",
+                        "surface-container-high": "#dce9ff",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-primary-container": "#7c839b",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#000000",
+                        "primary-fixed": "#dae2fd",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "surface-tint": "#565e74",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#6cf8bb",
+                        "on-tertiary-container": "#b87500",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "outline": "#76777d",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-fixed": "#002113",
+                        "primary-container": "#131b2e",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "secondary": "#006c49",
+                        "background": "#f8f9ff",
+                        "primary": "#000000",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "outline-variant": "#c6c6cd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "sidebar-width": "280px",
+                        "margin-page": "40px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface select-none">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm dark:shadow-none flex justify-between items-center px-gutter h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate employee for an HR management application. The person is smiling warmly, dressed in professional business attire. The background is a soft-focus office environment with clean, minimalist lines and neutral tones, fitting the executive precision style of the app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_lkSrRv97LVyMzV0Pdc0QwYIlIC9m7RMARube3sZaAfbRfe_sSdsop3sAuA3O329fKZ6cMBMgmBTh2khj7J8zsweC-yt_FqrqmzcsCIUSWxszvtwWed-KoSNiaqm2ifkXIGE9TjwaOYbYIr95jL0mQrEjZ9pKfMX-IhAEBGKMuWZe8XcCO2fNPlHqyOrNmY6Wfzx0Af3PQUdP-KR1qcnvQQH_6eAJvFqSTGj2xNS2LtRpitdkbhtpZTQt6ywhywSL98YL2QN0gEk">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">Executive HR</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="pt-16 pb-24 min-h-screen flex flex-col">
+<!-- Map Canvas Section -->
+<section class="relative w-full h-[442px] overflow-hidden">
+<div class="absolute inset-0 bg-surface-container-low">
+<div class="w-full h-full bg-cover bg-center" data-alt="A high-fidelity minimalist satellite map view of an urban industrial area with clean vector lines. The map shows a highlighted navy blue route path connecting a central point to an industrial park. The aesthetic is professional and clinical, using a palette of soft greys, slate blues, and clean whites, perfectly matching the SaaS-inspired HR dashboard style." data-location="New York City" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzUZaBC919_XrImMNNixsoJxagpJfYXQMiMlpz-VIZ9T6gvSXxD5zVJrJjI0FvUNz0M46qPvLH4bD9VEBz2sULnLSs5Hi4FnkLBvVcSy2ddlVhD4O3IFU67vbW_lyxFUd-0o-aBdN2Ra2tlWNRqyBTHHLl4n5_4EORw8z7yYRSPdpzcQPDHYH6dOtIO0i4pTEeTFUQ5Lmry8FFRR3dxyx1TEQWjUigTjX_3c2SWiaPYs1gZFdMnh-riXfy3u2eCQUtpwuGpS_bNRw')"></div>
+<!-- Interactive Map UI Overlays -->
+<div class="map-gradient-overlay absolute inset-0 pointer-events-none"></div>
+<!-- Floating Map Controls -->
+<div class="absolute top-4 right-4 flex flex-col gap-2">
+<button class="bg-white/90 backdrop-blur-md w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-primary active:scale-95">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="bg-white/90 backdrop-blur-md w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-primary active:scale-95">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Active Sync Indicator -->
+<div class="absolute top-4 left-4">
+<div class="bg-primary-container text-white px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg backdrop-blur-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Direct Sync with Admin Portal</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Control & Details Panel -->
+<section class="px-gutter -mt-8 relative z-10 flex flex-col gap-6">
+<!-- Main Toggle Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<h2 class="font-title-md text-title-md text-primary">Location Sharing</h2>
+<p class="text-on-surface-variant font-caption text-caption">Manage your real-time visibility</p>
+</div>
+<!-- Custom Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="share-toggle" type="checkbox">
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Active Trip Indicator (Conditional) -->
+<div class="mt-6 p-4 bg-surface-container-low rounded-lg border border-secondary-container/30 flex items-center gap-4" id="active-trip-status">
+<div class="bg-secondary-container text-on-secondary-container p-2 rounded-full">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-secondary-container font-label-md text-label-md uppercase">Active Trip Mode</span>
+<span class="text-primary font-body-md text-body-md">Currently transmitting secure telemetry.</span>
+</div>
+</div>
+</div>
+<!-- Bento Detail Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Status Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex flex-col gap-3">
+<span class="material-symbols-outlined text-secondary">insights</span>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Current Status</p>
+<p class="text-primary font-title-md text-title-md mt-1">En Route</p>
+</div>
+</div>
+<!-- Since Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex flex-col gap-3">
+<span class="material-symbols-outlined text-secondary">schedule</span>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Active Since</p>
+<p class="text-primary font-title-md text-title-md mt-1">08:42 AM</p>
+</div>
+</div>
+<!-- Destination Card -->
+<div class="col-span-2 bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-3 rounded-full">
+<span class="material-symbols-outlined text-primary">warehouse</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Destination</p>
+<p class="text-primary font-title-md text-title-md">North Warehouse</p>
+</div>
+</div>
+<button class="text-secondary font-label-md text-label-md border border-secondary/20 px-4 py-2 rounded-full hover:bg-secondary/5">
+                        EDIT
+                    </button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary py-4 rounded-xl text-white font-body-lg text-body-lg font-semibold active:scale-[0.98] transition-transform shadow-lg">
+                Complete Current Trip
+            </button>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-2 pb-safe bg-surface dark:bg-surface-dim z-50 rounded-t-xl shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_note</span>
+<span class="font-label-md text-label-md mt-1">Leave</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md mt-1">Payslips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-1 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions
+        const toggle = document.getElementById('share-toggle');
+        const statusPanel = document.getElementById('active-trip-status');
+
+        toggle.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                statusPanel.style.opacity = '1';
+                statusPanel.style.transform = 'translateY(0)';
+            } else {
+                statusPanel.style.opacity = '0.4';
+                statusPanel.style.transform = 'translateY(2px)';
+            }
+        });
+
+        // Simple smooth entrance
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('opacity-0');
+            setTimeout(() => {
+                document.body.classList.remove('opacity-0');
+                document.body.classList.add('transition-opacity', 'duration-500', 'opacity-100');
+            }, 10);
+        });
+    </script>
+</body></html>

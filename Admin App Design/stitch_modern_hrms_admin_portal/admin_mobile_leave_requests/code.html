@@ -1,0 +1,307 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Admin Portal - Leave Requests</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#d3e4fe",
+                    "outline-variant": "#c6c6cd",
+                    "primary-fixed": "#dae2fd",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed": "#131b2e",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-background": "#0b1c30",
+                    "primary": "#000000",
+                    "outline": "#76777d",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container": "#e5eeff",
+                    "surface-tint": "#565e74",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#bec6e0",
+                    "on-primary-container": "#7c839b",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-secondary-fixed": "#002113",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#b87500",
+                    "surface-dim": "#cbdbf5",
+                    "primary-container": "#131b2e",
+                    "on-tertiary": "#ffffff",
+                    "background": "#f8f9ff",
+                    "on-surface-variant": "#45464d",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#6cf8bb",
+                    "surface-container-low": "#eff4ff",
+                    "tertiary": "#000000",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#2a1700",
+                    "secondary": "#006c49",
+                    "on-secondary-container": "#00714d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "title-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "caption": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.5); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-surface-bright dark:bg-surface-dim shadow-sm flex justify-between items-center px-4 py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional corporate headshot of a high-level HR administrator in a clean, modern office setting. The individual has a confident yet approachable expression. The lighting is soft and natural, emphasizing a bright and airy atmosphere. The background features blurred minimalist architectural elements with a neutral color palette of soft greys and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuBK-OwpUeass-xJheBYr9cR42uWbwIjzW6SR3bOqK5eTtzTJd-maO-T01gXiKj67BwNIG7qpLB7Iwt8brDyX9shGhg2JzmTzxotygJmAWPFmEb53HhrcxwixQB6zx1AaipkGAJKmJoCpYBo0aqQsYu9k27yB3-ZdZ_mmBPfK2z6D_v8bLKisVNrMhWwdja69x4O3Y9knHxnbt7yCGvSKoug82Vpvw0Nv-X-GrnDS0EvPnbE3K1cTADWv57hRbL6UP33_iSWZT2o4">
+</div>
+<span class="font-title-md text-title-md font-semibold text-primary dark:text-primary-fixed">Admin Portal</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">notifications</span>
+</button>
+</header>
+<main class="max-w-[1440px] mx-auto pb-24">
+<!-- Dashboard Statistics Section (Bento Style) -->
+<section class="px-4 py-6">
+<h2 class="font-title-md text-title-md text-primary mb-4">Leave Overview</h2>
+<div class="grid grid-cols-2 gap-3">
+<div class="col-span-2 p-5 rounded-xl bg-primary text-on-primary shadow-sm flex justify-between items-end">
+<div>
+<p class="font-label-md text-label-md opacity-80 uppercase tracking-wider mb-1">Total Requests</p>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile">142</h3>
+</div>
+<div class="flex items-center text-secondary-container gap-1 pb-1">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="font-label-md text-label-md">12%</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase">Pending</p>
+<h3 class="font-title-md text-title-md text-primary">28</h3>
+<div class="mt-2 w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 40%"></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase">Approved Today</p>
+<h3 class="font-title-md text-title-md text-secondary">15</h3>
+<div class="mt-2 w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter Bar -->
+<section class="px-4 mb-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-none rounded-xl text-body-md focus:ring-2 focus:ring-primary" placeholder="Search employees or types..." type="text">
+</div>
+</section>
+<!-- Pending Requests List -->
+<section class="px-4 space-y-4">
+<div class="flex justify-between items-center mb-2">
+<h2 class="font-title-md text-title-md text-primary">Pending Requests</h2>
+<button class="text-on-secondary-container font-label-md text-label-md px-2 py-1 rounded hover:bg-secondary-container transition-colors">VIEW ALL</button>
+</div>
+<!-- Request Card 1 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm transition-all hover:shadow-md">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a professional employee with a warm, friendly smile. The background is a clean, modern office environment with blurred plants and warm lighting, creating a high-end, contemporary corporate look. Soft color palette with professional lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd7F2cOQ2aN2m_y_Cec7Y-gUPkD8I_I3wbWA4QtZj4qM434UaD-UeQGOZ15OicFLMfAXmg4U515QiBgBThGV31IHsR3oUCSAxjSWPpWcDZRy_PRw4oJvYxuYBG6XDRtDM2KYXJqfNocbwVowMhFkqJvEapEuoYAouCoYEohNQ4VOin7E6ltrQ1gv5VpnO2-ILAJmIbZA96p5pfEGCsfv_CSKBFsj-XxCSOQswcI4o320KhZhJ4d-iIUfiRB7qiXBJaEFifBsYlwJk">
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-primary">Marcus Thorne</h4>
+<p class="font-caption text-caption text-on-surface-variant">Senior UX Designer</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-md text-label-md">ANNUAL</span>
+</div>
+<div class="flex items-center gap-4 mb-6 px-1">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">From</span>
+<span class="font-body-md text-body-md font-medium">Oct 12, 2023</span>
+</div>
+<span class="material-symbols-outlined text-outline">arrow_forward</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">To</span>
+<span class="font-body-md text-body-md font-medium">Oct 15, 2023</span>
+</div>
+<div class="ml-auto flex flex-col items-end">
+<span class="font-caption text-caption text-outline uppercase">Duration</span>
+<span class="font-body-md text-body-md font-medium">4 Days</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-2.5 px-4 rounded-lg border border-outline-variant text-primary font-label-md text-label-md hover:bg-surface-container-low active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">close</span> REJECT
+                    </button>
+<button class="py-2.5 px-4 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check</span> APPROVE
+                    </button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm transition-all hover:shadow-md">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A profile photo of a sophisticated female executive in her early 30s, wearing business casual attire. The setting is a minimalist, modern workspace with natural light pouring in from a side window. The mood is professional, calm, and high-quality, mirroring a premium SaaS management aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxiJW37hgRE2cxPA7Of9i9EfYsTMRcSpXcPaPCxvCoCmshZbJxhZklIurUXTYO-iUeeYXHI6R3cHHky55sWGrF8JhSHWYlBoLbB4sNM_tv1l7XkJjB_WfPiMZUBf5NidzftQ1rXhWW2g3dSHGWjK7OITA9bH1kP1xWhBR3nCNEd_r_ZBTSgZTsHPv3Eylrk9UYJvYClzeKRTra-zxy2SZJnzo_f8_NpgI0ChQuBSZmwx-nj9F38tF6KD-6ZwVCkC8V4vhlC3YMhlM">
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-primary">Sarah Jenkins</h4>
+<p class="font-caption text-caption text-on-surface-variant">Lead Developer</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-error-container text-on-error-container rounded-full font-label-md text-label-md">SICK LEAVE</span>
+</div>
+<div class="flex items-center gap-4 mb-6 px-1">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">From</span>
+<span class="font-body-md text-body-md font-medium">Oct 10, 2023</span>
+</div>
+<span class="material-symbols-outlined text-outline">arrow_forward</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">To</span>
+<span class="font-body-md text-body-md font-medium">Oct 11, 2023</span>
+</div>
+<div class="ml-auto flex flex-col items-end">
+<span class="font-caption text-caption text-outline uppercase">Duration</span>
+<span class="font-body-md text-body-md font-medium">2 Days</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-2.5 px-4 rounded-lg border border-outline-variant text-primary font-label-md text-label-md hover:bg-surface-container-low active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">close</span> REJECT
+                    </button>
+<button class="py-2.5 px-4 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check</span> APPROVE
+                    </button>
+</div>
+</div>
+<!-- Request Card 3 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm transition-all hover:shadow-md">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Headshot of a focused professional male employee, possibly in engineering or product management. He is set against a blurred background of a modern architectural space with structural lines. Bright, natural lighting and sharp focus on the subject. Clean, crisp image quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSjRwWnHpjKEz5LmLJrJmIDPz-uFTAEhrqphj1cZN7Nfr8ib3YRtA6T8nisnD-WM_cLEWdN5YwrMjVFtGgjKt1CK92LdreCs5v86cL_ZARyKe-S4uJcYqiKdd1mfUU3x79pfspCNC7zLB_tVyn-zxNrYHB6SV5rJXGIk6yhpWyLEoZPjMKXVGleHO0tIRS64DXvzCGwVj-yJdr2CEpIg7JvfNr_4IHWyzOuBmT3o8EspiH3Rjg-unXbU6z45Clk3dLACbUaRtGNi0">
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-primary">Julian Reed</h4>
+<p class="font-caption text-caption text-on-surface-variant">Product Manager</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-md text-label-md">PERSONAL</span>
+</div>
+<div class="flex items-center gap-4 mb-6 px-1">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">From</span>
+<span class="font-body-md text-body-md font-medium">Oct 18, 2023</span>
+</div>
+<span class="material-symbols-outlined text-outline">arrow_forward</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline uppercase">To</span>
+<span class="font-body-md text-body-md font-medium">Oct 18, 2023</span>
+</div>
+<div class="ml-auto flex flex-col items-end">
+<span class="font-caption text-caption text-outline uppercase">Duration</span>
+<span class="font-body-md text-body-md font-medium">1 Day</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-2.5 px-4 rounded-lg border border-outline-variant text-primary font-label-md text-label-md hover:bg-surface-container-low active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">close</span> REJECT
+                    </button>
+<button class="py-2.5 px-4 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check</span> APPROVE
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-tint transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-label-md text-label-md mt-1">Dashboard</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-tint transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">group</span>
+    <span class="font-label-md text-label-md mt-1">Employees</span>
+  </a>
+  <a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-fixed text-on-secondary-container dark:text-on-secondary-fixed rounded-full px-4 py-1 active:scale-90 transition-transform duration-150" href="#">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_available</span>
+    <span class="font-label-md text-label-md mt-1">Attendance</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-tint transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">payments</span>
+    <span class="font-label-md text-label-md mt-1">Payroll</span>
+  </a>
+</nav>
+<script>
+        // Micro-interactions for action buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.innerText.includes('APPROVE') || this.innerText.includes('REJECT')) {
+                    const card = this.closest('.p-4');
+                    card.style.transform = 'scale(0.95)';
+                    card.style.opacity = '0.5';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body></html>

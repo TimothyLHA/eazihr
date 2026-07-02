@@ -1,0 +1,296 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        /* Custom scrollbar for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#006c49",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "on-error": "#ffffff",
+                      "surface-container": "#e5eeff",
+                      "surface-bright": "#f8f9ff",
+                      "on-tertiary": "#ffffff",
+                      "surface-dim": "#cbdbf5",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#d3e4fe",
+                      "tertiary-fixed": "#ffddb8",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-surface-variant": "#45464d",
+                      "on-primary-container": "#7c839b",
+                      "primary-fixed": "#dae2fd",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface": "#f8f9ff",
+                      "on-tertiary-container": "#b87500",
+                      "primary-container": "#131b2e",
+                      "on-secondary-container": "#00714d",
+                      "on-tertiary-fixed": "#2a1700",
+                      "secondary-fixed-dim": "#4edea3",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary-fixed-dim": "#bec6e0",
+                      "outline-variant": "#c6c6cd",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#213145",
+                      "on-primary-fixed": "#131b2e",
+                      "error-container": "#ffdad6",
+                      "inverse-primary": "#bec6e0",
+                      "tertiary-container": "#2a1700",
+                      "background": "#f8f9ff",
+                      "tertiary": "#000000",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "on-secondary-fixed": "#002113",
+                      "on-error-container": "#93000a",
+                      "surface-tint": "#565e74",
+                      "surface-container-low": "#eff4ff",
+                      "on-background": "#0b1c30",
+                      "outline": "#76777d",
+                      "surface-container-high": "#dce9ff",
+                      "surface-variant": "#d3e4fe",
+                      "on-surface": "#0b1c30",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#6cf8bb",
+                      "primary": "#000000"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "gutter": "24px",
+                      "sidebar-width": "280px",
+                      "margin-page": "40px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "caption": ["Inter"],
+                      "title-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-surface-bright dark:bg-surface-dim shadow-sm flex justify-between items-center px-4 py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female HR administrator with a warm and capable expression. She is wearing corporate attire in a modern, brightly lit office environment with soft focus greenery in the background. The aesthetic is clean, professional, and follows a light-mode color palette with high-fidelity detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7GK505xoQs8H_vztN1jPUFprtitenFG8GRPvUs3c89FRO8lV231km_5xyx2f0SvH5SAxNDTqrGaoc2daEcYP7_u6S8lHLlgQK8vFNszl2WA4fPH05MbkGVCzx0qMokTA2E6mzXaRhfECJ2iw87P1Gw8rJN50vdPa_jK3QshuUCTvdNrpUHoRSn-v-PgjpkCsZaKRJAmGCt_PZghVVtSblLS_fy0NWRgOG_K2Ijz3sNW8C0n8jgLQ9TwuIfVGOdke0mqI8Q-NwfZ0">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Overtime</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="px-4 py-6 space-y-8 max-w-lg mx-auto">
+<!-- Summary Stats Bento Section -->
+<section class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-primary-container p-6 rounded-xl shadow-sm relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-on-primary-container mb-1">TOTAL OVERTIME (OCTOBER)</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-white">428</span>
+<span class="font-title-md text-title-md text-primary-fixed-dim">hrs</span>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-sm">trending_up</span>
+<span class="font-body-md text-body-md text-primary-fixed-dim">+12% vs last month</span>
+</div>
+</div>
+<!-- Abstract background decoration -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+</div>
+<div class="bg-white border border-outline-variant p-5 rounded-xl shadow-sm">
+<p class="font-label-md text-label-md text-on-surface-variant mb-2">TOTAL COST</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-primary">$18,450</p>
+<p class="font-caption text-caption text-secondary mt-1">Within Budget</p>
+</div>
+<div class="bg-white border border-outline-variant p-5 rounded-xl shadow-sm">
+<p class="font-label-md text-label-md text-on-surface-variant mb-2">UTILIZATION</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-primary">84%</p>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 84%"></div>
+</div>
+</div>
+</section>
+<!-- Pending Requests Section -->
+<section>
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-md text-title-md text-primary">Pending Requests</h2>
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded-full font-label-md text-label-md">3 New</span>
+</div>
+<div class="space-y-4">
+<!-- Request Card 1 -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary">JD</div>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Jordan Davis</p>
+<p class="font-caption text-caption text-on-surface-variant">Product Design • Oct 24</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">4.5h</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2 italic">"Finalizing the high-fidelity mockups for the Q4 sprint release..."</p>
+<div class="flex gap-3">
+<button class="flex-1 py-2.5 rounded-lg border border-outline font-label-md text-label-md text-primary hover:bg-surface-container-low active:bg-surface-container transition-colors">REJECT</button>
+<button class="flex-1 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">APPROVE</button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary">SM</div>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Sarah Miller</p>
+<p class="font-caption text-caption text-on-surface-variant">Engineering • Oct 23</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">2.0h</span>
+</div>
+<div class="flex gap-3 mt-4">
+<button class="flex-1 py-2.5 rounded-lg border border-outline font-label-md text-label-md text-primary">REJECT</button>
+<button class="flex-1 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md">APPROVE</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Approvals -->
+<section>
+<h2 class="font-title-md text-title-md text-primary mb-4">Recent Approvals</h2>
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="divide-y divide-outline-variant">
+<div class="p-4 flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Alex Rivera</p>
+<p class="font-caption text-caption text-on-surface-variant">Yesterday • 3.5 hours</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="p-4 flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Elena Rodriguez</p>
+<p class="font-caption text-caption text-on-surface-variant">Oct 21 • 1.0 hour</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="p-4 flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Marcus Chen</p>
+<p class="font-caption text-caption text-on-surface-variant">Oct 20 • 5.5 hours</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB: Request Overtime -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-150 z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant flex justify-around items-center h-16 px-2 pb-safe shadow-lg rounded-t-xl">
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-label-md text-label-md mt-1">Dashboard</span>
+  </a>
+  <a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-fixed text-on-secondary-container dark:text-on-secondary-fixed rounded-full px-4 py-1 transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+    <span class="font-label-md text-label-md mt-1">Employees</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">event_available</span>
+    <span class="font-label-md text-label-md mt-1">Attendance</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-150" href="#">
+    <span class="material-symbols-outlined">payments</span>
+    <span class="font-label-md text-label-md mt-1">Payroll</span>
+  </a>
+</nav>
+<script>
+        // Simple interaction for FAB
+        document.querySelector('button.fixed.bottom-24').addEventListener('click', function() {
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute inset-0 bg-white/20 rounded-full animate-ping';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Card button interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if(btn.textContent.trim() === 'APPROVE') {
+                    const card = btn.closest('.bg-white.border');
+                    card.style.transition = 'all 0.4s ease-out';
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(50px)';
+                    setTimeout(() => {
+                        card.remove();
+                    }, 400);
+                }
+            });
+        });
+    </script>
+</body></html>

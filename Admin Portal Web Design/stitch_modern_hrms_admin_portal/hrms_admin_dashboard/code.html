@@ -1,0 +1,395 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>HRMS Enterprise Admin</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#565e74",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c6c6cd",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface": "#f8f9ff",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-dim": "#cbdbf5",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container": "#e5eeff",
+                    "secondary": "#006c49",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#000000",
+                    "tertiary-container": "#2a1700",
+                    "on-surface-variant": "#45464d",
+                    "on-primary-container": "#7c839b",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-surface": "#0b1c30",
+                    "inverse-surface": "#213145",
+                    "primary-container": "#131b2e",
+                    "primary-fixed": "#dae2fd",
+                    "on-primary-fixed": "#131b2e",
+                    "surface-variant": "#d3e4fe",
+                    "inverse-primary": "#bec6e0",
+                    "outline": "#76777d",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#002113",
+                    "secondary-container": "#6cf8bb",
+                    "on-secondary-fixed-variant": "#005236",
+                    "error": "#ba1a1a",
+                    "primary": "#000000",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "background": "#f8f9ff",
+                    "on-tertiary-container": "#b87500",
+                    "on-background": "#0b1c30",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-high": "#dce9ff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#ffddb8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "caption": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-md": ["Inter"],
+                    "display-lg": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style><style><br>        @keyframes shimmer {<br>            0% { transform: translateX(-100%); }<br>            100% { transform: translateX(100%); }<br>        }<br>    </style></head>
+<body class="bg-surface text-on-surface">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container border-r border-outline-variant z-20 overflow-y-auto scrollbar-hide">
+<div class="p-6 flex flex-col gap-8 h-full">
+<!-- Branding -->
+<div class="flex items-center gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-outlined">corporate_fare</span></div><h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">HR Portal</h1></div></div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-1"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-secondary-fixed-dim font-bold border-r-4 border-primary dark:border-secondary-fixed-dim bg-surface-container dark:bg-inverse-surface" href="#"><span class="material-symbols-outlined">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">groups</span><span class="font-body-md text-body-md">Employees</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-md text-body-md">Attendance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">event_busy</span><span class="font-body-md text-body-md">Leave Balance</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">more_time</span><span class="font-body-md text-body-md">Overtime</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">schedule</span><span class="font-body-md text-body-md">Late</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">payments</span><span class="font-body-md text-body-md">Loans</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">stars</span><span class="font-body-md text-body-md">Incentives</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="font-body-md text-body-md">Payroll</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="font-body-md text-body-md">Payslips</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">location_on</span><span class="font-body-md text-body-md">Tracking</span></a></nav>
+<!-- Bottom Profile -->
+<div class="px-4 mt-auto pt-6 border-t border-outline-variant/30 space-y-1"><button class="w-full bg-primary text-white font-label-md text-label-md py-3 rounded-lg transition-transform active:scale-95 mb-4 shadow-md">Generate Report</button><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="font-body-md text-body-md">Settings</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all" href="#"><span class="material-symbols-outlined">logout</span><span class="font-body-md text-body-md">Logout</span></a><div class="flex items-center gap-3 pt-4 border-t border-outline-variant/30"><img class="w-10 h-10 rounded-full object-cover border-2 border-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNW9p13OCy6yMstHTKSdoE7Xmn65F-dmpBEr-KRyl8_zBJ1Vk7xNrWLveBIfQxR9ljqkbz_MKVlCcTO30OWklJ4pabNx4schyWFcsdehuCighHkaf0TJeQU6D6xigpQkhx8k-E1iAHbuoh1fijtgspI2tCSk8Zx32Ug2C_Ny1aNH26Iis5BoMcDN6UNmcKDWgVEF056xL0ixUcQK9XSYyy_vLMN2Jo6XmRk5QPD9xMRfmHtbHhhVyROtKBvUKZYykEEF5EPWrB4E"><div class="text-left"><p class="font-label-md text-label-md leading-none text-on-surface">Alex Sterling</p><p class="font-caption text-caption text-on-surface-variant">Enterprise Admin</p></div></div></div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-72">
+<!-- Top Bar -->
+<header class="sticky top-0 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-10 px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h2 class="text-2xl font-bold text-on-surface tracking-tight">Main Dashboard</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Search employees, files..." type="text">
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Summary Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<div>
+<p class="text-sm font-medium text-on-surface-variant">Active Workforce</p>
+<h3 class="text-3xl font-bold text-on-surface">1,282</h3>
+<p class="text-xs text-secondary mt-1 font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +2.5% vs last month
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-primary-fixed-variant">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-sm font-medium text-on-surface-variant">Pending Loans</p>
+<h3 class="text-3xl font-bold text-on-surface">12</h3>
+<p class="text-xs text-on-surface-variant mt-1 font-semibold flex items-center gap-1">
+                             Requires immediate review
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">timer_off</span>
+</div>
+<div>
+<p class="text-sm font-medium text-on-surface-variant">Late Logs</p>
+<h3 class="text-3xl font-bold text-on-surface">45</h3>
+<p class="text-xs text-error mt-1 font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">warning</span> 5% higher than average
+                        </p>
+</div>
+</div>
+</div>
+<!-- Central Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Section: Data Table -->
+<div class="lg:col-span-2 flex flex-col gap-4">
+<div class="flex items-center justify-between mb-2">
+<h4 class="text-xl font-bold text-on-surface">Real-Time Employee Tracking</h4>
+<button class="text-sm font-semibold text-secondary hover:underline flex items-center gap-1">
+                            View Full History <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Employee</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check-in Time</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male professional in his 30s with a sharp haircut, wearing a crisp white button-down shirt. The image is a studio portrait with soft, clean lighting and a minimalist grey background, suitable for a corporate employee profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3edhVQvyzmvAxc7TJg7uLfnOYndb8hwlnER2qa52v3bzqBp8uRnLXY7XMZr2zgxvqCTFr4KxCMFe3o44vyolB5WeIATt0QO-lEA7fg7JZAOZF3yc6DXdGdQcggWCk6HdqX5zXrsTGKm3yxBZn3zXkcB-jHrgG-SIjBjQZrOO7SEkc-CegSmeMl5ZSsQIxFZaUBDUFsjFmGzmRUwLKmWTgu6NB0MKD3xj2IOS7pj2Dio3x7lSW4IfqLjb3lyu3xO6SzjEsrR2NJRQ">
+</div>
+<div>
+<p class="font-semibold text-sm text-on-surface">John Doe</p>
+<p class="text-xs text-on-surface-variant">Senior Engineer</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">08:45 AM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                            On Time
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young female professional with glasses, smiling confidently. She is wearing a modern business-casual outfit. Professional lighting with a bright, airy office backdrop blurred in the distance, emphasizing a high-end corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYzxRHv1nfxC4oQXtTB8WNa6VvrDhW27PoQSiopmYJLPaqeDaNsfBWct0jIe6AHZIfmk4MS4ksegVJTOSR5uXyRmwL9pgkcrTzVUqkUv8cLJ8nF_M-rMc-RODQ1MxerfHJIW1JoRlWTy2vZNVTHkBSWfWEI13ANoccWBiEGz8dXeOLYsuPU0zJhZNdKyL0T7sHuxXBoodRiIfQFWUA1-UiPbAB3HeHH33KtlXt_b7q0lCHDeZvpR1Vcze0pm0Zy0RXEVjVOSFIVOM">
+</div>
+<div>
+<p class="font-semibold text-sm text-on-surface">Jane Smith</p>
+<p class="text-xs text-on-surface-variant">Product Designer</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">09:15 AM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container text-on-error-container">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                            Late
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a middle-aged male executive with graying hair, wearing a stylish dark navy blazer. The lighting is sophisticated and dramatic, like an editorial business magazine shoot, against a clean white architectural background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGpI1zl9HORlEqTZj7acBb24GIUYxPkQgmqfZr_ZwFalxN4UipYJhS1nQjtnZvioIAHoLqo8BJzQTpxZYIU_RkYb15eD_j-I--DAX_MWWR6mZkLcNlA9tvwTJlSCZOSIE9LkXnLBXkpOEGI08Sf5GVtV2XlGHbEXX7qxVoe4HPuFdyohQ6bf1EEjnylJMynrlfh8hBIoBVJYyCjdY3HmUblIgsMatDRBYrAVQF2kS4uu0v7PgEu08UrzcCf0Ynh5l-EtT3AmSMBmk">
+</div>
+<div>
+<p class="font-semibold text-sm text-on-surface">Robert Fox</p>
+<p class="text-xs text-on-surface-variant">Marketing Lead</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">08:55 AM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                            On Time
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young female HR specialist with a bright and friendly expression. She has curly hair and is wearing a colorful but professional blouse. The setting is a minimalist, modern office with soft daylight coming from a large window." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTjq328VaJoJX3xdLU4cq-vmL8QDyHmSWpF17VqWI8gkWFLFGKJJYn9MNKqKkd17xoITz3wh9_LsL_BdNvInHAzb_8M-lQCQYcPUEgEHczWY6Ia97CXuyaTqtTa5DU-hpztpyM7tr1HVD-O6RgAbVZBwXjSFhCNc67vQ9i4GRJRHlGpTEJJQy9JL2Idk22V2lgG-0PBBcAAmcfE4x89Hrjk-ZKCRtFFFDdb18vgtPVXRUsYIpF3A3bzKVxijFPrq-kOog3eB4E-6o">
+</div>
+<div>
+<p class="font-semibold text-sm text-on-surface">Alice Brown</p>
+<p class="text-xs text-on-surface-variant">HR Specialist</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">09:30 AM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container text-on-error-container">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                            Late
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-surface-container-low text-center border-t border-outline-variant">
+<button class="text-sm font-medium text-on-primary-fixed-variant hover:text-primary transition-colors">
+                                Load 20 more records
+                            </button>
+</div>
+</div>
+</div>
+<!-- Right Section: Payroll Execution -->
+<div class="lg:col-span-1">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-xl font-bold text-on-surface">Payroll Execution</h4>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm p-6 flex flex-col gap-6">
+<!-- Total Incentives -->
+<div>
+<p class="text-sm font-medium text-on-surface-variant mb-1">Total Incentives this month</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">$45,200</span>
+<span class="text-sm font-bold text-secondary text-on-secondary-container px-2 py-0.5 bg-secondary-container rounded-lg">+12%</span>
+</div>
+</div>
+<!-- Overtime Hours -->
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+<div class="flex items-center justify-between mb-2">
+<p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Overtime hours calculation</p>
+<span class="material-symbols-outlined text-on-surface-variant text-lg">schedule</span>
+</div>
+<h5 class="text-2xl font-bold text-on-surface">1,420 <span class="text-base font-medium text-on-surface-variant">hrs</span></h5>
+<div class="mt-3 flex gap-2">
+<div class="h-1.5 flex-1 bg-secondary rounded-full"></div>
+<div class="h-1.5 w-1/3 bg-outline-variant rounded-full"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2">75% of projected monthly capacity reached.</p>
+</div>
+<!-- Payslip Progress -->
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm font-semibold">
+<span class="text-on-surface">Payslip Generation Status</span>
+<span class="text-on-primary-fixed-variant">82%</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[82%] transition-all duration-1000 relative overflow-hidden" id="progress-bar" style="width: 82%;">
+<div class="absolute inset-0 bg-white/10 flex animate-[shimmer_2s_infinite]"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-secondary">check_circle</span>
+                                1,053 of 1,284 slips generated
+                            </div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-bold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group">
+                            Execute Monthly Payroll
+                            <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">rocket_launch</span>
+</button>
+<div class="pt-2 border-t border-outline-variant">
+<div class="flex items-center justify-between text-xs text-on-surface-variant">
+<span class="">Next Disbursal Date:</span>
+<span class="font-bold text-on-surface">Oct 28, 2023</span>
+</div>
+</div>
+</div>
+<!-- System Pulse/Atmospheric Element -->
+<div class="mt-6 p-4 rounded-2xl bg-primary-container text-primary-fixed overflow-hidden relative">
+<div class="relative z-10">
+<h5 class="text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg animate-pulse">sensors</span>
+                                System Health: Optimal
+                            </h5>
+<p class="text-[11px] opacity-80 mt-1">Cloud synchronization active. All biometric nodes reporting 100% uptime.</p>
+</div>
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="material-symbols-outlined text-6xl">blur_on</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // Micro-interaction: Table row hover effect enhancements or simple data visualization logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressBar = document.getElementById('progress-bar');
+        // Simple entry animation for progress bar
+        setTimeout(() => {
+            progressBar.style.width = '82%';
+        }, 500);
+
+        // Simulated real-time update for Active Workforce
+        const workforceElement = document.querySelector('.text-3xl.font-bold.text-on-surface');
+        if (workforceElement && workforceElement.innerText === '1,284') {
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    const current = parseInt(workforceElement.innerText.replace(',', ''));
+                    const change = Math.random() > 0.5 ? 1 : -1;
+                    workforceElement.innerText = (current + change).toLocaleString();
+                }
+            }, 5000);
+        }
+    });
+
+    // Keyframes for custom shimmer animation
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+</script>
+
+
+
+
+
+
+
+
+</body></html>
