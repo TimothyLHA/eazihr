@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Shield, ArrowRight, Mail, Lock, HelpCircle, Check } from 'lucide-react'
+
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -41,7 +41,7 @@ function LoginForm() {
       <header className="bg-surface fixed top-0 w-full z-50">
         <div className="flex justify-between items-center w-full px-10 py-4 max-w-[1440px] mx-auto">
           <div className="flex items-center gap-2 text-xl font-semibold text-on-surface">
-            <Shield className="w-6 h-6 text-primary" fill="currentColor" />
+            <span className="material-symbols-outlined text-2xl text-primary" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
             eazihr
           </div>
           <nav className="hidden md:flex items-center gap-8">
@@ -60,7 +60,7 @@ function LoginForm() {
           <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-8 md:p-10 shadow-[0_4px_40px_-10px_rgba(15,23,42,0.05)]">
             <div className="flex flex-col items-center mb-8">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-6">
-                <Shield className="w-6 h-6 text-white" fill="currentColor" />
+                <span className="material-symbols-outlined text-2xl text-white" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
               </div>
               <h1 className="text-[32px] font-semibold tracking-tight text-on-surface text-center mb-2">
                 Sign in to eazihr
@@ -76,7 +76,7 @@ function LoginForm() {
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">mail</span>
                   <input
                     id="email"
                     type="email"
@@ -94,7 +94,7 @@ function LoginForm() {
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
                   <input
                     id="password"
                     type="password"
@@ -114,7 +114,7 @@ function LoginForm() {
                       type="checkbox"
                       className="peer w-5 h-5 cursor-pointer appearance-none rounded border border-outline-variant bg-white checked:bg-primary checked:border-primary transition-all duration-200"
                     />
-                    <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                    <span className="material-symbols-outlined text-base text-white opacity-0 peer-checked:opacity-100 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">check</span>
                   </div>
                   <span className="ml-2 text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">
                     Remember Me
@@ -141,7 +141,7 @@ function LoginForm() {
                 ) : (
                   <>
                     Sign In
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                   </>
                 )}
               </button>
@@ -162,7 +162,7 @@ function LoginForm() {
 
             <div className="mt-8 pt-8 border-t border-outline-variant/30 text-center">
               <a href="#" className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-2">
-                <HelpCircle className="w-[18px] h-[18px]" />
+                <span className="material-symbols-outlined text-lg">help</span>
                 Trouble logging in? Contact IT Support
               </a>
             </div>
@@ -170,11 +170,11 @@ function LoginForm() {
 
           <div className="mt-8 flex justify-center gap-6 opacity-40 grayscale hover:opacity-80 transition-opacity">
             <div className="flex items-center gap-1 text-xs font-semibold tracking-wider text-on-surface">
-              <Shield className="w-4 h-4" />
+              <span className="material-symbols-outlined text-base">verified</span>
               SOC2 COMPLIANT
             </div>
             <div className="flex items-center gap-1 text-xs font-semibold tracking-wider text-on-surface">
-              <Shield className="w-4 h-4" />
+              <span className="material-symbols-outlined text-base">verified</span>
               SSL SECURED
             </div>
           </div>

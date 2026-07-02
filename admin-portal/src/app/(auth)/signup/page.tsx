@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Shield, Mail, Lock, User, Building2, ArrowRight, Check } from 'lucide-react'
+
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -49,7 +49,7 @@ export default function SignupPage() {
       <header className="bg-surface fixed top-0 w-full z-50">
         <div className="flex justify-between items-center w-full px-10 py-4 max-w-[1440px] mx-auto">
           <div className="flex items-center gap-2 text-xl font-semibold text-on-surface">
-            <Shield className="w-6 h-6 text-primary" fill="currentColor" />
+            <span className="material-symbols-outlined text-2xl text-primary" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
             eazihr
           </div>
           <nav className="hidden md:flex items-center gap-8">
@@ -68,7 +68,7 @@ export default function SignupPage() {
           <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-8 md:p-10 shadow-[0_4px_40px_-10px_rgba(15,23,42,0.05)]">
             <div className="flex flex-col items-center mb-8">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-6">
-                <Shield className="w-6 h-6 text-white" fill="currentColor" />
+                <span className="material-symbols-outlined text-2xl text-white" style={{fontVariationSettings: "'FILL' 1"}}>corporate_fare</span>
               </div>
               <h1 className="text-[32px] font-semibold tracking-tight text-on-surface text-center mb-2">
                 Create Account
@@ -84,7 +84,7 @@ export default function SignupPage() {
                   Full Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">person</span>
                   <input
                     id="fullName"
                     type="text"
@@ -102,7 +102,7 @@ export default function SignupPage() {
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">mail</span>
                   <input
                     id="email"
                     type="email"
@@ -120,7 +120,7 @@ export default function SignupPage() {
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
                   <input
                     id="password"
                     type="password"
@@ -139,7 +139,7 @@ export default function SignupPage() {
                   Organization ID
                 </label>
                 <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+                  <span className="material-symbols-outlined text-xl absolute left-3 top-1/2 -translate-y-1/2 text-outline">corporate_fare</span>
                   <input
                     id="orgId"
                     type="text"
@@ -183,7 +183,7 @@ export default function SignupPage() {
                 ) : (
                   <>
                     Create Account
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                   </>
                 )}
               </button>

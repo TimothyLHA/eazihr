@@ -1,101 +1,126 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useAuth } from '@/providers/auth-provider'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Shield, LayoutDashboard, Users, CalendarClock, Clock, Wallet, Settings, LogOut, ChevronDown, Bell, Search } from 'lucide-react'
+import { useEffect } from 'react'
+import { OrgProvider } from '@/providers/org-provider'
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/employees', label: 'Employees', icon: Users },
-  { href: '/dashboard/leave', label: 'Leave', icon: CalendarClock },
-  { href: '/dashboard/attendance', label: 'Attendance', icon: Clock },
-  { href: '/dashboard/payroll', label: 'Payroll', icon: Wallet },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/employees', label: 'Employees', icon: 'groups' },
+  { href: '/attendance', label: 'Attendance', icon: 'calendar_today' },
+  { href: '/leave', label: 'Leave Balance', icon: 'event_busy' },
+  { href: '/overtime', label: 'Overtime', icon: 'more_time' },
+  { href: '/late-logs', label: 'Late', icon: 'schedule' },
 ]
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const pathname = usePathname()
 
-  if (!user) redirect('/login')
+  useEffect(() => {
+    if (!loading && !user) router.push('/login')
+  }, [loading, user, router])
+
+  if (loading || !user) return null
 
   const fullName = user.user_metadata?.full_name as string || user.email?.split('@')[0] || 'User'
   const role = user.user_metadata?.role as string || 'admin'
 
   return (
-    <div className="min-h-screen flex bg-surface-container-low">
-      <aside className="w-64 bg-primary text-white flex flex-col shrink-0">
-        <div className="p-6 border-b border-white/10">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" fill="currentColor" />
+    <OrgProvider>
+      <div className="min-h-screen flex bg-surface">
+      <aside className="fixed left-0 top-0 h-screen w-72 bg-surface-container border-r border-outline-variant overflow-y-auto z-20">
+        <div className="p-6 flex flex-col gap-8 h-full">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl text-on-primary">corporate_fare</span>
             </div>
-            <div>
-              <div className="text-base font-semibold tracking-tight">eazihr</div>
-              <div className="text-[11px] text-white/50 font-medium tracking-wider uppercase">Admin Portal</div>
-            </div>
-          </Link>
-        </div>
+            <h1 className="font-bold text-xl text-primary">eazihr</h1>
+          </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map((item) => (
+          <nav className="flex flex-col gap-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all ${
+                    isActive
+                      ? 'text-primary font-bold border-r-4 border-primary bg-surface-container-low'
+                      : 'text-on-surface-variant hover:text-primary hover:bg-surface-container-low'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                  {item.label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="mt-auto pt-6 border-t border-outline-variant/30 space-y-1">
+            <button className="w-full bg-primary text-on-primary font-semibold text-sm py-3 rounded-lg transition-transform active:scale-95 mb-4 shadow-md">
+              Generate Report
+            </button>
             <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all"
+              href="/settings"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-all"
             >
-              <item.icon className="w-5 h-5" />
-              {item.label}
+              <span className="material-symbols-outlined text-xl">settings</span>
+              Settings
             </Link>
-          ))}
-        </nav>
-
-        <div className="p-3 border-t border-white/10">
-          <Link
-            href="/login"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/10 transition-all"
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </Link>
+            <Link
+              href="/login"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-error hover:bg-error-container/20 transition-all"
+            >
+              <span className="material-symbols-outlined text-xl">logout</span>
+              Logout
+            </Link>
+            <div className="flex items-center gap-3 pt-4 border-t border-outline-variant/30">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary border-2 border-primary/10">
+                {fullName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold leading-none text-on-surface">{fullName}</p>
+                <p className="text-xs text-on-surface-variant capitalize">{role.replace('_', ' ')}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col">
-        <header className="bg-surface border-b border-outline-variant/30 px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-lg font-semibold text-on-surface hidden sm:block">Overview</h2>
-            <div className="relative max-w-md w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-outline" />
+      <div className="flex-1 ml-72">
+        <header className="sticky top-0 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-10 px-8 py-4 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-on-surface tracking-tight">Main Dashboard</h2>
+          <div className="flex items-center gap-6">
+            <div className="relative w-72">
+              <span className="material-symbols-outlined text-lg absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
               <input
                 type="text"
-                placeholder="Search employees, leave, payroll..."
-                className="w-full pl-9 pr-4 py-2 bg-surface-container-low border border-outline-variant/50 rounded-lg text-sm text-on-surface placeholder:text-outline/50 focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/5 transition-all"
+                placeholder="Search employees, files..."
+                className="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               />
             </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-on-surface-variant hover:text-on-surface transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full" />
-            </button>
-            <div className="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-xs font-semibold text-primary">
-                {fullName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
-              </div>
-              <div className="hidden sm:block">
-                <div className="text-sm font-medium text-on-surface leading-tight">{fullName}</div>
-                <div className="text-xs text-on-surface-variant capitalize">{role.replace('_', ' ')}</div>
-              </div>
-              <ChevronDown className="w-4 h-4 text-on-surface-variant hidden sm:block" />
+            <div className="flex gap-2">
+              <button className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors relative">
+                <span className="material-symbols-outlined text-xl">notifications</span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
+              </button>
+              <button className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
+                <span className="material-symbols-outlined text-xl">help</span>
+              </button>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 p-8">
+        <main className="p-8 max-w-[1600px] mx-auto">
           {children}
         </main>
       </div>
     </div>
+    </OrgProvider>
   )
 }

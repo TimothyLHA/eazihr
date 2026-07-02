@@ -1,138 +1,195 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { Shield, Users, CalendarClock, Clock, Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Briefcase, UserPlus, FileText, Bell } from 'lucide-react'
+'use client'
 
-const stats = [
-  { label: 'Total Employees', value: '128', change: '+12', changeType: 'up' as const, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { label: 'On Leave', value: '8', change: '+3', changeType: 'up' as const, icon: CalendarClock, color: 'text-amber-600', bg: 'bg-amber-50' },
-  { label: 'Pending Requests', value: '14', change: '-2', changeType: 'down' as const, icon: FileText, color: 'text-purple-600', bg: 'bg-purple-50' },
-  { label: 'Present Today', value: '92%', change: '+5%', changeType: 'up' as const, icon: Clock, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+import { useAuth } from '@/providers/auth-provider'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
+const employees = [
+  { name: 'John Doe', role: 'Senior Engineer', time: '08:45 AM', status: 'On Time' as const },
+  { name: 'Jane Smith', role: 'Product Designer', time: '09:15 AM', status: 'Late' as const },
+  { name: 'Robert Fox', role: 'Marketing Lead', time: '08:55 AM', status: 'On Time' as const },
+  { name: 'Alice Brown', role: 'HR Specialist', time: '09:30 AM', status: 'Late' as const },
 ]
 
-const recentActivity = [
-  { action: 'New employee onboarded', detail: 'Sarah Chen joined as UI Designer', time: '2 hours ago', type: 'add' },
-  { action: 'Leave approved', detail: 'Annual leave for Michael Park (Mar 15-19)', time: '3 hours ago', type: 'approve' },
-  { action: 'Payroll generated', detail: 'February 2026 payroll processed', time: '5 hours ago', type: 'payroll' },
-  { action: 'Overtime request', detail: 'David Kim - 4 hours (Overtime)', time: '1 day ago', type: 'overtime' },
-  { action: 'Leave request', detail: 'Emily Johnson - Sick Leave (Mar 10-11)', time: '1 day ago', type: 'request' },
-]
+export default function DashboardPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
 
-const quickLinks = [
-  { label: 'Add Employee', href: '/dashboard/employees', icon: UserPlus, desc: 'Onboard a new team member' },
-  { label: 'Process Payroll', href: '/dashboard/payroll', icon: Wallet, desc: 'Run monthly payroll' },
-  { label: 'Review Requests', href: '/dashboard/leave', icon: FileText, desc: 'Pending leave & overtime' },
-  { label: 'View Reports', href: '/dashboard/reports', icon: TrendingUp, desc: 'Analytics & insights' },
-]
+  useEffect(() => {
+    if (!loading && !user) router.push('/login')
+  }, [loading, user, router])
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) redirect('/login')
-
-  const fullName = user.user_metadata?.full_name as string || user.email?.split('@')[0] || 'User'
+  if (loading || !user) return null
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold text-on-surface">Welcome back, {fullName.split(' ')[0]}</h1>
-        <p className="text-sm text-on-surface-variant mt-1">Here&apos;s what&apos;s happening at your organization today.</p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {stats.map((stat) => (
-          <div key={stat.label} className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 hover:shadow-[0_4px_20px_-8px_rgba(15,23,42,0.08)] transition-shadow">
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-10 h-10 ${stat.bg} rounded-lg flex items-center justify-center`}>
-                <stat.icon className={`w-5 h-5 ${stat.color}`} />
-              </div>
-              <span className={`flex items-center gap-0.5 text-xs font-medium ${stat.changeType === 'up' ? 'text-emerald-600' : 'text-red-500'}`}>
-                {stat.changeType === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                {stat.change}
-              </span>
-            </div>
-            <div className="text-2xl font-bold text-on-surface">{stat.value}</div>
-            <div className="text-xs text-on-surface-variant mt-1">{stat.label}</div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+            <span className="material-symbols-outlined text-3xl" style={{fontVariationSettings: "'FILL' 1"}}>groups</span>
           </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-base font-semibold text-on-surface">Recent Activity</h2>
-            <Link href="/dashboard/activity" className="text-xs font-medium text-primary hover:underline">
-              View All
-            </Link>
-          </div>
-          <div className="space-y-0 divide-y divide-outline-variant/20">
-            {recentActivity.map((activity, i) => (
-              <div key={i} className="flex items-start gap-4 py-4 first:pt-0 last:pb-0">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                  activity.type === 'add' ? 'bg-emerald-50 text-emerald-600' :
-                  activity.type === 'approve' ? 'bg-blue-50 text-blue-600' :
-                  activity.type === 'payroll' ? 'bg-purple-50 text-purple-600' :
-                  activity.type === 'overtime' ? 'bg-amber-50 text-amber-600' :
-                  'bg-surface-container text-on-surface-variant'
-                }`}>
-                  {activity.type === 'add' ? <UserPlus className="w-4 h-4" /> :
-                   activity.type === 'approve' ? <Shield className="w-4 h-4" /> :
-                   activity.type === 'payroll' ? <Wallet className="w-4 h-4" /> :
-                   activity.type === 'overtime' ? <Clock className="w-4 h-4" /> :
-                   <Bell className="w-4 h-4" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-on-surface">{activity.action}</div>
-                  <div className="text-xs text-on-surface-variant mt-0.5">{activity.detail}</div>
-                </div>
-                <div className="text-xs text-on-surface-variant/60 shrink-0">{activity.time}</div>
-              </div>
-            ))}
+          <div>
+            <p className="text-sm font-medium text-on-surface-variant">Active Workforce</p>
+            <h3 className="text-3xl font-bold text-on-surface">1,282</h3>
+            <p className="text-xs text-secondary mt-1 font-semibold flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">trending_up</span> +2.5% vs last month
+            </p>
           </div>
         </div>
-
-        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-6">
-          <h2 className="text-base font-semibold text-on-surface mb-6">Quick Actions</h2>
-          <div className="space-y-3">
-            {quickLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-container-low transition-colors group"
-              >
-                <div className="w-9 h-9 bg-primary/5 rounded-lg flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <link.icon className="w-4.5 h-4.5 text-primary" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-on-surface">{link.label}</div>
-                  <div className="text-xs text-on-surface-variant mt-0.5">{link.desc}</div>
-                </div>
-              </Link>
-            ))}
+        <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-primary-fixed-variant">
+            <span className="material-symbols-outlined text-3xl" style={{fontVariationSettings: "'FILL' 1"}}>account_balance_wallet</span>
           </div>
-
-          <div className="mt-8 p-4 bg-primary rounded-xl">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center">
-                <Wallet className="w-4 h-4 text-white" />
-              </div>
-              <div className="text-white text-sm font-medium">Next Payroll</div>
-            </div>
-            <div className="text-white/70 text-xs">March 31, 2026</div>
-            <div className="text-white text-xl font-bold mt-1">$84,250.00</div>
-            <div className="mt-4">
-              <Link
-                href="/dashboard/payroll"
-                className="text-xs font-medium text-white/80 hover:text-white transition-colors flex items-center gap-1"
-              >
-                View Details
-                <ArrowUpRight className="w-3 h-3" />
-              </Link>
-            </div>
+          <div>
+            <p className="text-sm font-medium text-on-surface-variant">Pending Loans</p>
+            <h3 className="text-3xl font-bold text-on-surface">12</h3>
+            <p className="text-xs text-on-surface-variant mt-1 font-semibold">Requires immediate review</p>
+          </div>
+        </div>
+        <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 rounded-xl bg-error-container/40 flex items-center justify-center text-error">
+            <span className="material-symbols-outlined text-3xl" style={{fontVariationSettings: "'FILL' 1"}}>timer_off</span>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-on-surface-variant">Late Logs</p>
+            <h3 className="text-3xl font-bold text-on-surface">45</h3>
+            <p className="text-xs text-error mt-1 font-semibold flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">warning</span>
+              5% higher than average
+            </p>
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 flex flex-col gap-4">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-xl font-bold text-on-surface">Real-Time Employee Tracking</h4>
+            <button className="text-sm font-semibold text-secondary hover:underline flex items-center gap-1">
+              View Full History <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-surface-container-low border-b border-outline-variant">
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Employee</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check-in Time</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant">
+                {employees.map((emp, i) => (
+                  <tr key={i} className="hover:bg-surface-container-low transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
+                          {emp.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm text-on-surface">{emp.name}</p>
+                          <p className="text-xs text-on-surface-variant">{emp.role}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-on-surface-variant">{emp.time}</td>
+                    <td className="px-6 py-4 text-right">
+                      {emp.status === 'On Time' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">
+                          <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5" />
+                          On Time
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container text-on-error-container">
+                          <span className="w-1.5 h-1.5 rounded-full bg-error mr-1.5" />
+                          Late
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="p-4 bg-surface-container-low text-center border-t border-outline-variant">
+              <button className="text-sm font-medium text-on-primary-fixed-variant hover:text-primary transition-colors">
+                Load 20 more records
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-xl font-bold text-on-surface">Payroll Execution</h4>
+            <button className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+              <span className="material-symbols-outlined text-xl">more_vert</span>
+            </button>
+          </div>
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm p-6 flex flex-col gap-6">
+            <div>
+              <p className="text-sm font-medium text-on-surface-variant mb-1">Total Incentives this month</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-on-surface">$45,200</span>
+                <span className="text-sm font-bold text-on-secondary-container px-2 py-0.5 bg-secondary-container rounded-lg">+12%</span>
+              </div>
+            </div>
+
+            <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Overtime hours calculation</p>
+                <span className="material-symbols-outlined text-xl text-on-surface-variant">schedule</span>
+              </div>
+              <h5 className="text-2xl font-bold text-on-surface">1,420 <span className="text-base font-medium text-on-surface-variant">hrs</span></h5>
+              <div className="mt-3 flex gap-2">
+                <div className="h-1.5 flex-1 bg-secondary rounded-full" />
+                <div className="h-1.5 w-1/3 bg-outline-variant rounded-full" />
+              </div>
+              <p className="text-[10px] text-on-surface-variant mt-2">75% of projected monthly capacity reached.</p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center text-sm font-semibold">
+                <span className="text-on-surface">Payslip Generation Status</span>
+                <span className="text-on-primary-fixed-variant">82%</span>
+              </div>
+              <div className="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+                <div className="h-full bg-primary-container rounded-full w-[82%] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-white/10 animate-shimmer" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                <span className="material-symbols-outlined text-sm text-secondary">check_circle</span>
+                1,053 of 1,284 slips generated
+              </div>
+            </div>
+
+            <button className="w-full py-4 bg-primary text-on-primary rounded-xl font-bold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group">
+              Execute Monthly Payroll
+              <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">rocket_launch</span>
+            </button>
+
+            <div className="pt-2 border-t border-outline-variant">
+              <div className="flex items-center justify-between text-xs text-on-surface-variant">
+                <span>Next Disbursal Date:</span>
+                <span className="font-bold text-on-surface">Oct 28, 2023</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 rounded-2xl bg-primary-container text-primary-fixed overflow-hidden relative">
+            <div className="relative z-10">
+              <h5 className="text-sm font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-lg animate-pulse">sensors</span>
+                System Health: Optimal
+              </h5>
+              <p className="text-[11px] opacity-80 mt-1">Cloud synchronization active. All biometric nodes reporting 100% uptime.</p>
+            </div>
+            <div className="absolute top-0 right-0 p-2 opacity-20">
+              <span className="material-symbols-outlined text-6xl text-primary-fixed">blur_on</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
