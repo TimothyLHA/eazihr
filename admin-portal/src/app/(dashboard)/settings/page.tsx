@@ -53,13 +53,9 @@ export default function SettingsPage() {
         currency,
       }
 
-      const { error: updateError } = await (supabase
-        .from('organizations') as unknown as { update: (vals: Record<string, unknown>) => { eq: (col: string, val: string) => Promise<{ error: Error | null }> } }
-      ).update({
-        name: companyName,
-        settings: newSettings,
-        payroll_config: newPayrollConfig,
-      }).eq('id', (org as unknown as { id: string }).id)
+      const { error: updateError } = await (supabase.from('organizations') as any)
+        .update({ name: companyName, settings: newSettings, payroll_config: newPayrollConfig })
+        .eq('id', (org as any).id)
 
       if (updateError) throw updateError
 
