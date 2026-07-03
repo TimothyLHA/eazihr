@@ -44,7 +44,7 @@ export function useLeave() {
         await Promise.all([
           supabase
             .from('leave_balances')
-            .select('id, employee_id, leave_type_id, total_days, used_days, remaining_days, leave_type:leave_type_id(name), employee:employee_id(id, profile:profile_id(full_name))')
+            .select('id, employee_id, leave_type_id, allocated_days, used_days, remaining_days, leave_type:leave_type_id(name), employee:employee_id(id, profile:profile_id(full_name))')
             .eq('organization_id', orgId)
             .order('created_at', { ascending: false }),
           supabase
@@ -73,7 +73,7 @@ export function useLeave() {
           employee_id: b.employee_id as string,
           employee_name: emp?.profile?.full_name ?? 'Unknown',
           leave_type: lt?.name ?? 'Unknown',
-          allocated_days: (b.total_days as number) ?? 0,
+          allocated_days: (b.allocated_days as number) ?? 0,
           used_days: (b.used_days as number) ?? 0,
           remaining_days: (b.remaining_days as number) ?? 0,
         }
