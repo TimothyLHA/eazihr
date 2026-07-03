@@ -140,7 +140,9 @@ export default function SettingsPage() {
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Primary Timezone</label>
                       <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                        <option>{org?.settings?.timezone as string ?? '(GMT +00:00) London'}</option>
+                        <option>Asia/Yangon (GMT +06:30)</option>
+                        <option>{org?.settings?.timezone as string ?? 'Asia/Yangon (GMT +06:30)'}</option>
+                        <option>(GMT +00:00) London</option>
                         <option>(GMT -05:00) New York</option>
                         <option>(GMT +08:00) Singapore</option>
                       </select>
@@ -148,9 +150,10 @@ export default function SettingsPage() {
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Base Currency</label>
                       <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                        <option>{currency === 'USD' ? 'USD ($)' : currency === 'GBP' ? 'GBP (£)' : currency === 'EUR' ? 'EUR (€)' : `${currency}`}</option>
-                        <option>GBP (£)</option>
+                        <option>MMK (K)</option>
+                        <option>{currency === 'USD' ? 'USD ($)' : currency === 'GBP' ? 'GBP (£)' : currency === 'EUR' ? 'EUR (€)' : currency === 'MMK' ? 'MMK (K)' : `${currency}`}</option>
                         <option>USD ($)</option>
+                        <option>GBP (£)</option>
                         <option>EUR (€)</option>
                       </select>
                     </div>
