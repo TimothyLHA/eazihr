@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useAuth } from './auth-provider'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from './supabase-provider'
 
 type Organization = {
   id: string
@@ -35,7 +35,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
   const [organization, setOrganization] = useState<Organization | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const supabase = createClient()
+  const supabase = useSupabase()
 
   const fetchOrganization = async () => {
     if (!organizationId) {

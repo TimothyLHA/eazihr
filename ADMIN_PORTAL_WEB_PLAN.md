@@ -236,26 +236,29 @@ admin-portal/
 - [x] Set up folder structure (`lib/supabase/`, `providers/`, `hooks/`, `components/ui/`)
 - [x] Create Supabase client (browser + server) (`client.ts`, `server.ts`, `middleware.ts`)
 - [x] Set up auth provider wrapper (`auth-provider.tsx`)
-- [ ] **Set up org-provider.tsx** — reads org_id from JWT, fetches org settings
-- [ ] Create TypeScript types for all tables (with organization_id)
+- [x] **Set up org-provider.tsx** — reads org_id from JWT, fetches org settings
+- [x] Create TypeScript types for all tables (with organization_id)
+- [x] Create typed Supabase client (`client.ts` with `Database` generic)
+- [x] Create shared Supabase provider context (`supabase-provider.tsx`)
+- [x] Create dashboard data hooks (`use-dashboard-stats.ts`)
 
 ### Phase 2: Auth & Layout (Multi-Tenant)
 - [x] Build login page with email/password, remember me, forgot password (`login/page.tsx`)
 - [x] **Login flow**: After auth, read `organization_id` from JWT claim → scope all queries (in auth-provider)
 - [x] Create auth middleware for protected routes (`middleware.ts`)
-- [ ] Build sidebar navigation
-- [ ] Build topbar with org name display + org switcher (super admin only)
-- [ ] Build responsive layout
+- [x] Build sidebar navigation
+- [x] Build topbar with org name display (from OrgProvider)
+- [x] Build responsive layout
 - [x] Create logout flow (`auth.ts` signOut server action)
 - [ ] **Super admin**: special route to list all orgs and switch between them
 
 ### Phase 3: Dashboard
-- [ ] Active Workforce metric card (filtered by org_id)
-- [ ] Pending Loans card (org scope)
-- [ ] Late Logs card (org scope)
-- [ ] Real-Time Employee Tracking table (org scope)
-- [ ] Payroll Execution card (uses org's payroll_config)
-- [ ] Execute Monthly Payroll button
+- [x] Active Workforce metric card (filtered by org_id) — wired
+- [x] Pending Loans card (org scope) — wired
+- [x] Late Logs card (org scope) — wired
+- [x] Real-Time Employee Tracking table (org scope) — wired
+- [x] Payroll Execution card (uses org's payroll_config) — wired
+- [ ] Execute Monthly Payroll button (needs DB function call)
 - [ ] System Health widget (org scope)
 - [ ] Simulated real-time updates → swap with Supabase Realtime
 
@@ -337,6 +340,41 @@ admin-portal/
 - [ ] Performance audit (Lighthouse)
 - [x] Env vars setup for Vercel (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY)
 - [x] Deploy to Vercel — **https://eazihr.vercel.app**
+
+## Build Status
+
+- **Repository branch:** `main`
+- **Latest work:**
+  - Wired main Dashboard page to real Supabase data (employees, loans, late logs, attendance, payroll stats)
+  - Created typed Supabase client (`client.ts` with `Database` generic)
+  - Created shared `SupabaseProvider` for typed client context
+  - Upgraded `OrgProvider` to use shared typed client
+  - Created `useDashboardStats` hook that queries 8 Supabase tables in parallel
+- **Local build:** ✅ **Passes** — `npm run build` compiles successfully with no TypeScript errors.
+- **Deployed at:** https://eazihr.vercel.app
+
+### How to build:
+
+```bash
+cd admin-portal
+npm install
+npm run build
+```
+
+### What's wired so far:
+
+| Dashboard Section | Supabase Tables Queried |
+|---|---|
+| Active Workforce card | `employees` (count, status=active) |
+| Pending Loans card | `loans` (count, status=pending) |
+| Late Logs card | `late_logs` (count, date=today) |
+| Quick links (Loans, Incentives, Payslips, Tracking) | Same as above + `incentives`, `payslips`, `vehicles` |
+| Real-Time Employee Tracking table | `attendance_logs` (with `employee` join for name/role) |
+| Payroll sidebar (Incentives, Overtime, Payslips) | `incentives`, `overtime_requests`, `payslips` (month/year scoped) |
+
+### Next pages to wire:
+
+- Employees, Attendance, Late Logs, Leave, Loans, Incentives, Overtime, Payroll, Payslips, Tracking, Settings
 
 ---
 
