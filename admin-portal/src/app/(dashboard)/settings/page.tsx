@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSettings } from '@/hooks/use-settings'
+import { useSupabase } from '@/providers/supabase-provider'
 
 const tabs = [
   { id: 'company', label: 'Company Profile', icon: 'business' },
@@ -12,10 +13,67 @@ const tabs = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('company')
-  const { org, roles, loading, error } = useSettings()
+  const [saving, setSaving] = useState(false)
+  const [saveMsg, setSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const supabase = useSupabase()
+  const { org, roles, loading, error, refetch } = useSettings()
+
+  const [companyName, setCompanyName] = useState('')
+  const [regNumber, setRegNumber] = useState('')
+  const [address, setAddress] = useState('')
+  const [timezone, setTimezone] = useState('Asia/Yangon (GMT +06:30)')
+  const [currency, setCurrency] = useState('MMK')
+
+  useEffect(() => {
+    if (org) {
+      setCompanyName(org.name ?? '')
+      setRegNumber((org.settings as Record<string, unknown>)?.registration_number as string ?? '')
+      setAddress((org.settings as Record<string, unknown>)?.address as string ?? '')
+      setTimezone((org.settings as Record<string, unknown>)?.timezone as string ?? 'Asia/Yangon (GMT +06:30)')
+      const pc = org.payroll_config as Record<string, unknown>
+      setCurrency((pc?.currency as string) ?? 'MMK')
+    }
+  }, [org])
+
+  const handleSave = async () => {
+    if (!org) return
+    setSaving(true)
+    setSaveMsg(null)
+
+    try {
+      const newSettings = {
+        ...(org.settings as Record<string, unknown> ?? {}),
+        registration_number: regNumber,
+        address,
+        timezone,
+      }
+
+      const newPayrollConfig = {
+        ...(org.payroll_config as Record<string, unknown> ?? {}),
+        currency,
+      }
+
+      const { error: updateError } = await (supabase
+        .from('organizations') as unknown as { update: (vals: Record<string, unknown>) => { eq: (col: string, val: string) => Promise<{ error: Error | null }> } }
+      ).update({
+        name: companyName,
+        settings: newSettings,
+        payroll_config: newPayrollConfig,
+      }).eq('id', (org as unknown as { id: string }).id)
+
+      if (updateError) throw updateError
+
+      setSaveMsg({ type: 'success', text: 'Settings saved successfully.' })
+      refetch()
+    } catch (err) {
+      setSaveMsg({ type: 'error', text: err instanceof Error ? err.message : 'Failed to save settings' })
+    } finally {
+      setSaving(false)
+      setTimeout(() => setSaveMsg(null), 3000)
+    }
+  }
 
   const payrollConfig = org?.payroll_config as Record<string, unknown> ?? {}
-  const currency = (payrollConfig.currency as string) ?? 'USD'
 
   if (error) {
     return (
@@ -37,6 +95,15 @@ export default function SettingsPage() {
           Manage your organization's global identity, security protocols, and operational frameworks from a central command center.
         </p>
       </div>
+
+      {saveMsg && (
+        <div className={`rounded-2xl px-5 py-3 text-sm font-semibold flex items-center gap-2 ${
+          saveMsg.type === 'success' ? 'bg-secondary-container text-on-secondary-container' : 'bg-error-container text-error'
+        }`}>
+          <span className="material-symbols-outlined text-lg">{saveMsg.type === 'success' ? 'check_circle' : 'error'}</span>
+          {saveMsg.text}
+        </div>
+      )}
 
       <div className="rounded-3xl border border-outline-variant/30 bg-surface-container-lowest shadow-sm overflow-hidden">
         <div className="flex flex-wrap border-b border-outline-variant/30 bg-surface-container-lowest">
@@ -77,8 +144,8 @@ export default function SettingsPage() {
                       <input
                         className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         type="text"
-                        defaultValue={org?.name ?? ''}
-                        readOnly={loading}
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -86,8 +153,8 @@ export default function SettingsPage() {
                       <input
                         className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         type="text"
-                        defaultValue={(org?.settings?.registration_number as string) ?? ''}
-                        readOnly={loading}
+                        value={regNumber}
+                        onChange={(e) => setRegNumber(e.target.value)}
                       />
                     </div>
                   </div>
@@ -97,8 +164,8 @@ export default function SettingsPage() {
                     <textarea
                       className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                       rows={3}
-                      defaultValue={(org?.settings?.address as string) ?? ''}
-                      readOnly={loading}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
                     />
                   </div>
 
@@ -139,9 +206,12 @@ export default function SettingsPage() {
                   <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Primary Timezone</label>
-                      <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                      <select
+                        className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                        value={timezone}
+                        onChange={(e) => setTimezone(e.target.value)}
+                      >
                         <option>Asia/Yangon (GMT +06:30)</option>
-                        <option>{org?.settings?.timezone as string ?? 'Asia/Yangon (GMT +06:30)'}</option>
                         <option>(GMT +00:00) London</option>
                         <option>(GMT -05:00) New York</option>
                         <option>(GMT +08:00) Singapore</option>
@@ -149,16 +219,34 @@ export default function SettingsPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Base Currency</label>
-                      <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                        <option>MMK (K)</option>
-                        <option>{currency === 'USD' ? 'USD ($)' : currency === 'GBP' ? 'GBP (£)' : currency === 'EUR' ? 'EUR (€)' : currency === 'MMK' ? 'MMK (K)' : `${currency}`}</option>
-                        <option>USD ($)</option>
-                        <option>GBP (£)</option>
-                        <option>EUR (€)</option>
+                      <select
+                        className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                      >
+                        <option value="MMK">MMK (K)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="EUR">EUR (€)</option>
                       </select>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-outline-variant/20">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-primary px-8 py-3 text-sm font-semibold text-on-primary hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                  {saving ? (
+                    <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-lg">save</span>
+                  )}
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
               </div>
             </div>
           )}
