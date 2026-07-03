@@ -45,8 +45,7 @@ export function useLeave() {
           supabase
             .from('leave_balances')
             .select('id, employee_id, leave_type_id, allocated_days, used_days, remaining_days, leave_type:leave_type_id(name), employee:employee_id(id, profile:profile_id(full_name))')
-            .eq('organization_id', orgId)
-            .order('created_at', { ascending: false }),
+            .eq('organization_id', orgId),
           supabase
             .from('leave_requests')
             .select('id', { count: 'exact', head: true })
