@@ -1,29 +1,54 @@
 'use client'
 
+import { useAttendance } from '@/hooks/use-attendance'
+
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const barData = [
-  { onTime: 80, late: 20 },
-  { onTime: 95, late: 0 },
-  { onTime: 75, late: 15 },
-  { onTime: 85, late: 5 },
-  { onTime: 60, late: 25 },
-  { onTime: 20, late: 0 },
-  { onTime: 15, late: 0 },
-]
 
-const lateLogs = [
-  { name: 'Marcus Thorne', role: 'UI Designer', minutes: '15m', reason: 'Traffic congestion on M1', excused: false },
-  { name: 'Sarah Jenkins', role: 'Dev Ops', minutes: '42m', reason: null, excused: false },
-  { name: 'Leo Grcic', role: 'Finance', minutes: '08m', reason: null, excused: false },
-]
+const statusLabel: Record<string, string> = {
+  on_time: 'ON TIME',
+  late: 'LATE',
+  absent: 'ABSENT',
+  half_day: 'HALF DAY',
+}
 
-const records = [
-  { initials: 'JD', name: 'Jane Doe', role: 'Engineer', date: 'Oct 24, 2023', checkIn: '08:52:14', checkInLabel: 'ON TIME', checkInLabelColor: 'text-on-secondary-container', checkOut: '17:35:02', location: 'HQ - Floor 4 (Zone B)', locationIcon: 'location_on', locationColor: 'text-secondary', status: 'PRESENT' },
-  { initials: 'AS', name: 'Alan Smith', role: 'Manager', date: 'Oct 24, 2023', checkIn: '09:45:33', checkInLabel: 'LATE (45m)', checkInLabelColor: 'text-amber-600', checkOut: null, location: 'Remote (Verified IP)', locationIcon: 'home_pin', locationColor: 'text-amber-500', status: 'ACTIVE' },
-  { initials: 'RW', name: 'Robert Wilson', role: 'Senior Dev', date: 'Oct 24, 2023', checkIn: '08:02:10', checkInLabel: 'EARLY', checkInLabelColor: 'text-on-secondary-container', checkOut: '18:05:44', location: 'HQ - Floor 2 (Dev Lab)', locationIcon: 'location_on', locationColor: 'text-secondary', status: 'COMPLETED' },
-]
+const statusColor: Record<string, string> = {
+  on_time: 'text-on-secondary-container',
+  late: 'text-amber-600',
+  absent: 'text-error',
+  half_day: 'text-amber-600',
+}
+
+const statusBadge: Record<string, string> = {
+  on_time: 'bg-secondary-container text-on-secondary-container',
+  late: 'bg-amber-100 text-amber-700',
+  absent: 'bg-error-container text-error',
+  half_day: 'bg-amber-100 text-amber-700',
+}
+
+function formatTime(dt: string | null) {
+  if (!dt) return null
+  const d = new Date(dt)
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+}
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function initials(name: string) {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+}
+
+function maxValue(items: { on_time: number; late: number }[]) {
+  return Math.max(...items.map((i) => i.on_time + i.late), 1)
+}
 
 export default function AttendancePage() {
+  const { records, weeklyTrends, lateLogs, loading, error } = useAttendance()
+
+  const barMax = maxValue(weeklyTrends)
+
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between">
@@ -41,6 +66,13 @@ export default function AttendancePage() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-xl bg-error-container text-error p-4 text-sm">
+          Failed to load attendance data.{' '}
+          <button onClick={() => window.location.reload()} className="underline font-semibold">Retry</button>
+        </div>
+      )}
+
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col">
           <div className="flex items-center justify-between mb-8">
@@ -54,15 +86,35 @@ export default function AttendancePage() {
             </select>
           </div>
           <div className="flex-1 flex items-end justify-between gap-4 h-64 px-4">
-            {barData.map((bar, i) => (
-              <div key={i} className="flex-1 group relative flex flex-col justify-end items-center h-full">
-                <div className="w-full bg-secondary-container rounded-t-lg transition-all hover:opacity-80" style={{ height: `${bar.onTime}%` }} />
-                {bar.late > 0 && (
-                  <div className="w-full bg-amber-500 rounded-t-lg transition-all absolute" style={{ height: `${bar.late}%`, bottom: 0 }} />
-                )}
-                <span className="mt-2 text-[10px] text-on-surface-variant">{days[i]}</span>
-              </div>
-            ))}
+            {loading ? (
+              Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="flex-1 flex flex-col justify-end items-center h-full">
+                  <div className="w-full bg-surface-container rounded-t-lg animate-pulse" style={{ height: '60%' }} />
+                  <span className="mt-2 text-[10px] text-on-surface-variant">{days[i]}</span>
+                </div>
+              ))
+            ) : (
+              weeklyTrends.map((bar, i) => {
+                const total = bar.on_time + bar.late
+                const onTimePct = barMax > 0 ? (bar.on_time / barMax) * 100 : 0
+                const latePct = barMax > 0 ? (bar.late / barMax) * 100 : 0
+                return (
+                  <div key={i} className="flex-1 group relative flex flex-col justify-end items-center h-full">
+                    {latePct > 0 && (
+                      <div
+                        className="w-full bg-amber-500 rounded-t-lg transition-all absolute bottom-0"
+                        style={{ height: `${latePct}%` }}
+                      />
+                    )}
+                    <div
+                      className="w-full bg-secondary-container rounded-t-lg transition-all hover:opacity-80 relative z-10"
+                      style={{ height: `${onTimePct}%` }}
+                    />
+                    <span className="mt-2 text-[10px] text-on-surface-variant">{days[i]}</span>
+                  </div>
+                )
+              })
+            )}
           </div>
           <div className="mt-8 flex gap-6">
             <div className="flex items-center gap-2">
@@ -79,33 +131,52 @@ export default function AttendancePage() {
         <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 overflow-hidden flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-on-surface">Today&apos;s Late Logs</h3>
-            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container">12 Alerts</span>
+            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container">{lateLogs.length} Alerts</span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-4">
-            {lateLogs.map((log, i) => (
-              <div key={i} className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-amber-500 transition-colors group">
-                <div className="flex items-start justify-between">
-                  <div className="flex gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                      <span className="material-symbols-outlined text-lg">timer_off</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-on-surface">{log.name}</p>
-                      <p className="text-xs text-on-surface-variant">{log.role} &bull; {log.minutes} late</p>
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest animate-pulse">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-surface-container" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 w-28 bg-surface-container rounded" />
+                      <div className="h-3 w-20 bg-surface-container rounded" />
                     </div>
                   </div>
-                  <button className="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
-                    <span className="material-symbols-outlined text-sm">notifications_active</span>
-                  </button>
                 </div>
-                {log.reason && (
-                  <div className="mt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between">
-                    <span className="text-xs text-on-surface-variant italic">&ldquo;{log.reason}&rdquo;</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">UNEXCUSED</span>
-                  </div>
-                )}
+              ))
+            ) : lateLogs.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant/40 mb-2">check_circle</span>
+                <p className="text-xs text-on-surface-variant">No late arrivals today</p>
               </div>
-            ))}
+            ) : (
+              lateLogs.map((log) => (
+                <div key={log.id} className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-amber-500 transition-colors group">
+                  <div className="flex items-start justify-between">
+                    <div className="flex gap-3">
+                      <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                        <span className="material-symbols-outlined text-lg">timer_off</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-on-surface">{log.employee_name}</p>
+                        <p className="text-xs text-on-surface-variant">{log.minutes}m late</p>
+                      </div>
+                    </div>
+                    <button className="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
+                      <span className="material-symbols-outlined text-sm">notifications_active</span>
+                    </button>
+                  </div>
+                  {log.reason && (
+                    <div className="mt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between">
+                      <span className="text-xs text-on-surface-variant italic">&ldquo;{log.reason}&rdquo;</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">UNEXCUSED</span>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
           <button className="w-full mt-4 py-3 text-center text-xs font-semibold text-primary hover:bg-surface-container-low rounded-lg transition-colors border border-dashed border-outline-variant">
             View All Late Logs
@@ -139,50 +210,77 @@ export default function AttendancePage() {
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Date</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check In</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check Out</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Location Tracking</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/30">
-                {records.map((r, i) => (
-                  <tr key={i} className="hover:bg-surface-container-low/20 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[10px]">{r.initials}</div>
-                        <div>
-                          <p className="text-sm font-medium">{r.name}</p>
-                          <p className="text-xs text-on-surface-variant">{r.role}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-on-surface-variant">{r.date}</td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-mono text-on-surface">{r.checkIn}</span>
-                      <p className={`text-[10px] font-bold ${r.checkInLabelColor}`}>{r.checkInLabel}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      {r.checkOut ? (
-                        <span className="text-sm font-mono text-on-surface">{r.checkOut}</span>
-                      ) : (
-                        <span className="text-on-surface-variant/40">&mdash;</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-on-surface-variant">
-                        <span className={`material-symbols-outlined text-lg ${r.locationColor}`}>{r.locationIcon}</span>
-                        <span className="text-xs">{r.location}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container">{r.status}</span>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <td key={j} className="px-6 py-4">
+                          <div className="h-4 w-24 bg-surface-container rounded" />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : records.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                      No attendance records found.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  records.map((r) => {
+                    const checkInTime = formatTime(r.check_in)
+                    const checkOutTime = formatTime(r.check_out)
+                    return (
+                      <tr key={r.id} className="hover:bg-surface-container-low/20 transition-colors group">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[10px]">
+                              {initials(r.employee_name)}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">{r.employee_name}</p>
+                              <p className="text-xs text-on-surface-variant">{r.employee_code}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-on-surface-variant">{formatDate(r.date)}</td>
+                        <td className="px-6 py-4">
+                          {checkInTime ? (
+                            <>
+                              <span className="text-sm font-mono text-on-surface">{checkInTime}</span>
+                              <p className={`text-[10px] font-bold ${statusColor[r.status] || ''}`}>
+                                {statusLabel[r.status] || r.status}
+                              </p>
+                            </>
+                          ) : (
+                            <span className="text-on-surface-variant/40">&mdash;</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {checkOutTime ? (
+                            <span className="text-sm font-mono text-on-surface">{checkOutTime}</span>
+                          ) : (
+                            <span className="text-on-surface-variant/40">&mdash;</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${statusBadge[r.status] || 'bg-surface-container text-on-surface-variant'}`}>
+                            {statusLabel[r.status] || r.status}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })
+                )}
               </tbody>
             </table>
           </div>
           <div className="p-4 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
-            <span className="text-xs text-on-surface-variant">Showing 1-10 of 422 entries</span>
+            <span className="text-xs text-on-surface-variant">Showing {records.length} records</span>
             <div className="flex gap-2">
               <button className="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low disabled:opacity-30 opacity-30 cursor-not-allowed">
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
