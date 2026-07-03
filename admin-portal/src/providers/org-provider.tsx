@@ -3,18 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useAuth } from './auth-provider'
 import { useSupabase } from './supabase-provider'
-
-type Organization = {
-  id: string
-  name: string
-  slug: string
-  logo_url: string | null
-  payroll_config: Record<string, any> | null
-  leave_config: Record<string, any> | null
-  loan_config: Record<string, any> | null
-  created_at: string
-  updated_at: string
-}
+import type { Organization } from '@/lib/supabase/types'
 
 type OrgContextType = {
   organization: Organization | null

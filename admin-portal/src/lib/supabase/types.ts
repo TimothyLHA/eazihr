@@ -15,11 +15,13 @@ export type Organization = {
   name: string
   slug: string
   logo_url: string | null
-  payroll_config: Record<string, Json> | null
-  leave_config: Record<string, Json> | null
-  loan_config: Record<string, Json> | null
-  created_at: string
-  updated_at: string
+  is_active: boolean | null
+  settings: Json | null
+  payroll_config: Json | null
+  leave_config: Json | null
+  loan_config: Json | null
+  feature_config: Json | null
+  created_at: string | null
 }
 
 // Profile types (extends Supabase auth.users)
