@@ -69,43 +69,43 @@ export default function OvertimePage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[32px] font-black tracking-tight text-on-surface">Overtime Requests</h1>
-          <p className="text-sm text-on-surface-variant">Review and approve additional working hour submissions.</p>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">Overtime Requests</h1>
+          <p className="text-xs text-on-surface-variant">Review and approve additional working hour submissions.</p>
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-6 py-2.5 border border-outline text-on-surface rounded-lg font-bold text-sm hover:bg-surface-container transition-colors">
-            <span className="material-symbols-outlined text-xl">file_download</span>
+        <div className="flex gap-2">
+          <button className="flex items-center gap-1.5 px-4 py-2 border border-outline text-on-surface rounded-lg font-bold text-xs hover:bg-surface-container transition-colors">
+            <span className="material-symbols-outlined text-lg">file_download</span>
             Export Report
           </button>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
-            <span className="material-symbols-outlined text-xl">add</span>
+          <button className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-lg font-bold text-xs hover:opacity-90 transition-opacity">
+            <span className="material-symbols-outlined text-lg">add</span>
             Log Overtime
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Pending Requests</p>
-          <h2 className="text-3xl font-black text-on-surface">{stats.pending_count}</h2>
-          <p className="text-xs text-secondary font-medium mt-2">&uarr; Pending approvals</p>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm">
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Pending Requests</p>
+          <h2 className="text-2xl font-black text-on-surface">{stats.pending_count}</h2>
+          <p className="text-[10px] text-secondary font-medium mt-1">&uarr; Pending approvals</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Approved Hours</p>
-          <h2 className="text-3xl font-black text-on-surface">{stats.approved_hours.toFixed(1)}</h2>
-          <p className="text-xs text-on-surface-variant font-medium mt-2">This month</p>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm">
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Approved Hours</p>
+          <h2 className="text-2xl font-black text-on-surface">{stats.approved_hours.toFixed(1)}</h2>
+          <p className="text-[10px] text-on-surface-variant font-medium mt-1">This month</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Total Payout</p>
-          <h2 className="text-3xl font-black text-on-surface">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm">
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Total Payout</p>
+          <h2 className="text-2xl font-black text-on-surface">
             {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(stats.total_payout)}
           </h2>
-          <p className="text-xs text-on-surface-variant font-medium mt-2">Projected costs</p>
+          <p className="text-[10px] text-on-surface-variant font-medium mt-1">Projected costs</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Active Multiplier</p>
-          <h2 className="text-3xl font-black text-on-surface">{stats.active_multiplier}x</h2>
-          <p className="text-xs text-on-surface-variant font-medium mt-2">Standard rate</p>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm">
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Active Multiplier</p>
+          <h2 className="text-2xl font-black text-on-surface">{stats.active_multiplier}x</h2>
+          <p className="text-[10px] text-on-surface-variant font-medium mt-1">Standard rate</p>
         </div>
       </div>
 

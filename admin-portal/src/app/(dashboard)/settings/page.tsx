@@ -86,7 +86,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-on-surface">System Configuration</h1>
+        <h1 className="text-xl font-bold text-on-surface">System Configuration</h1>
         <p className="text-sm text-on-surface-variant mt-1 max-w-2xl">
           Manage your organization's global identity, security protocols, and operational frameworks from a central command center.
         </p>

@@ -22,7 +22,7 @@ export default function PayslipsPage() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Skeleton className="h-9 w-64" />
@@ -49,7 +49,7 @@ export default function PayslipsPage() {
                 <Skeleton className="h-10 w-48" />
               </div>
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 px-6 py-4 border-b border-outline-variant">
+                <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-outline-variant">
                   <Skeleton className="h-8 w-8 rounded-full" />
                   <div className="flex-1">
                     <Skeleton className="h-4 w-40" />
@@ -80,10 +80,10 @@ export default function PayslipsPage() {
 
   if (error) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-on-surface">Payslips Archive</h1>
+            <h1 className="text-xl font-black tracking-tight text-on-surface">Payslips Archive</h1>
             <p className="text-sm text-on-surface-variant mt-1">Manage, generate, and review employee earnings records.</p>
           </div>
         </div>
@@ -114,29 +114,29 @@ export default function PayslipsPage() {
   ]
 
   return (
-    <div className="space-y-8">
+      <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-on-surface">Payslips Archive</h1>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">Payslips Archive</h1>
           <p className="text-sm text-on-surface-variant mt-1">Manage, generate, and review employee earnings records.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <button className="flex items-center gap-2 rounded-2xl bg-white border border-outline-variant px-4 py-2.5 text-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+          <button className="flex items-center gap-2 rounded-lg bg-white border border-outline-variant px-4 py-2.5 text-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
             <span className="material-symbols-outlined text-[20px]">filter_list</span>
             Filter Archive
           </button>
-          <button className="flex items-center gap-2 rounded-2xl bg-primary px-6 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90 transition-all shadow-md">
+          <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90 transition-all shadow-md">
             <span className="material-symbols-outlined text-[20px]">sync</span>
             Run Bulk Generation
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {topCards.map((card) => (
-              <div key={card.label} className="rounded-3xl border border-outline-variant bg-white p-6 shadow-sm">
+              <div key={card.label} className="rounded-xl border border-outline-variant bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-wider text-on-surface-variant mb-2">{card.label}</p>
                 <p className="text-title-md font-bold text-primary">{card.value}</p>
                 <div className={`mt-4 flex items-center gap-1 text-xs font-semibold ${card.intent === 'secondary' ? 'text-secondary' : 'text-on-surface-variant'}`}>
@@ -147,15 +147,15 @@ export default function PayslipsPage() {
             ))}
           </div>
 
-          <div className="bg-white rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
-            <div className="flex flex-col gap-4 p-6 border-b border-outline-variant bg-surface-container-lowest md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-col gap-2">
-                <select className="rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+          <div className="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+            <div className="flex flex-col gap-3 p-4 border-b border-outline-variant bg-surface-container-lowest md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-col gap-1.5">
+                <select className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
                   <option>October 2023</option>
                   <option>September 2023</option>
                   <option>August 2023</option>
                 </select>
-                <select className="rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                <select className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
                   <option>All Departments</option>
                   <option>Engineering</option>
                   <option>Design</option>
@@ -169,11 +169,11 @@ export default function PayslipsPage() {
               <table className="w-full text-left border-separate border-spacing-0">
                 <thead className="bg-surface-container-low border-b border-outline-variant">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Employee</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Pay Period</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Gross</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Status</th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Action</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Employee</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Pay Period</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Gross</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Status</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant">
@@ -181,7 +181,7 @@ export default function PayslipsPage() {
                     const status = getStatusInfo(row.status)
                     return (
                       <tr key={row.id} className="group cursor-pointer border-l-4 border-transparent transition-colors hover:bg-surface-container-lowest hover:border-primary">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-fixed text-primary font-bold text-caption">{row.employee_name.split(' ').map((n) => n[0]).join('')}</div>
                             <div>
@@ -190,15 +190,15 @@ export default function PayslipsPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-on-surface">{row.period}</td>
-                        <td className="px-6 py-4 text-sm font-semibold text-on-surface">{fmt(row.gross_pay)}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3 text-sm text-on-surface">{row.period}</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-on-surface">{fmt(row.gross_pay)}</td>
+                        <td className="px-4 py-3">
                           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${status.className}`}>
                             <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
                             {status.label}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-right text-sm text-outline transition-colors group-hover:text-primary">
+                        <td className="px-4 py-3 text-right text-sm text-outline transition-colors group-hover:text-primary">
                           {['visibility', 'download'].map((icon) => (
                             <button key={icon} className="ml-2 text-on-surface-variant hover:text-primary">
                               <span className="material-symbols-outlined text-[18px]">{icon}</span>
@@ -214,74 +214,74 @@ export default function PayslipsPage() {
           </div>
         </div>
 
-        <aside className="space-y-6">
-          <div className="rounded-3xl border border-outline-variant bg-white shadow-sm sticky top-24 overflow-hidden">
-            <div className="flex items-center justify-between border-b border-outline-variant bg-surface-container-low px-6 py-4">
+        <aside className="space-y-4">
+          <div className="rounded-xl border border-outline-variant bg-white shadow-sm sticky top-24 overflow-hidden">
+            <div className="flex items-center justify-between border-b border-outline-variant bg-surface-container-low px-4 py-2">
               <div>
-                <h3 className="text-base font-bold text-on-surface">Preview</h3>
-                <p className="text-xs text-on-surface-variant">Last Generated: Oct 28, 2023</p>
+                <h3 className="text-sm font-bold text-on-surface">Preview</h3>
+                <p className="text-[10px] text-on-surface-variant">Last Generated: Oct 28, 2023</p>
               </div>
-              <div className="flex gap-2">
-                <button className="rounded-2xl bg-white border border-outline-variant p-2 text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
-                  <span className="material-symbols-outlined text-[20px]">print</span>
+              <div className="flex gap-1">
+                <button className="rounded-lg bg-white border border-outline-variant p-1.5 text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+                  <span className="material-symbols-outlined text-base">print</span>
                 </button>
-                <button className="rounded-2xl bg-white border border-outline-variant p-2 text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
-                  <span className="material-symbols-outlined text-[20px]">share</span>
+                <button className="rounded-lg bg-white border border-outline-variant p-1.5 text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+                  <span className="material-symbols-outlined text-base">share</span>
                 </button>
               </div>
             </div>
-            <div className="p-8 overflow-y-auto max-h-[calc(100vh-240px)] bg-white payslip-preview-scroll">
-              <div className="relative rounded-3xl border-2 border-dashed border-outline-variant p-6">
-                <div className="absolute right-6 top-6 opacity-10">
-                  <span className="material-symbols-outlined text-[64px]">receipt_long</span>
+            <div className="p-6 overflow-y-auto max-h-[calc(100vh-200px)] bg-white payslip-preview-scroll">
+              <div className="relative rounded-xl border-2 border-dashed border-outline-variant p-4">
+                <div className="absolute right-4 top-4 opacity-10">
+                  <span className="material-symbols-outlined text-4xl">receipt_long</span>
                 </div>
-                <div className="mb-8">
+                <div className="mb-6">
                   <p className="text-headline-lg font-bold text-primary">HRMS PORTAL</p>
                   <p className="text-xs text-on-surface-variant">Corporate Head Office, NY 10001</p>
                 </div>
-                <div className="flex justify-between border-b border-outline-variant pb-4 mb-6">
+                <div className="flex justify-between border-b border-outline-variant pb-3 mb-4">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-on-surface-variant">EMPLOYEE</p>
-                    <p className="text-base font-bold text-on-surface">Jane Doe</p>
-                    <p className="text-xs text-on-surface-variant">Senior Product Designer</p>
+                    <p className="text-sm font-bold text-on-surface">Jane Doe</p>
+                    <p className="text-[10px] text-on-surface-variant">Senior Product Designer</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] uppercase tracking-wider text-on-surface-variant">PAY DATE</p>
-                    <p className="text-base font-bold text-on-surface">Oct 31, 2023</p>
+                    <p className="text-sm font-bold text-on-surface">Oct 31, 2023</p>
                   </div>
                 </div>
-                <div className="mb-6">
-                  <p className="text-[10px] uppercase tracking-wider text-on-surface-variant mb-3">EARNINGS</p>
-                  <div className="space-y-2 text-sm text-on-surface">
+                <div className="mb-4">
+                  <p className="text-[10px] uppercase tracking-wider text-on-surface-variant mb-2">EARNINGS</p>
+                  <div className="space-y-1 text-xs text-on-surface">
                     <div className="flex justify-between"><span>Basic Salary</span><span className="font-semibold">$6,500.00</span></div>
                     <div className="flex justify-between"><span>House Rent Allowance</span><span className="font-semibold">$1,200.00</span></div>
                     <div className="flex justify-between"><span>Performance Bonus</span><span className="font-semibold">$700.00</span></div>
-                    <div className="mt-2 flex justify-between border-t border-outline-variant pt-2 font-bold"><span>Gross Earnings</span><span>$8,400.00</span></div>
+                    <div className="mt-1 flex justify-between border-t border-outline-variant pt-1 font-bold"><span>Gross Earnings</span><span>$8,400.00</span></div>
                   </div>
                 </div>
-                <div className="mb-8">
-                  <p className="text-[10px] uppercase tracking-wider text-error mb-3">DEDUCTIONS</p>
-                  <div className="space-y-2 text-sm text-on-surface">
+                <div className="mb-6">
+                  <p className="text-[10px] uppercase tracking-wider text-error mb-2">DEDUCTIONS</p>
+                  <div className="space-y-1 text-xs text-on-surface">
                     <div className="flex justify-between"><span>Income Tax (PAYE)</span><span className="font-semibold">-$1,420.00</span></div>
                     <div className="flex justify-between"><span>Health Insurance</span><span className="font-semibold">-$150.00</span></div>
                     <div className="flex justify-between"><span>Retirement Fund</span><span className="font-semibold">-$310.00</span></div>
-                    <div className="mt-2 flex justify-between border-t border-outline-variant pt-2 font-bold text-error"><span>Total Deductions</span><span>-$1,880.00</span></div>
+                    <div className="mt-1 flex justify-between border-t border-outline-variant pt-1 font-bold text-error"><span>Total Deductions</span><span>-$1,880.00</span></div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between rounded-3xl bg-primary px-4 py-4 text-white">
+                <div className="flex items-center justify-between rounded-xl bg-primary px-4 py-3 text-white">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-white/80">Net Take-Home Pay</p>
-                    <p className="text-2xl font-bold">$6,520.00</p>
+                    <p className="text-xl font-bold">$6,520.00</p>
                   </div>
-                  <span className="material-symbols-outlined text-[32px] text-white/80">payments</span>
+                  <span className="material-symbols-outlined text-2xl text-white/80">payments</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <button className="w-full rounded-2xl bg-surface-container text-primary px-5 py-3 text-sm font-semibold hover:bg-surface-container-high transition-colors">Send to Employee Email</button>
-            <button className="w-full rounded-2xl border border-outline-variant bg-white px-5 py-3 text-sm font-semibold text-on-surface-variant hover:bg-surface-container-low transition-colors">Void This Payslip</button>
+          <div className="space-y-2">
+            <button className="w-full rounded-lg bg-surface-container text-primary px-4 py-2 text-xs font-semibold hover:bg-surface-container-high transition-colors">Send to Employee Email</button>
+            <button className="w-full rounded-lg border border-outline-variant bg-white px-4 py-2 text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low transition-colors">Void This Payslip</button>
           </div>
         </aside>
       </div>

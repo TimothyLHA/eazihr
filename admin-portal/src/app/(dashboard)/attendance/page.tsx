@@ -53,8 +53,8 @@ export default function AttendancePage() {
     <div className="space-y-6">
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-[32px] font-semibold tracking-tight text-on-surface">Attendance & Tracking</h2>
-          <p className="text-sm text-on-surface-variant">Real-time oversight of personnel movement and precision logging.</p>
+          <h2 className="text-xl font-semibold tracking-tight text-on-surface">Attendance & Tracking</h2>
+          <p className="text-xs text-on-surface-variant">Real-time oversight of personnel movement and precision logging.</p>
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest text-xs font-semibold hover:bg-surface-container-low transition-all">
@@ -206,11 +206,11 @@ export default function AttendancePage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-surface-container-low/30 border-b border-outline-variant">
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Employee</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Date</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check In</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check Out</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Employee</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Date</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check In</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check Out</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/30">
@@ -218,7 +218,7 @@ export default function AttendancePage() {
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="animate-pulse">
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <td key={j} className="px-6 py-4">
+                        <td key={j} className="px-4 py-3">
                           <div className="h-4 w-24 bg-surface-container rounded" />
                         </td>
                       ))}
@@ -236,7 +236,7 @@ export default function AttendancePage() {
                     const checkOutTime = formatTime(r.check_out)
                     return (
                       <tr key={r.id} className="hover:bg-surface-container-low/20 transition-colors group">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[10px]">
                               {initials(r.employee_name)}
@@ -247,8 +247,8 @@ export default function AttendancePage() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-on-surface-variant">{formatDate(r.date)}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3 text-sm text-on-surface-variant">{formatDate(r.date)}</td>
+                        <td className="px-4 py-3">
                           {checkInTime ? (
                             <>
                               <span className="text-sm font-mono text-on-surface">{checkInTime}</span>
@@ -260,14 +260,14 @@ export default function AttendancePage() {
                             <span className="text-on-surface-variant/40">&mdash;</span>
                           )}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3">
                           {checkOutTime ? (
                             <span className="text-sm font-mono text-on-surface">{checkOutTime}</span>
                           ) : (
                             <span className="text-on-surface-variant/40">&mdash;</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-4 py-3 text-right">
                           <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${statusBadge[r.status] || 'bg-surface-container text-on-surface-variant'}`}>
                             {statusLabel[r.status] || r.status}
                           </span>

@@ -52,8 +52,8 @@ export default function LateLogsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[32px] font-black tracking-tight text-on-surface">Late Logs</h1>
-          <p className="text-sm text-on-surface-variant">Track and manage employee late arrivals and attendance anomalies.</p>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">Late Logs</h1>
+          <p className="text-xs text-on-surface-variant">Track and manage employee late arrivals and attendance anomalies.</p>
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest text-xs font-semibold hover:bg-surface-container-low transition-all">
@@ -75,8 +75,8 @@ export default function LateLogsPage() {
       )}
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-error-container rounded-lg">
               <span className="material-symbols-outlined text-on-error-container">warning</span>
@@ -99,9 +99,9 @@ export default function LateLogsPage() {
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm group hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-surface-container rounded-lg">
+        <div className="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm group hover:shadow-md transition-shadow">
+          <div className="flex justify-between items-start mb-2">
+            <div className="p-2 bg-surface-container rounded-lg">
               <span className="material-symbols-outlined text-primary">timer</span>
             </div>
             <span className="text-secondary font-bold flex items-center text-caption bg-secondary/5 px-2 py-1 rounded">
@@ -122,9 +122,9 @@ export default function LateLogsPage() {
           <p className="text-caption text-on-surface-variant mt-4">Calculated across all departments today</p>
         </div>
 
-        <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm group hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-surface-container rounded-lg">
+        <div className="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm group hover:shadow-md transition-shadow">
+          <div className="flex justify-between items-start mb-2">
+            <div className="p-2 bg-surface-container rounded-lg">
               <span className="material-symbols-outlined text-primary">person_alert</span>
             </div>
             <span className="text-on-surface-variant text-caption font-bold bg-surface-container px-2 py-1 rounded">
@@ -144,10 +144,10 @@ export default function LateLogsPage() {
       </div>
 
       {/* Chart and Policy Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
         {/* Historical Trend Chart */}
-        <div className="lg:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
-          <div className="flex justify-between items-center mb-6">
+        <div className="lg:col-span-2 bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm">
+          <div className="flex justify-between items-center mb-3">
             <div>
               <h2 className="text-title-md font-title-md text-on-surface font-bold">Late Frequency Trend</h2>
               <p className="text-caption text-on-surface-variant">Last 7 days performance metrics</p>
@@ -202,7 +202,7 @@ export default function LateLogsPage() {
         </div>
 
         {/* Policy Quick-View */}
-        <div className="bg-primary-container p-6 rounded-xl shadow-lg flex flex-col justify-between text-on-primary-fixed">
+        <div className="bg-primary-container p-4 rounded-lg shadow-lg flex flex-col justify-between text-on-primary-fixed">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="material-symbols-outlined text-secondary-fixed">gavel</span>
@@ -227,13 +227,13 @@ export default function LateLogsPage() {
 
       {/* Late Records Table */}
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-outline-variant flex justify-between items-center">
+        <div className="p-4 border-b border-outline-variant flex justify-between items-center">
           <div>
             <h2 className="text-title-md font-title-md text-on-surface font-bold">Late Records Today</h2>
             <p className="text-caption text-on-surface-variant">Real-time attendance log for late arrivals</p>
           </div>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-body-md hover:bg-surface-container-low transition-all">
+          <div className="flex gap-2">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant rounded-lg text-body-md hover:bg-surface-container-low transition-all">
               <span className="material-symbols-outlined text-sm">filter_alt</span>
               Filter
             </button>
@@ -248,12 +248,12 @@ export default function LateLogsPage() {
           <table className="w-full text-left border-collapse">
             <thead className="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4 font-semibold">Employee</th>
-                <th className="px-6 py-4 font-semibold">Department</th>
-                <th className="px-6 py-4 font-semibold">Schedule vs Actual</th>
-                <th className="px-6 py-4 font-semibold">Delay</th>
-                <th className="px-6 py-4 font-semibold">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                <th className="px-4 py-3 font-semibold">Employee</th>
+                <th className="px-4 py-3 font-semibold">Department</th>
+                <th className="px-4 py-3 font-semibold">Schedule vs Actual</th>
+                <th className="px-4 py-3 font-semibold">Delay</th>
+                <th className="px-4 py-3 font-semibold">Status</th>
+                <th className="px-4 py-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
@@ -261,7 +261,7 @@ export default function LateLogsPage() {
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
                     {Array.from({ length: 6 }).map((_, j) => (
-                      <td key={j} className="px-6 py-4">
+                      <td key={j} className="px-4 py-3">
                         <div className="h-4 w-24 bg-surface-container rounded" />
                       </td>
                     ))}
@@ -279,7 +279,7 @@ export default function LateLogsPage() {
                   const status = statusConfig[statusKey]
                   return (
                     <tr key={entry.id} className="hover:bg-surface-container-low/50 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full border-2 border-surface-container-highest bg-surface-container flex items-center justify-center text-sm font-bold text-primary">
                             {entry.employee_name.split(' ').map(n => n[0]).join('')}
@@ -290,8 +290,8 @@ export default function LateLogsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-body-md text-on-surface-variant">{entry.employee_id}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 text-body-md text-on-surface-variant">{entry.employee_id}</td>
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-2 text-body-md">
                           <span className="text-on-surface-variant">{formatDate(entry.date)}</span>
                           <span className="material-symbols-outlined text-sm text-outline">east</span>
@@ -300,7 +300,7 @@ export default function LateLogsPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3">
                         <span
                           className={`px-2 py-1 rounded font-label-md text-[10px] ${
                             entry.minutes_late > 30 ? 'bg-error-container text-on-error-container' : 'bg-surface-container text-on-surface-variant'
@@ -309,13 +309,13 @@ export default function LateLogsPage() {
                           {entry.minutes_late} Mins
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-1.5">
                           <div className={`w-2 h-2 rounded-full ${status.dot}`}></div>
                           <span className="text-body-md">{statusKey}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-4 py-3 text-right">
                         <div className="flex justify-end gap-2">
                           <button
                             className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all"

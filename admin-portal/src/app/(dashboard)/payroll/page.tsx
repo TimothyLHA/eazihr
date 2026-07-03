@@ -11,22 +11,22 @@ const months = ['MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT']
 
 export default function PayrollPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h2 className="text-3xl font-black text-on-surface tracking-tight">Payroll Operations</h2>
-          <p className="text-on-surface-variant font-medium">Cycle: October 1 - October 31, 2023</p>
+          <h2 className="text-xl font-black text-on-surface tracking-tight">Payroll Operations</h2>
+          <p className="text-xs text-on-surface-variant font-medium">Cycle: October 1 - October 31, 2023</p>
         </div>
-        <div className="flex gap-3">
-          <button className="px-5 py-2.5 rounded-xl border border-outline font-bold text-sm hover:bg-surface-container-high transition-all">Export Reports</button>
-          <button className="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-sm hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2">
+        <div className="flex gap-2">
+          <button className="px-4 py-2 rounded-lg border border-outline font-bold text-xs hover:bg-surface-container-high transition-all">Export Reports</button>
+          <button className="px-4 py-2 rounded-lg bg-primary text-on-primary font-bold text-xs hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-1.5">
             <span className="material-symbols-outlined text-sm">add</span> Start New Run
           </button>
         </div>
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-surface-container-lowest/70 backdrop-blur-md border border-outline-variant p-6 rounded-[2rem] flex flex-col justify-between shadow-sm relative overflow-hidden">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="bg-surface-container-lowest/70 backdrop-blur-md border border-outline-variant p-4 rounded-[1.5rem] flex flex-col justify-between shadow-sm relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="p-2 bg-secondary-container text-on-secondary-container rounded-lg material-symbols-outlined">account_balance</span>
@@ -40,11 +40,11 @@ export default function PayrollPage() {
           </div>
         </div>
 
-        <div className="lg:col-span-2 bg-surface-container-lowest/70 backdrop-blur-md border border-outline-variant p-6 rounded-[2rem] shadow-sm flex flex-col">
-          <div className="flex items-center justify-between mb-6">
+        <div className="lg:col-span-2 bg-surface-container-lowest/70 backdrop-blur-md border border-outline-variant p-4 rounded-[1.5rem] shadow-sm flex flex-col">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Historical Trend</p>
-              <p className="text-xs text-outline">Gross Expenditure (Last 6 Months)</p>
+              <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Historical Trend</p>
+              <p className="text-[10px] text-outline">Gross Expenditure (Last 6 Months)</p>
             </div>
             <div className="flex gap-2">
               <button className="text-[10px] font-bold px-3 py-1 bg-primary text-on-primary rounded-full">Monthly</button>
@@ -116,52 +116,52 @@ export default function PayrollPage() {
           </div>
         </div>
 
-        <div className="xl:col-span-2 space-y-4">
-          <h4 className="text-xl font-bold text-on-surface">Variable Pay Breakdown</h4>
-          <div className="space-y-4">
-            <div className="bg-surface-container-highest/30 border border-outline-variant rounded-[1.5rem] p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
-                    <span className="material-symbols-outlined text-lg">military_tech</span>
+        <div className="xl:col-span-2 space-y-3">
+          <h4 className="text-sm font-bold text-on-surface">Variable Pay Breakdown</h4>
+          <div className="space-y-3">
+            <div className="bg-surface-container-highest/30 border border-outline-variant rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+                    <span className="material-symbols-outlined text-base">military_tech</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface">Total Incentives</p>
+                    <p className="text-xs font-bold text-on-surface">Total Incentives</p>
                     <p className="text-[10px] text-outline">Oct 2023 Projection</p>
                   </div>
                 </div>
-                <p className="text-lg font-black text-on-surface">$82,400</p>
+                <p className="text-base font-black text-on-surface">$82,400</p>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[10px]">
                   <span className="text-on-surface-variant font-medium">Sales Commission</span>
                   <span className="text-on-surface font-bold">$54,000</span>
                 </div>
-                <div className="w-full bg-outline-variant h-1.5 rounded-full">
+                <div className="w-full bg-outline-variant h-1 rounded-full">
                   <div className="bg-tertiary-fixed-dim w-[65%] h-full rounded-full" />
                 </div>
-                <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center justify-between text-[10px]">
                   <span className="text-on-surface-variant font-medium">Referral Bonuses</span>
                   <span className="text-on-surface font-bold">$12,400</span>
                 </div>
-                <div className="w-full bg-outline-variant h-1.5 rounded-full">
+                <div className="w-full bg-outline-variant h-1 rounded-full">
                   <div className="bg-primary w-[15%] h-full rounded-full" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-surface-container-highest/30 border border-outline-variant rounded-[1.5rem] p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed-variant">
-                    <span className="material-symbols-outlined text-lg">timer</span>
+            <div className="bg-surface-container-highest/30 border border-outline-variant rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed-variant">
+                    <span className="material-symbols-outlined text-base">timer</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface">Overtime Costs</p>
+                    <p className="text-xs font-bold text-on-surface">Overtime Costs</p>
                     <p className="text-[10px] text-outline">1,240 Total Hours</p>
                   </div>
                 </div>
-                <p className="text-lg font-black text-on-surface">$46,250</p>
+                <p className="text-base font-black text-on-surface">$46,250</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30">

@@ -75,34 +75,34 @@ export default function LeavePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[32px] font-black tracking-tight text-on-surface">Leave Balance Overview</h1>
-        <p className="text-sm text-on-surface-variant">Manage and track employee leave quotas, usage history, and pending approval workflows.</p>
+        <h1 className="text-xl font-black tracking-tight text-on-surface">Leave Balance Overview</h1>
+        <p className="text-xs text-on-surface-variant">Manage and track employee leave quotas, usage history, and pending approval workflows.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
-          <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Total Company Quota</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.total_quota_days.toLocaleString()} Days</p>
-            <span className="text-secondary text-sm font-bold">+2.4%</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-lg p-4 border border-outline-variant bg-surface-container-lowest shadow-sm">
+          <p className="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Total Company Quota</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-on-surface tracking-tight text-2xl font-bold">{stats.total_quota_days.toLocaleString()} Days</p>
+            <span className="text-secondary text-xs font-bold">+2.4%</span>
           </div>
-          <p className="text-on-surface-variant text-xs mt-1">Total leave pool for current fiscal year</p>
+          <p className="text-on-surface-variant text-[10px] mt-0.5">Total leave pool for current fiscal year</p>
         </div>
-        <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
-          <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Total Leave Taken</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.total_taken_days.toLocaleString()} Days</p>
-            <span className="text-secondary text-sm font-bold">+8.1%</span>
+        <div className="rounded-lg p-4 border border-outline-variant bg-surface-container-lowest shadow-sm">
+          <p className="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Total Leave Taken</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-on-surface tracking-tight text-2xl font-bold">{stats.total_taken_days.toLocaleString()} Days</p>
+            <span className="text-secondary text-xs font-bold">+8.1%</span>
           </div>
-          <p className="text-on-surface-variant text-xs mt-1">Utilization rate: {stats.total_quota_days > 0 ? ((stats.total_taken_days / stats.total_quota_days) * 100).toFixed(1) : '0.0'}% of total pool</p>
+          <p className="text-on-surface-variant text-[10px] mt-0.5">Utilization rate: {stats.total_quota_days > 0 ? ((stats.total_taken_days / stats.total_quota_days) * 100).toFixed(1) : '0.0'}% of total pool</p>
         </div>
-        <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
-          <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Pending Approvals</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.pending_requests} Requests</p>
-            <span className="text-error text-sm font-bold">-12%</span>
+        <div className="rounded-lg p-4 border border-outline-variant bg-surface-container-lowest shadow-sm">
+          <p className="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Pending Approvals</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-on-surface tracking-tight text-2xl font-bold">{stats.pending_requests} Requests</p>
+            <span className="text-error text-xs font-bold">-12%</span>
           </div>
-          <p className="text-on-surface-variant text-xs mt-1">Requires attention within 48 hours</p>
+          <p className="text-on-surface-variant text-[10px] mt-0.5">Requires attention within 48 hours</p>
         </div>
       </div>
 

@@ -24,8 +24,8 @@ export default function EmployeesPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[32px] font-black tracking-tight text-on-surface">Employee Directory</h1>
-          <p className="text-sm text-on-surface-variant">Manage and organize your global workforce with precision.</p>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">Employee Directory</h1>
+          <p className="text-xs text-on-surface-variant">Manage and organize your global workforce with precision.</p>
         </div>
         <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
           <span className="material-symbols-outlined text-xl">person_add</span>
@@ -134,7 +134,7 @@ export default function EmployeesPage() {
                   </div>
                 </div>
               </div>
-              <div className="border-t border-outline-variant bg-surface-container-low px-6 py-3 flex justify-between">
+              <div className="border-t border-outline-variant bg-surface-container-low px-4 py-2 flex justify-between">
                 <button className="text-xs font-bold text-primary hover:underline">View Profile</button>
                 <button className="text-on-surface-variant hover:text-primary transition-colors">
                   <span className="material-symbols-outlined text-lg">more_horiz</span>

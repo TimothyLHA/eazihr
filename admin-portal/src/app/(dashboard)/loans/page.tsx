@@ -116,49 +116,49 @@ export default function LoansPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-on-surface">Loan Management</h1>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">Loan Management</h1>
           <p className="text-sm text-on-surface-variant mt-1">Track employee loan applications, approvals, and repayment schedules with full transparency.</p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-on-primary shadow-sm hover:opacity-90 transition-all">
-          <span className="material-symbols-outlined">add_card</span>
+        <button className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-on-primary shadow-sm hover:opacity-90 transition-all">
+          <span className="material-symbols-outlined text-lg">add_card</span>
           New Loan Request
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
         {statCards.map((s) => {
           const value = stats[s.key]
           return (
-            <div key={s.key} className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <span className="rounded-2xl bg-surface-container p-3 text-primary">
-                  <span className="material-symbols-outlined text-2xl">{s.icon}</span>
+            <div key={s.key} className="rounded-xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <span className="rounded-lg bg-surface-container p-2 text-primary">
+                  <span className="material-symbols-outlined text-xl">{s.icon}</span>
                 </span>
-                <span className={`rounded-full px-3 py-1 text-[10px] font-bold ${s.badge}`}>{statNote(s.key, value)}</span>
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${s.badge}`}>{statNote(s.key, value)}</span>
               </div>
-              <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">{s.label}</p>
-              <p className="mt-3 text-3xl font-black text-on-surface">{s.format(value)}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">{s.label}</p>
+              <p className="mt-2 text-2xl font-black text-on-surface">{s.format(value)}</p>
             </div>
           )
         })}
       </div>
 
-      <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
-        <div className="grid gap-4 lg:grid-cols-[minmax(220px,1fr)_minmax(260px,1fr)] lg:items-center">
+      <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold text-on-surface">Loan Requests</h2>
-            <p className="text-sm text-on-surface-variant">Search employee loan applications and filter by status or type.</p>
+            <h2 className="text-sm font-bold text-on-surface">Loan Requests</h2>
+            <p className="text-xs text-on-surface-variant">Search employee loan applications and filter by status or type.</p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-            <div className="relative w-full sm:w-80">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div className="relative sm:w-64">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
               <input
-                className="w-full rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 pl-11 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 pl-9 text-xs text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 placeholder="Search employee name or loan ID..."
                 type="text"
               />
             </div>
-            <select className="w-full sm:w-52 rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+            <select className="sm:w-44 rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
               <option>All Loan Types</option>
               <option>Salary Advance</option>
               <option>Personal Loan</option>

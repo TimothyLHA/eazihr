@@ -53,7 +53,7 @@ export default function TrackingPage() {
       <div className="space-y-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <h1 className="text-[32px] font-black tracking-tight text-on-surface">FleetControl Live Tracking</h1>
+            <h1 className="text-xl font-black tracking-tight text-on-surface">FleetControl Live Tracking</h1>
             <p className="text-sm text-on-surface-variant">Live asset tracking, fleet status, and activity logs for your field workforce.</p>
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function TrackingPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <h1 className="text-[32px] font-black tracking-tight text-on-surface">FleetControl Live Tracking</h1>
+          <h1 className="text-xl font-black tracking-tight text-on-surface">FleetControl Live Tracking</h1>
           <p className="text-sm text-on-surface-variant">Live asset tracking, fleet status, and activity logs for your field workforce.</p>
         </div>
         <div className="flex flex-wrap gap-3">
