@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSettings } from '@/hooks/use-settings'
 
 const tabs = [
   { id: 'company', label: 'Company Profile', icon: 'business' },
@@ -9,20 +10,24 @@ const tabs = [
   { id: 'payroll', label: 'Payroll Cycle', icon: 'event_repeat' },
 ]
 
-const roles = [
-  { name: 'Super Admin', users: '6', level: 'Full system access' },
-  { name: 'HR Manager', users: '12', level: 'Payroll, benefits, approvals' },
-  { name: 'Team Lead', users: '24', level: 'Team and attendance review' },
-]
-
-const notificationSettings = [
-  { label: 'Email alerts', description: 'Send system updates to administrators.', enabled: true },
-  { label: 'SMS alerts', description: 'Notify managers on critical events.', enabled: false },
-  { label: 'In-app notifications', description: 'Show alerts inside the portal.', enabled: true },
-]
-
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('company')
+  const { org, roles, loading, error } = useSettings()
+
+  const payrollConfig = org?.payroll_config as Record<string, unknown> ?? {}
+  const currency = (payrollConfig.currency as string) ?? 'USD'
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <span className="material-symbols-outlined text-5xl text-error">error</span>
+        <p className="text-lg font-bold text-on-surface">Failed to load settings</p>
+        <button onClick={() => window.location.reload()} className="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-sm">
+          Retry
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -72,7 +77,8 @@ export default function SettingsPage() {
                       <input
                         className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         type="text"
-                        defaultValue="Lumina Global Solutions Ltd."
+                        defaultValue={org?.name ?? ''}
+                        readOnly={loading}
                       />
                     </div>
                     <div className="space-y-2">
@@ -80,7 +86,8 @@ export default function SettingsPage() {
                       <input
                         className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         type="text"
-                        defaultValue="UK-7729-102B"
+                        defaultValue={(org?.settings?.registration_number as string) ?? ''}
+                        readOnly={loading}
                       />
                     </div>
                   </div>
@@ -90,19 +97,20 @@ export default function SettingsPage() {
                     <textarea
                       className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                       rows={3}
-                      defaultValue="42 Tech Plaza, Canary Wharf, London, E14 5JJ, United Kingdom"
+                      defaultValue={(org?.settings?.address as string) ?? ''}
+                      readOnly={loading}
                     />
                   </div>
 
                   <div className="flex flex-col gap-6 rounded-3xl border border-dashed border-outline-variant px-6 py-6 bg-white">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="h-20 w-20 rounded-3xl bg-surface-container-highest p-4 flex items-center justify-center">
-                          <img
-                            className="h-full w-full object-contain"
-                            src="https://via.placeholder.com/80x80.png?text=Logo"
-                            alt="Company logo"
-                          />
+                        <div className="h-20 w-20 rounded-3xl bg-surface-container-highest p-4 flex items-center justify-center overflow-hidden">
+                          {org?.logo_url ? (
+                            <img className="h-full w-full object-contain" src={org.logo_url} alt="Company logo" />
+                          ) : (
+                            <span className="material-symbols-outlined text-3xl text-on-surface-variant">business</span>
+                          )}
                         </div>
                         <div>
                           <p className="font-semibold text-on-surface">Company Logo</p>
@@ -132,7 +140,7 @@ export default function SettingsPage() {
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Primary Timezone</label>
                       <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                        <option>(GMT +00:00) London</option>
+                        <option>{org?.settings?.timezone as string ?? '(GMT +00:00) London'}</option>
                         <option>(GMT -05:00) New York</option>
                         <option>(GMT +08:00) Singapore</option>
                       </select>
@@ -140,6 +148,7 @@ export default function SettingsPage() {
                     <div className="space-y-2">
                       <label className="font-semibold text-on-surface-variant">Base Currency</label>
                       <select className="w-full rounded-2xl border border-outline-variant bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                        <option>{currency === 'USD' ? 'USD ($)' : currency === 'GBP' ? 'GBP (£)' : currency === 'EUR' ? 'EUR (€)' : `${currency}`}</option>
                         <option>GBP (£)</option>
                         <option>USD ($)</option>
                         <option>EUR (€)</option>
@@ -175,16 +184,32 @@ export default function SettingsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant">
-                    {roles.map((role) => (
-                      <tr key={role.name} className="hover:bg-surface-container-low transition-colors">
-                        <td className="px-6 py-5 font-semibold text-on-surface">{role.name}</td>
-                        <td className="px-6 py-5 text-sm text-on-surface-variant">{role.users}</td>
-                        <td className="px-6 py-5 text-sm text-on-surface-variant">{role.level}</td>
-                        <td className="px-6 py-5 text-right">
-                          <button className="text-primary text-sm font-semibold hover:underline">Manage</button>
-                        </td>
+                    {loading ? (
+                      Array.from({ length: 3 }).map((_, i) => (
+                        <tr key={i} className="animate-pulse">
+                          {Array.from({ length: 4 }).map((_, j) => (
+                            <td key={j} className="px-6 py-5">
+                              <div className="h-4 w-24 bg-surface-container rounded" />
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    ) : roles.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-12 text-center text-sm text-on-surface-variant">No roles found</td>
                       </tr>
-                    ))}
+                    ) : (
+                      roles.map((role) => (
+                        <tr key={role.name} className="hover:bg-surface-container-low transition-colors">
+                          <td className="px-6 py-5 font-semibold text-on-surface">{role.name}</td>
+                          <td className="px-6 py-5 text-sm text-on-surface-variant">{role.users}</td>
+                          <td className="px-6 py-5 text-sm text-on-surface-variant">{role.level}</td>
+                          <td className="px-6 py-5 text-right">
+                            <button className="text-primary text-sm font-semibold hover:underline">Manage</button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -199,21 +224,30 @@ export default function SettingsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {notificationSettings.map((item) => (
-                  <div key={item.label} className="rounded-3xl border border-outline-variant bg-white p-6">
-                    <div className="flex items-center justify-between gap-4 mb-3">
-                      <div>
-                        <p className="text-sm font-semibold text-on-surface">{item.label}</p>
-                        <p className="text-xs text-on-surface-variant">{item.description}</p>
+                {['Email alerts', 'SMS alerts', 'In-app notifications'].map((label) => {
+                  const notifConfig = org?.settings?.notifications as Record<string, boolean> ?? {}
+                  const key = label.toLowerCase().replace(/\s+/g, '_')
+                  const enabled = notifConfig[key] ?? (label === 'Email alerts' || label === 'In-app notifications')
+                  return (
+                    <div key={label} className="rounded-3xl border border-outline-variant bg-white p-6">
+                      <div className="flex items-center justify-between gap-4 mb-3">
+                        <div>
+                          <p className="text-sm font-semibold text-on-surface">{label}</p>
+                          <p className="text-xs text-on-surface-variant">
+                            {label === 'Email alerts' ? 'Send system updates to administrators.' :
+                             label === 'SMS alerts' ? 'Notify managers on critical events.' :
+                             'Show alerts inside the portal.'}
+                          </p>
+                        </div>
+                        <span className={`inline-flex h-6 w-12 items-center rounded-full p-1 transition ${enabled ? 'bg-primary/10' : 'bg-surface-container-highest'}`}>
+                          <span className={`h-4 w-4 rounded-full bg-white shadow-sm transition-all ${enabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                        </span>
                       </div>
-                      <span className={`inline-flex h-6 w-12 items-center rounded-full p-1 transition ${item.enabled ? 'bg-primary/10' : 'bg-surface-container-highest'}`}>
-                        <span className={`h-4 w-4 rounded-full bg-white shadow-sm transition-all ${item.enabled ? 'translate-x-6' : 'translate-x-0'}`} />
-                      </span>
+                      <p className="text-xs uppercase tracking-wider text-on-surface-variant">Status</p>
+                      <p className="mt-2 font-semibold text-on-surface">{enabled ? 'Enabled' : 'Disabled'}</p>
                     </div>
-                    <p className="text-xs uppercase tracking-wider text-on-surface-variant">Status</p>
-                    <p className="mt-2 font-semibold text-on-surface">{item.enabled ? 'Enabled' : 'Disabled'}</p>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           )}
@@ -238,14 +272,14 @@ export default function SettingsPage() {
                   <p className="mt-3 text-sm text-on-surface-variant">Automatic payroll creation on the last business day of each month.</p>
                 </div>
                 <div className="rounded-3xl border border-outline-variant bg-white p-6">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Next Run</p>
-                  <p className="mt-4 text-2xl font-bold text-on-surface">Jul 31, 2026</p>
-                  <p className="mt-3 text-sm text-on-surface-variant">Payroll will be queued for approval 3 days prior.</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Base Currency</p>
+                  <p className="mt-4 text-2xl font-bold text-on-surface">{currency}</p>
+                  <p className="mt-3 text-sm text-on-surface-variant">Currency used for all payroll calculations.</p>
                 </div>
                 <div className="rounded-3xl border border-outline-variant bg-white p-6">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Approval Workflow</p>
-                  <p className="mt-4 text-2xl font-bold text-on-surface">2-step review</p>
-                  <p className="mt-3 text-sm text-on-surface-variant">Finance and HR manager review before release.</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Overtime Rate</p>
+                  <p className="mt-4 text-2xl font-bold text-on-surface">{(payrollConfig.overtime_rate as string ?? '1.5')}x</p>
+                  <p className="mt-3 text-sm text-on-surface-variant">Standard overtime multiplier.</p>
                 </div>
               </div>
             </div>
