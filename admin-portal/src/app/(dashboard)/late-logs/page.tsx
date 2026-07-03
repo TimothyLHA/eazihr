@@ -1,62 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-
-interface LateEntry {
-  id: string
-  name: string
-  employeeId: string
-  role: string
-  department: string
-  scheduledTime: string
-  actualTime: string
-  minutesLate: number
-  reason: string | null
-  status: 'Late' | 'Grace Period' | 'Excused'
-  avatarUrl?: string
-}
-
-const lateEntries: LateEntry[] = [
-  {
-    id: '1',
-    name: 'Marcus Sterling',
-    employeeId: 'EMP-9021',
-    role: 'UI Designer',
-    department: 'Marketing',
-    scheduledTime: '09:00 AM',
-    actualTime: '09:42 AM',
-    minutesLate: 42,
-    reason: 'Traffic congestion on M1',
-    status: 'Late',
-  },
-  {
-    id: '2',
-    name: 'Sarah Chen',
-    employeeId: 'EMP-8842',
-    role: 'Senior Engineer',
-    department: 'Engineering',
-    scheduledTime: '09:00 AM',
-    actualTime: '09:08 AM',
-    minutesLate: 8,
-    reason: null,
-    status: 'Grace Period',
-  },
-  {
-    id: '3',
-    name: 'Julian Thorne',
-    employeeId: 'EMP-7712',
-    role: 'Operations Manager',
-    department: 'Operations',
-    scheduledTime: '08:30 AM',
-    actualTime: '10:15 AM',
-    minutesLate: 105,
-    reason: 'Medical appointment',
-    status: 'Excused',
-  },
-]
+import { useLateLogs } from '@/hooks/use-late-logs'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const barData = [40, 65, 90, 55, 45, 20, 15]
 
 const statusConfig = {
   'Late': {
@@ -76,8 +23,29 @@ const statusConfig = {
   },
 }
 
+function deriveStatus(minutesLate: number): 'Late' | 'Grace Period' {
+  return minutesLate <= 15 ? 'Grace Period' : 'Late'
+}
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function formatTime(timeStr: string | null) {
+  if (!timeStr) return '--:--'
+  const [h, m] = timeStr.split(':')
+  const hour = parseInt(h, 10)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const hr12 = hour % 12 || 12
+  return `${hr12}:${m} ${ampm}`
+}
+
 export default function LateLogsPage() {
   const [activeFilter, setActiveFilter] = useState<'Week' | 'Month'>('Week')
+  const { entries, stats, loading, error, refetch } = useLateLogs()
+
+  const barMax = stats.bar_data.length > 0 ? Math.max(...stats.bar_data.map((b) => b.count), 1) : 1
 
   return (
     <div className="space-y-6">
@@ -99,6 +67,13 @@ export default function LateLogsPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-xl bg-error-container text-error p-4 text-sm">
+          Failed to load late log data.{' '}
+          <button onClick={() => refetch()} className="underline font-semibold">Retry</button>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
@@ -114,7 +89,11 @@ export default function LateLogsPage() {
           <h3 className="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider mb-1">
             Total Late Today
           </h3>
-          <p className="text-headline-lg font-headline-lg text-on-surface font-bold">42</p>
+          {loading ? (
+            <div className="h-9 w-16 bg-surface-container rounded animate-pulse" />
+          ) : (
+            <p className="text-headline-lg font-headline-lg text-on-surface font-bold">{stats.total_late}</p>
+          )}
           <div className="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
             <div className="h-full bg-error w-3/4"></div>
           </div>
@@ -133,9 +112,13 @@ export default function LateLogsPage() {
           <h3 className="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider mb-1">
             Average Delay Time
           </h3>
-          <p className="text-headline-lg font-headline-lg text-on-surface font-bold">
-            14<span className="text-body-lg font-normal ml-1">mins</span>
-          </p>
+          {loading ? (
+            <div className="h-9 w-24 bg-surface-container rounded animate-pulse" />
+          ) : (
+            <p className="text-headline-lg font-headline-lg text-on-surface font-bold">
+              {stats.avg_delay}<span className="text-body-lg font-normal ml-1">mins</span>
+            </p>
+          )}
           <p className="text-caption text-on-surface-variant mt-4">Calculated across all departments today</p>
         </div>
 
@@ -151,7 +134,11 @@ export default function LateLogsPage() {
           <h3 className="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider mb-1">
             Critical Offenders
           </h3>
-          <p className="text-headline-lg font-headline-lg text-on-surface font-bold">08</p>
+          {loading ? (
+            <div className="h-9 w-12 bg-surface-container rounded animate-pulse" />
+          ) : (
+            <p className="text-headline-lg font-headline-lg text-on-surface font-bold">{String(stats.critical_offenders).padStart(2, '0')}</p>
+          )}
           <p className="text-caption text-on-surface-variant mt-4">Employees with &gt;3 late marks this week</p>
         </div>
       </div>
@@ -189,19 +176,28 @@ export default function LateLogsPage() {
             </div>
           </div>
           <div className="h-64 flex items-end justify-between gap-4 px-2">
-            {barData.map((height, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                <div
-                  className={`w-full rounded-t-lg transition-all duration-500 hover:opacity-80 ${
-                    i === 3 ? 'bg-primary shadow-lg shadow-primary/10' : 'bg-surface-container'
-                  }`}
-                  style={{ height: `${height}%` }}
-                />
-                <span className={`text-caption ${i === 3 ? 'font-bold text-on-surface' : 'text-on-surface-variant'}`}>
-                  {days[i]}
-                </span>
-              </div>
-            ))}
+            {loading ? (
+              Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                  <div className="w-full rounded-t-lg bg-surface-container animate-pulse" style={{ height: '60%' }} />
+                  <span className="text-caption text-on-surface-variant">{days[i]}</span>
+                </div>
+              ))
+            ) : (
+              stats.bar_data.map((bar, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                  <div
+                    className={`w-full rounded-t-lg transition-all duration-500 hover:opacity-80 ${
+                      i === 3 ? 'bg-primary shadow-lg shadow-primary/10' : 'bg-surface-container'
+                    }`}
+                    style={{ height: `${(bar.count / barMax) * 100}%` }}
+                  />
+                  <span className={`text-caption ${i === 3 ? 'font-bold text-on-surface' : 'text-on-surface-variant'}`}>
+                    {days[i]}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -261,76 +257,95 @@ export default function LateLogsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
-              {lateEntries.map((entry) => {
-                const status = statusConfig[entry.status]
-                return (
-                  <tr key={entry.id} className="hover:bg-surface-container-low/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full border-2 border-surface-container-highest bg-surface-container flex items-center justify-center text-sm font-bold text-primary">
-                          {entry.name.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <div>
-                          <p className="text-body-md font-bold text-on-surface">{entry.name}</p>
-                          <p className="text-caption text-on-surface-variant">{entry.employeeId}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-body-md text-on-surface-variant">{entry.department}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-body-md">
-                        <span className="text-on-surface-variant">{entry.scheduledTime}</span>
-                        <span className="material-symbols-outlined text-sm text-outline">east</span>
-                        <span className={`font-bold ${entry.status === 'Late' ? 'text-error' : 'text-on-surface'}`}>
-                          {entry.actualTime}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 rounded font-label-md text-[10px] ${
-                          entry.minutesLate > 30 ? 'bg-error-container text-on-error-container' : 'bg-surface-container text-on-surface-variant'
-                        }`}
-                      >
-                        {entry.minutesLate} Mins
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5">
-                        <div className={`w-2 h-2 rounded-full ${status.dot}`}></div>
-                        <span className="text-body-md">{entry.status}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all"
-                          title="View Details"
-                        >
-                          <span className="material-symbols-outlined">visibility</span>
-                        </button>
-                        <button
-                          className={`p-2 rounded-lg transition-all ${
-                            entry.status === 'Late'
-                              ? 'text-error hover:bg-error-container/50'
-                              : 'text-on-surface-variant/50 cursor-not-allowed'
-                          }`}
-                          title="Send Warning"
-                          disabled={entry.status !== 'Late'}
-                        >
-                          <span className="material-symbols-outlined">priority_high</span>
-                        </button>
-                      </div>
-                    </td>
+              {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    {Array.from({ length: 6 }).map((_, j) => (
+                      <td key={j} className="px-6 py-4">
+                        <div className="h-4 w-24 bg-surface-container rounded" />
+                      </td>
+                    ))}
                   </tr>
-                )
-              })}
+                ))
+              ) : entries.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                    No late records found.
+                  </td>
+                </tr>
+              ) : (
+                entries.map((entry) => {
+                  const statusKey = deriveStatus(entry.minutes_late)
+                  const status = statusConfig[statusKey]
+                  return (
+                    <tr key={entry.id} className="hover:bg-surface-container-low/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full border-2 border-surface-container-highest bg-surface-container flex items-center justify-center text-sm font-bold text-primary">
+                            {entry.employee_name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <p className="text-body-md font-bold text-on-surface">{entry.employee_name}</p>
+                            <p className="text-caption text-on-surface-variant">{entry.employee_id}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-body-md text-on-surface-variant">{entry.employee_id}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-body-md">
+                          <span className="text-on-surface-variant">{formatDate(entry.date)}</span>
+                          <span className="material-symbols-outlined text-sm text-outline">east</span>
+                          <span className="font-bold text-error">
+                            {formatTime(entry.check_in_time)}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 rounded font-label-md text-[10px] ${
+                            entry.minutes_late > 30 ? 'bg-error-container text-on-error-container' : 'bg-surface-container text-on-surface-variant'
+                          }`}
+                        >
+                          {entry.minutes_late} Mins
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5">
+                          <div className={`w-2 h-2 rounded-full ${status.dot}`}></div>
+                          <span className="text-body-md">{statusKey}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all"
+                            title="View Details"
+                          >
+                            <span className="material-symbols-outlined">visibility</span>
+                          </button>
+                          <button
+                            className={`p-2 rounded-lg transition-all ${
+                              statusKey === 'Late'
+                                ? 'text-error hover:bg-error-container/50'
+                                : 'text-on-surface-variant/50 cursor-not-allowed'
+                            }`}
+                            title="Send Warning"
+                            disabled={statusKey !== 'Late'}
+                          >
+                            <span className="material-symbols-outlined">priority_high</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
             </tbody>
           </table>
         </div>
 
         <div className="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-container-low/30">
-          <span className="text-caption text-on-surface-variant">Showing 3 of 42 late records</span>
+          <span className="text-caption text-on-surface-variant">Showing {entries.length} of {stats.total_late} late records</span>
           <div className="flex gap-1">
             <button className="w-8 h-8 flex items-center justify-center rounded-md border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container">
               1

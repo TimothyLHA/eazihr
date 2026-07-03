@@ -1,15 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useLeave } from '@/hooks/use-leave'
 
 type Tab = 'quotas' | 'taken' | 'pending'
-
-const quotas = [
-  { name: 'Alexander Wright', role: 'Senior Project Manager', dept: 'Operations', quota: '25 Days', used: '12 Days', remaining: '13 Days', remainingColor: 'text-on-surface', status: 'Healthy', statusStyle: 'bg-secondary-container text-on-secondary-container' },
-  { name: 'Elena Rodriguez', role: 'Lead Designer', dept: 'Creative', quota: '25 Days', used: '22 Days', remaining: '3 Days', remainingColor: 'text-error', status: 'Low Balance', statusStyle: 'bg-error-container text-on-error-container' },
-  { name: 'Jordan Smith', role: 'Full Stack Developer', dept: 'Engineering', quota: '30 Days', used: '5 Days', remaining: '25 Days', remainingColor: 'text-on-surface', status: 'Healthy', statusStyle: 'bg-secondary-container text-on-secondary-container' },
-  { name: 'Sarah Jenkins', role: 'Marketing Director', dept: 'Marketing', quota: '25 Days', used: '15 Days', remaining: '10 Days', remainingColor: 'text-on-surface', status: 'Healthy', statusStyle: 'bg-secondary-container text-on-secondary-container' },
-]
 
 const tabs: { key: Tab; label: string }[] = [
   { key: 'quotas', label: 'Leave Quotas' },
@@ -17,8 +11,66 @@ const tabs: { key: Tab; label: string }[] = [
   { key: 'pending', label: 'Pending Approvals' },
 ]
 
+function StatusBadge({ remaining }: { remaining: number }) {
+  if (remaining <= 3) {
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container text-on-error-container">
+        Low Balance
+      </span>
+    )
+  }
+  return (
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">
+      Healthy
+    </span>
+  )
+}
+
+function Skeleton() {
+  return (
+    <div className="space-y-8 animate-pulse">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
+            <div className="h-4 w-36 bg-surface-container-high rounded mb-4" />
+            <div className="h-8 w-28 bg-surface-container-high rounded mb-2" />
+            <div className="h-3 w-44 bg-surface-container-high rounded" />
+          </div>
+        ))}
+      </div>
+      <div>
+        <div className="h-10 w-full bg-surface-container-high rounded-lg mb-4" />
+        <div className="h-64 bg-surface-container-high rounded-xl" />
+      </div>
+    </div>
+  )
+}
+
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div className="rounded-xl border border-error/30 bg-error-container/10 p-12 flex flex-col items-center justify-center text-center">
+      <div className="w-16 h-16 bg-error/10 rounded-2xl flex items-center justify-center mb-4">
+        <span className="material-symbols-outlined text-3xl text-error">error_outline</span>
+      </div>
+      <h2 className="text-lg font-semibold text-on-surface mb-2">Failed to load leave data</h2>
+      <p className="text-sm text-on-surface-variant max-w-sm mb-6">{message}</p>
+      <button
+        onClick={onRetry}
+        className="px-6 py-3 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-all"
+      >
+        Retry
+      </button>
+    </div>
+  )
+}
+
 export default function LeavePage() {
+  const { balances, stats, loading, error, refetch } = useLeave()
   const [activeTab, setActiveTab] = useState<Tab>('quotas')
+
+  if (loading) return <Skeleton />
+
+  if (error) return <ErrorState message={error.message} onRetry={refetch} />
 
   return (
     <div className="space-y-8">
@@ -31,7 +83,7 @@ export default function LeavePage() {
         <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
           <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Total Company Quota</p>
           <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">14,250 Days</p>
+            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.total_quota_days.toLocaleString()} Days</p>
             <span className="text-secondary text-sm font-bold">+2.4%</span>
           </div>
           <p className="text-on-surface-variant text-xs mt-1">Total leave pool for current fiscal year</p>
@@ -39,15 +91,15 @@ export default function LeavePage() {
         <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
           <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Total Leave Taken</p>
           <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">3,120 Days</p>
+            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.total_taken_days.toLocaleString()} Days</p>
             <span className="text-secondary text-sm font-bold">+8.1%</span>
           </div>
-          <p className="text-on-surface-variant text-xs mt-1">Utilization rate: 21.8% of total pool</p>
+          <p className="text-on-surface-variant text-xs mt-1">Utilization rate: {stats.total_quota_days > 0 ? ((stats.total_taken_days / stats.total_quota_days) * 100).toFixed(1) : '0.0'}% of total pool</p>
         </div>
         <div className="rounded-xl p-6 border border-outline-variant bg-surface-container-lowest shadow-sm">
           <p className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Pending Approvals</p>
           <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-on-surface tracking-tight text-3xl font-bold">42 Requests</p>
+            <p className="text-on-surface tracking-tight text-3xl font-bold">{stats.pending_requests} Requests</p>
             <span className="text-error text-sm font-bold">-12%</span>
           </div>
           <p className="text-on-surface-variant text-xs mt-1">Requires attention within 48 hours</p>
@@ -92,7 +144,7 @@ export default function LeavePage() {
               <thead>
                 <tr className="bg-surface-container-low border-b border-outline-variant">
                   <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Employee</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Department</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Leave Type</th>
                   <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Annual Quota</th>
                   <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Used</th>
                   <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Remaining</th>
@@ -100,35 +152,41 @@ export default function LeavePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
-                {quotas.map((row, i) => (
-                  <tr key={i} className="hover:bg-surface-container-low transition-colors group">
+                {balances.map((row) => (
+                  <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
-                          {row.name.split(' ').map(n => n[0]).join('')}
+                          {row.employee_name.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div>
-                          <span className="text-sm font-bold text-on-surface">{row.name}</span>
-                          <span className="text-xs text-on-surface-variant block">{row.role}</span>
+                          <span className="text-sm font-bold text-on-surface">{row.employee_name}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.dept}</td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.quota}</td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.used}</td>
-                    <td className={`px-6 py-4 text-sm font-bold ${row.remainingColor}`}>{row.remaining}</td>
+                    <td className="px-6 py-4 text-sm text-on-surface">{row.leave_type}</td>
+                    <td className="px-6 py-4 text-sm text-on-surface">{row.allocated_days} Days</td>
+                    <td className="px-6 py-4 text-sm text-on-surface">{row.used_days} Days</td>
+                    <td className={`px-6 py-4 text-sm font-bold ${row.remaining_days <= 3 ? 'text-error' : 'text-on-surface'}`}>
+                      {row.remaining_days} Days
+                    </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.statusStyle}`}>
-                        {row.status}
-                      </span>
+                      <StatusBadge remaining={row.remaining_days} />
                     </td>
                   </tr>
                 ))}
+                {balances.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                      No leave balances found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
           <div className="flex items-center justify-between px-2">
-            <p className="text-sm text-on-surface-variant">Showing 4 of 248 employees</p>
+            <p className="text-sm text-on-surface-variant">Showing {balances.length} of {balances.length} employees</p>
             <div className="flex gap-2">
               <button className="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors">
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
@@ -170,7 +228,11 @@ export default function LeavePage() {
             <span className="material-symbols-outlined text-3xl text-primary/40">pending_actions</span>
           </div>
           <h2 className="text-lg font-semibold text-on-surface mb-2">Pending Approvals</h2>
-          <p className="text-sm text-on-surface-variant max-w-sm">Leave requests awaiting your review.</p>
+          <p className="text-sm text-on-surface-variant max-w-sm">
+            {stats.pending_requests > 0
+              ? `${stats.pending_requests} leave request${stats.pending_requests > 1 ? 's' : ''} awaiting your review.`
+              : 'No pending leave requests.'}
+          </p>
         </div>
       )}
     </div>

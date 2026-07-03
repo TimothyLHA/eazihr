@@ -1,27 +1,121 @@
 'use client'
 
-const stats = [
-  { label: 'Active Fleet', value: '42 / 50', trend: '+5%', icon: 'local_shipping', accent: 'text-secondary', badge: 'bg-surface-container-low text-secondary' },
-  { label: 'Staff in Field', value: '128', trend: '-2%', icon: 'groups', accent: 'text-error', badge: 'bg-surface-container-low text-error' },
-  { label: 'Fuel Efficiency', value: '8.4 L/km', trend: '-12%', icon: 'gas_meter', accent: 'text-secondary', badge: 'bg-surface-container-low text-secondary' },
-  { label: 'System Alerts', value: '03 High', trend: 'Critical', icon: 'warning', accent: 'text-error', badge: 'bg-error-container text-error' },
-]
+import { useTracking } from '@/hooks/use-tracking'
 
-const assets = [
-  { id: 'FLT-992-K', status: 'ON-TRACK', location: 'Broadway St Intersect', time: '14:10:50', badge: 'bg-secondary/10 text-secondary' },
-  { id: 'EMP-8812', status: 'CHECK_IN_SUCCESS', location: 'Zone 4 Warehouse', time: '14:18:45', badge: 'bg-primary-container/10 text-primary-container' },
-  { id: 'TRK-550-B', status: 'DELAY_RISK', location: 'Hudson Terminal', time: '14:22:10', badge: 'bg-amber-500/10 text-amber-700' },
-  { id: 'VHC-314-N', status: 'CRITICAL', location: 'East Dock', time: '14:25:02', badge: 'bg-error/10 text-error' },
-]
+const STATUS_MAP: Record<string, { display: string; badge: string; action: string; logStatus: string }> = {
+  active: { display: 'ON-TRACK', badge: 'bg-secondary/10 text-secondary', action: 'On track update', logStatus: 'ON-TRACK' },
+  idle: { display: 'CHECK_IN_SUCCESS', badge: 'bg-primary-container/10 text-primary-container', action: 'Check-in success', logStatus: 'SUCCESS' },
+  maintenance: { display: 'DELAY_RISK', badge: 'bg-amber-500/10 text-amber-700', action: 'Route delay detected', logStatus: 'DELAY' },
+  out_of_service: { display: 'CRITICAL', badge: 'bg-error/10 text-error', action: 'Critical alert raised', logStatus: 'CRITICAL' },
+}
 
-const activityLog = [
-  { id: 'FLT-992-K', action: 'On track update', location: 'Broadway St Intersect', time: '14:10:50', status: 'ON-TRACK' },
-  { id: 'EMP-8812', action: 'Check-in success', location: 'Zone 4 Warehouse', time: '14:18:45', status: 'SUCCESS' },
-  { id: 'TRK-550-B', action: 'Route delay detected', location: 'Hudson Terminal', time: '14:22:10', status: 'DELAY' },
-  { id: 'VHC-314-N', action: 'Critical alert raised', location: 'East Dock', time: '14:25:02', status: 'CRITICAL' },
-]
+function formatTime(dateStr: string | null): string {
+  if (!dateStr) return '--:--:--'
+  try {
+    return new Date(dateStr).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  } catch {
+    return '--:--:--'
+  }
+}
+
+function getLocationDisplay(vehicle: { last_location: Record<string, unknown> | null; name: string; plate_number: string }): string {
+  if (vehicle.last_location && typeof vehicle.last_location === 'object') {
+    const addr = vehicle.last_location['address'] ?? vehicle.last_location['city'] ?? vehicle.last_location['name']
+    if (addr) return String(addr)
+    const parts = Object.values(vehicle.last_location).filter((v) => typeof v === 'string' || typeof v === 'number')
+    if (parts.length > 0) return parts.join(', ')
+  }
+  return vehicle.plate_number || vehicle.name || 'Unknown'
+}
 
 export default function TrackingPage() {
+  const { vehicles, stats, loading, error, refetch } = useTracking()
+
+  const derivedStats = [
+    { label: 'Active Fleet', value: `${stats.active_count} / ${stats.total_count}`, trend: stats.total_count > 0 ? `${Math.round((stats.active_count / stats.total_count) * 100)}%` : '0%', icon: 'local_shipping', accent: 'text-secondary', badge: 'bg-surface-container-low text-secondary' },
+    { label: 'Staff in Field', value: `${vehicles.filter((v) => v.driver_name).length}`, trend: `${vehicles.length} total`, icon: 'groups', accent: 'text-error', badge: 'bg-surface-container-low text-error' },
+    { label: 'Fuel Efficiency', value: `${stats.total_count > 0 ? ((stats.active_count / stats.total_count) * 100).toFixed(0) : '0'}%`, trend: 'Fleet avg', icon: 'gas_meter', accent: 'text-secondary', badge: 'bg-surface-container-low text-secondary' },
+    { label: 'System Alerts', value: `${String(stats.alert_count).padStart(2, '0')} High`, trend: stats.alert_count > 0 ? 'Critical' : 'Normal', icon: 'warning', accent: 'text-error', badge: stats.alert_count > 0 ? 'bg-error-container text-error' : 'bg-surface-container-low text-secondary' },
+  ]
+
+  const assets = vehicles.map((v) => {
+    const mapping = STATUS_MAP[v.status] ?? STATUS_MAP.idle
+    return { id: v.plate_number || v.name || v.id, status: mapping.display, location: getLocationDisplay(v), time: formatTime(v.last_updated), badge: mapping.badge }
+  })
+
+  const activityLog = vehicles.slice(0, 10).map((v) => {
+    const mapping = STATUS_MAP[v.status] ?? STATUS_MAP.idle
+    return { id: v.plate_number || v.name || v.id, action: mapping.action, location: getLocationDisplay(v), time: formatTime(v.last_updated), status: mapping.logStatus }
+  })
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <h1 className="text-[32px] font-black tracking-tight text-on-surface">FleetControl Live Tracking</h1>
+            <p className="text-sm text-on-surface-variant">Live asset tracking, fleet status, and activity logs for your field workforce.</p>
+          </div>
+        </div>
+        <section className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm animate-pulse">
+              <div className="h-12 bg-surface-dim rounded-2xl mb-4 w-12" />
+              <div className="h-4 bg-surface-dim rounded w-24 mb-3" />
+              <div className="h-8 bg-surface-dim rounded w-20" />
+            </div>
+          ))}
+        </section>
+        <div className="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 h-[calc(100vh-240px)]">
+          <div className="flex flex-col rounded-3xl border border-outline-variant bg-white shadow-sm overflow-hidden animate-pulse">
+            <div className="border-b border-outline-variant px-6 py-4 bg-surface-container-lowest">
+              <div className="h-4 bg-surface-dim rounded w-24 mb-1" />
+              <div className="h-3 bg-surface-dim rounded w-40" />
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="rounded-3xl border border-outline-variant p-4 bg-surface-container-lowest">
+                  <div className="h-4 bg-surface-dim rounded w-24 mb-2" />
+                  <div className="h-3 bg-surface-dim rounded w-32 mb-3" />
+                  <div className="h-3 bg-surface-dim rounded w-16" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col rounded-3xl border border-outline-variant bg-surface-dim shadow-sm overflow-hidden animate-pulse">
+            <div className="border-b border-outline-variant px-6 py-4 bg-white">
+              <div className="h-4 bg-surface-dim rounded w-24" />
+            </div>
+          </div>
+        </div>
+        <div className="rounded-3xl border border-outline-variant bg-white shadow-sm overflow-hidden animate-pulse">
+          <div className="border-b border-outline-variant px-6 py-4 bg-surface-container-lowest">
+            <div className="h-4 bg-surface-dim rounded w-32" />
+          </div>
+          <div className="p-6">
+            <div className="h-8 bg-surface-dim rounded w-full" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="text-center space-y-4">
+          <span className="material-symbols-outlined text-6xl text-error">error_outline</span>
+          <h2 className="text-xl font-bold text-on-surface">Failed to load tracking data</h2>
+          <p className="text-sm text-on-surface-variant">{error.message}</p>
+          <button onClick={() => refetch()} className="inline-flex items-center gap-2 rounded-xl bg-primary text-on-primary px-5 py-3 text-sm font-semibold hover:opacity-90 transition-all">
+            <span className="material-symbols-outlined text-lg">refresh</span>
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
@@ -42,7 +136,7 @@ export default function TrackingPage() {
       </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
+        {derivedStats.map((stat) => (
           <div key={stat.label} className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="rounded-2xl bg-surface-container p-3 text-on-surface">
@@ -112,7 +206,7 @@ export default function TrackingPage() {
               </div>
               <div className="flex items-center gap-2 rounded-full bg-surface-container px-3 py-2 text-[11px] font-semibold text-primary">
                 <span className="material-symbols-outlined text-sm">local_shipping</span>
-                FLT-992-K (3 min)
+                {assets.length > 0 ? `${assets[0].id} (3 min)` : 'No vehicles'}
               </div>
             </div>
             <div className="absolute bottom-6 left-6 rounded-3xl bg-white/90 border border-outline-variant p-4 shadow-2xl flex flex-col gap-3">

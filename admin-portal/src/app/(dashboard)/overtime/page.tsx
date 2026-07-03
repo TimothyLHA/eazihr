@@ -1,20 +1,70 @@
 'use client'
 
-type Status = 'Approved' | 'Pending' | 'Rejected'
+import { useOvertime } from '@/hooks/use-overtime'
 
-const requests = [
-  { name: 'Sarah Chen', id: 'FE-9021', date: 'Oct 24, 2023', hours: '4.5', reason: 'System deployment & critical bug fixes', status: 'Approved' as Status },
-  { name: 'Marcus Thorne', id: 'DS-4412', date: 'Oct 25, 2023', hours: '2.0', reason: 'Client review board emergency preparation', status: 'Pending' as Status },
-  { name: 'Elena Rodriguez', id: 'OP-1102', date: 'Oct 25, 2023', hours: '3.0', reason: 'Monthly financial audit deadline', status: 'Rejected' as Status },
-]
-
-const statusStyles: Record<Status, string> = {
+const statusStyles: Record<string, string> = {
   Approved: 'bg-secondary-container text-on-secondary-container',
   Pending: 'bg-surface-container-highest text-on-surface-variant border border-outline-variant',
   Rejected: 'bg-tertiary-fixed-dim text-on-tertiary-fixed-variant',
 }
 
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 export default function OvertimePage() {
+  const { entries, stats, loading, error, refetch } = useOvertime()
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <span className="material-symbols-outlined text-5xl text-error">error</span>
+        <p className="text-on-surface-variant text-sm">Failed to load overtime data.</p>
+        <button onClick={refetch} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">
+          Retry
+        </button>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex justify-between">
+          <div className="space-y-2">
+            <div className="h-8 w-60 bg-surface-container-highest rounded animate-pulse" />
+            <div className="h-4 w-80 bg-surface-container-highest rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-3">
+              <div className="h-3 w-24 bg-surface-container-highest rounded animate-pulse" />
+              <div className="h-8 w-16 bg-surface-container-highest rounded animate-pulse" />
+              <div className="h-3 w-28 bg-surface-container-highest rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm space-y-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-surface-container-highest animate-pulse" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-40 bg-surface-container-highest rounded animate-pulse" />
+                <div className="h-3 w-24 bg-surface-container-highest rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -37,22 +87,24 @@ export default function OvertimePage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
           <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Pending Requests</p>
-          <h2 className="text-3xl font-black text-on-surface">24</h2>
-          <p className="text-xs text-secondary font-medium mt-2">&uarr; 5 from yesterday</p>
+          <h2 className="text-3xl font-black text-on-surface">{stats.pending_count}</h2>
+          <p className="text-xs text-secondary font-medium mt-2">&uarr; Pending approvals</p>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
           <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Approved Hours</p>
-          <h2 className="text-3xl font-black text-on-surface">148.5</h2>
+          <h2 className="text-3xl font-black text-on-surface">{stats.approved_hours.toFixed(1)}</h2>
           <p className="text-xs text-on-surface-variant font-medium mt-2">This month</p>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
           <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Total Payout</p>
-          <h2 className="text-3xl font-black text-on-surface">$12,450</h2>
+          <h2 className="text-3xl font-black text-on-surface">
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(stats.total_payout)}
+          </h2>
           <p className="text-xs text-on-surface-variant font-medium mt-2">Projected costs</p>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
           <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Active Multiplier</p>
-          <h2 className="text-3xl font-black text-on-surface">1.5x</h2>
+          <h2 className="text-3xl font-black text-on-surface">{stats.active_multiplier}x</h2>
           <p className="text-xs text-on-surface-variant font-medium mt-2">Standard rate</p>
         </div>
       </div>
@@ -99,29 +151,29 @@ export default function OvertimePage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {requests.map((r, i) => (
-              <tr key={i} className="hover:bg-surface-container-lowest transition-colors">
+            {entries.map((r) => (
+              <tr key={r.id} className="hover:bg-surface-container-lowest transition-colors">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
-                      {r.name.split(' ').map(n => n[0]).join('')}
+                      {r.employee_name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-on-surface">{r.name}</p>
-                      <p className="text-xs text-on-surface-variant">{r.id}</p>
+                      <p className="text-sm font-bold text-on-surface">{r.employee_name}</p>
+                      <p className="text-xs text-on-surface-variant">{r.employee_code}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-on-surface">{r.date}</td>
+                <td className="px-6 py-4 text-sm text-on-surface">{formatDate(r.date)}</td>
                 <td className="px-6 py-4 text-sm text-on-surface text-center font-bold">{r.hours}</td>
-                <td className="px-6 py-4 text-sm text-on-surface-variant max-w-[200px] truncate">{r.reason}</td>
+                <td className="px-6 py-4 text-sm text-on-surface-variant max-w-[200px] truncate">{r.reason ?? '—'}</td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 text-[10px] font-bold uppercase rounded tracking-wider ${statusStyles[r.status]}`}>
-                    {r.status}
+                  <span className={`px-2 py-1 text-[10px] font-bold uppercase rounded tracking-wider ${statusStyles[capitalize(r.status)]}`}>
+                    {capitalize(r.status)}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  {r.status === 'Pending' ? (
+                  {r.status === 'pending' ? (
                     <div className="flex items-center justify-end gap-2">
                       <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-error hover:bg-error-container transition-colors">
                         <span className="material-symbols-outlined text-lg">close</span>
@@ -132,7 +184,7 @@ export default function OvertimePage() {
                     </div>
                   ) : (
                     <button className="text-on-surface-variant hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined text-xl">more_vert</span>
+                      <span className="material-symbols-outlined text-lg">more_vert</span>
                     </button>
                   )}
                 </td>
@@ -141,15 +193,16 @@ export default function OvertimePage() {
           </tbody>
         </table>
         <div className="px-6 py-4 flex items-center justify-between bg-surface-container-low border-t border-outline-variant">
-          <p className="text-xs text-on-surface-variant">Showing <span className="font-bold text-on-surface">1-3</span> of <span className="font-bold text-on-surface">24</span> requests</p>
+          <p className="text-xs text-on-surface-variant">
+            Showing <span className="font-bold text-on-surface">{entries.length}</span> of{' '}
+            <span className="font-bold text-on-surface">{entries.length}</span> requests
+          </p>
           <div className="flex items-center gap-1">
             <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors opacity-50 cursor-not-allowed">
               <span className="material-symbols-outlined text-sm">chevron_left</span>
             </button>
             <button className="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-xs font-bold">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface text-xs hover:bg-surface-container transition-colors">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface text-xs hover:bg-surface-container transition-colors">3</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container transition-colors">
+            <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface text-xs hover:bg-surface-container transition-colors opacity-50 cursor-not-allowed">
               <span className="material-symbols-outlined text-sm">chevron_right</span>
             </button>
           </div>

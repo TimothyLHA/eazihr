@@ -1,18 +1,118 @@
 'use client'
 
-const topCards = [
-  { label: 'Total Disbursed', value: '$428,500.00', note: '+2.4% vs last month', icon: 'trending_up', intent: 'secondary' },
-  { label: 'Generated Slips', value: '1,240', note: '100% Completed', icon: 'check_circle', intent: 'surface' },
-  { label: 'Pending Review', value: '14', note: 'Action required', icon: 'schedule', intent: 'tertiary' },
-]
+import { usePayslips } from '@/hooks/use-payslips'
 
-const payslipRows = [
-  { name: 'Jane Doe', id: 'EMP-0042', period: 'Oct 01 - Oct 31, 2023', gross: '$8,400.00', status: 'Published', statusClass: 'bg-secondary/10 text-secondary', actions: ['visibility', 'download'] },
-  { name: 'Marcus Aurelius', id: 'EMP-0091', period: 'Oct 01 - Oct 31, 2023', gross: '$12,200.00', status: 'Published', statusClass: 'bg-secondary/10 text-secondary', actions: ['visibility', 'download'] },
-  { name: 'Sarah Lima', id: 'EMP-0105', period: 'Oct 01 - Oct 31, 2023', gross: '$6,950.00', status: 'Pending Review', statusClass: 'bg-tertiary-fixed text-on-tertiary-fixed', actions: ['visibility', 'download'] },
-]
+const fmt = (n: number) =>
+  '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+const countFmt = (n: number) => n.toLocaleString('en-US')
+
+function getStatusInfo(status: string) {
+  if (status === 'generated')
+    return { label: 'Pending Review', className: 'bg-tertiary-fixed text-on-tertiary-fixed' }
+  return { label: 'Published', className: 'bg-secondary/10 text-secondary' }
+}
+
+function Skeleton({ className }: { className?: string }) {
+  return <div className={`animate-pulse rounded bg-outline-variant/40 ${className ?? ''}`} />
+}
 
 export default function PayslipsPage() {
+  const { entries, stats, loading, error, refetch } = usePayslips()
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <Skeleton className="h-9 w-64" />
+            <Skeleton className="h-5 w-80 mt-2" />
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-11 w-32 rounded-2xl" />
+            <Skeleton className="h-11 w-44 rounded-2xl" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-3xl border border-outline-variant bg-white p-6 shadow-sm">
+                  <Skeleton className="h-3 w-24 mb-2" />
+                  <Skeleton className="h-7 w-32" />
+                  <Skeleton className="h-4 w-40 mt-4" />
+                </div>
+              ))}
+            </div>
+            <div className="bg-white rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-outline-variant">
+                <Skeleton className="h-10 w-48" />
+              </div>
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-4 px-6 py-4 border-b border-outline-variant">
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <div className="flex-1">
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-3 w-24 mt-1" />
+                  </div>
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-10" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <aside className="space-y-6">
+            <div className="rounded-3xl border border-outline-variant bg-white shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-outline-variant">
+                <Skeleton className="h-5 w-20" />
+                <Skeleton className="h-3 w-36 mt-1" />
+              </div>
+              <div className="p-8">
+                <Skeleton className="h-64 w-full rounded-3xl" />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-3xl font-black tracking-tight text-on-surface">Payslips Archive</h1>
+            <p className="text-sm text-on-surface-variant mt-1">Manage, generate, and review employee earnings records.</p>
+          </div>
+        </div>
+        <div className="rounded-3xl border border-error/20 bg-error/5 p-6">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-error text-[24px]">error_outline</span>
+            <div>
+              <p className="font-semibold text-error">Failed to load payslips</p>
+              <p className="text-sm text-on-surface-variant mt-0.5">{error.message}</p>
+            </div>
+          </div>
+          <button
+            onClick={refetch}
+            className="mt-4 flex items-center gap-2 rounded-2xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90 transition-all shadow-md"
+          >
+            <span className="material-symbols-outlined text-[18px]">refresh</span>
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const topCards = [
+    { label: 'Total Disbursed', value: fmt(stats.total_disbursed), note: '+2.4% vs last month', icon: 'trending_up', intent: 'secondary' },
+    { label: 'Generated Slips', value: countFmt(stats.total_count), note: '100% Completed', icon: 'check_circle', intent: 'surface' },
+    { label: 'Pending Review', value: countFmt(stats.pending_count), note: 'Action required', icon: 'schedule', intent: 'tertiary' },
+  ]
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -62,7 +162,7 @@ export default function PayslipsPage() {
                   <option>Sales</option>
                 </select>
               </div>
-              <div className="text-sm text-on-surface-variant">Showing 1-10 of 1,240</div>
+              <div className="text-sm text-on-surface-variant">Showing 1-10 of {countFmt(stats.total_count)}</div>
             </div>
 
             <div className="overflow-x-auto">
@@ -77,34 +177,37 @@ export default function PayslipsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant">
-                  {payslipRows.map((row, index) => (
-                    <tr key={index} className="group cursor-pointer border-l-4 border-transparent transition-colors hover:bg-surface-container-lowest hover:border-primary">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-fixed text-primary font-bold text-caption">{row.name.split(' ').map((n) => n[0]).join('')}</div>
-                          <div>
-                            <p className="font-semibold text-on-surface">{row.name}</p>
-                            <p className="text-xs text-on-surface-variant">ID: {row.id}</p>
+                  {entries.map((row) => {
+                    const status = getStatusInfo(row.status)
+                    return (
+                      <tr key={row.id} className="group cursor-pointer border-l-4 border-transparent transition-colors hover:bg-surface-container-lowest hover:border-primary">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-fixed text-primary font-bold text-caption">{row.employee_name.split(' ').map((n) => n[0]).join('')}</div>
+                            <div>
+                              <p className="font-semibold text-on-surface">{row.employee_name}</p>
+                              <p className="text-xs text-on-surface-variant">ID: {row.employee_code}</p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-on-surface">{row.period}</td>
-                      <td className="px-6 py-4 text-sm font-semibold text-on-surface">{row.gross}</td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${row.statusClass}`}>
-                          <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                          {row.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right text-sm text-outline transition-colors group-hover:text-primary">
-                        {row.actions.map((icon) => (
-                          <button key={icon} className="ml-2 text-on-surface-variant hover:text-primary">
-                            <span className="material-symbols-outlined text-[18px]">{icon}</span>
-                          </button>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-on-surface">{row.period}</td>
+                        <td className="px-6 py-4 text-sm font-semibold text-on-surface">{fmt(row.gross_pay)}</td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${status.className}`}>
+                            <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                            {status.label}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right text-sm text-outline transition-colors group-hover:text-primary">
+                          {['visibility', 'download'].map((icon) => (
+                            <button key={icon} className="ml-2 text-on-surface-variant hover:text-primary">
+                              <span className="material-symbols-outlined text-[18px]">{icon}</span>
+                            </button>
+                          ))}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
