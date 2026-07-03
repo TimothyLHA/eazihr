@@ -38,29 +38,29 @@ export function useSettings() {
       const [orgRes, profileRes] = await Promise.all([
         supabase
           .from('organizations')
-          .select('name, logo_url, settings, payroll_config, leave_config, loan_config, feature_config')
+          .select('*')
           .eq('id', organization.id)
-          .single(),
+          .single() as unknown as Promise<{ data: Record<string, unknown> | null; error: Error | null }>,
         supabase
           .from('profiles')
           .select('role')
           .eq('organization_id', organization.id)
-          .not('role', 'is', null),
+          .not('role', 'is', null) as unknown as Promise<{ data: Array<Record<string, unknown>> | null; error: Error | null }>,
       ])
 
       if (orgRes.error) throw orgRes.error
       if (profileRes.error) throw profileRes.error
 
-      const raw = orgRes.data as Record<string, unknown> | null
+      const raw = (orgRes.data ?? {}) as Record<string, unknown>
 
       setOrg({
-        name: (raw?.name as string) ?? '',
-        logo_url: (raw?.logo_url as string) ?? null,
-        settings: (raw?.settings ?? {}) as Record<string, unknown>,
-        payroll_config: (raw?.payroll_config ?? {}) as Record<string, unknown>,
-        leave_config: (raw?.leave_config ?? {}) as Record<string, unknown>,
-        loan_config: (raw?.loan_config ?? {}) as Record<string, unknown>,
-        feature_config: (raw?.feature_config ?? {}) as Record<string, unknown>,
+        name: (raw.name as string) ?? '',
+        logo_url: (raw.logo_url as string) ?? null,
+        settings: (raw.settings ?? {}) as Record<string, unknown>,
+        payroll_config: (raw.payroll_config ?? {}) as Record<string, unknown>,
+        leave_config: (raw.leave_config ?? {}) as Record<string, unknown>,
+        loan_config: (raw.loan_config ?? {}) as Record<string, unknown>,
+        feature_config: (raw.feature_config ?? {}) as Record<string, unknown>,
       })
 
       const roleCounts: Record<string, { users: number; level: string }> = {
