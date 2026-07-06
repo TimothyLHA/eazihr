@@ -315,18 +315,25 @@ export type OvertimeRequestInsert = {
 export type Vehicle = {
   id: string
   organization_id: string
+  name: string
   plate_number: string
-  make: string
-  model: string
-  year: number
-  color: string
-  driver_id: string | null
-  status: 'available' | 'in_use' | 'maintenance' | 'out_of_service'
-  current_location: string | null
-  last_maintenance_date: string | null
-  next_maintenance_date: string | null
+  driver_name: string | null
+  driver_phone: string | null
+  status: 'active' | 'idle' | 'maintenance' | 'out_of_service'
+  last_location: Record<string, unknown> | null
+  last_updated: string | null
   created_at: string
-  updated_at: string
+}
+
+export type VehicleInsert = {
+  organization_id: string
+  name: string
+  plate_number: string
+  driver_name?: string | null
+  driver_phone?: string | null
+  status?: 'active' | 'idle' | 'maintenance' | 'out_of_service'
+  last_location?: Record<string, unknown> | null
+  last_updated?: string | null
 }
 
 // Database schema types for queries
@@ -410,8 +417,8 @@ export type Database = {
       }
       vehicles: {
         Row: Vehicle
-        Insert: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>>
+        Insert: VehicleInsert
+        Update: Partial<VehicleInsert>
       }
     }
   }
