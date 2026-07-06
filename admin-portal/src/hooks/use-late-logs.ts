@@ -8,10 +8,12 @@ export type LateLogEntry = {
   id: string
   employee_id: string
   employee_name: string
+  department: string
   date: string
   check_in_time: string
   minutes_late: number
   reason: string | null
+  created_at: string
 }
 
 export type BarDatum = {
@@ -43,7 +45,7 @@ export function useLateLogs() {
 
       const { data: rawLogs, error: logsErr } = await supabase
         .from('late_logs')
-        .select('id, employee_id, date, check_in_time, minutes_late, reason')
+        .select('id, employee_id, date, check_in_time, minutes_late, reason, created_at, employee:employee_id(id, department, profile:profile_id(full_name))')
         .eq('organization_id', organization.id)
         .order('date', { ascending: false })
 
@@ -51,35 +53,20 @@ export function useLateLogs() {
 
       const lateLogs = (rawLogs ?? []) as Array<Record<string, unknown>>
 
-      const employeeIds = new Set<string>()
-      lateLogs.forEach((r) => employeeIds.add(r.employee_id as string))
-
-      let employeeMap: Record<string, { full_name: string }> = {}
-      if (employeeIds.size > 0) {
-        const { data: employees } = await supabase
-          .from('employees')
-          .select('id, profile:profile_id(id, email, full_name)')
-          .in('id', Array.from(employeeIds))
-
-        if (employees) {
-          for (const e of (employees as Array<Record<string, unknown>>)) {
-            const p = e.profile as { full_name?: string } | null
-            employeeMap[e.id as string] = {
-              full_name: p?.full_name || 'Unknown',
-            }
-          }
+      const mapped: LateLogEntry[] = lateLogs.map((r) => {
+        const emp = r.employee as { department: string | null; profile: { full_name: string } | null } | null
+        return {
+          id: r.id as string,
+          employee_id: r.employee_id as string,
+          employee_name: emp?.profile?.full_name ?? 'Unknown',
+          department: emp?.department ?? '—',
+          date: r.date as string,
+          check_in_time: r.check_in_time as string,
+          minutes_late: (r.minutes_late as number) ?? 0,
+          reason: (r.reason as string) ?? null,
+          created_at: r.created_at as string,
         }
-      }
-
-      const mapped: LateLogEntry[] = lateLogs.map((r) => ({
-        id: r.id as string,
-        employee_id: r.employee_id as string,
-        employee_name: employeeMap[r.employee_id as string]?.full_name ?? 'Unknown',
-        date: r.date as string,
-        check_in_time: r.check_in_time as string,
-        minutes_late: (r.minutes_late as number) ?? 0,
-        reason: (r.reason as string) ?? null,
-      }))
+      })
 
       setEntries(mapped)
 
