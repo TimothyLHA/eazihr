@@ -92,3 +92,49 @@ export async function addEmployee(
   revalidatePath('/employees')
   return { success: true }
 }
+
+export async function updateEmployee(
+  _prevState: EmployeeActionResult,
+  formData: FormData
+): Promise<EmployeeActionResult> {
+  const id = formData.get('id') as string
+  const employeeCode = formData.get('employee_code') as string
+  const position = formData.get('position') as string
+  const department = formData.get('department') as string
+  const hireDate = formData.get('hire_date') as string
+  const basicSalary = formData.get('basic_salary') as string
+  const status = formData.get('status') as string
+  const emergencyName = formData.get('emergency_name') as string
+  const emergencyPhone = formData.get('emergency_phone') as string
+  const organizationId = formData.get('organization_id') as string
+
+  if (!id || !organizationId) {
+    return { error: 'Employee ID and organization are required.' }
+  }
+
+  const supabase = getAnonClient()
+
+  const { error } = await supabase
+    .from('employees')
+    .update({
+      employee_code: employeeCode || null,
+      position: position || null,
+      department: department || null,
+      hire_date: hireDate || null,
+      basic_salary: basicSalary ? parseFloat(basicSalary) : null,
+      status: (status as 'active' | 'resigned' | 'suspended') || 'active',
+      emergency_contact: {
+        name: emergencyName || '',
+        phone: emergencyPhone || '',
+      },
+    })
+    .eq('id', id)
+    .eq('organization_id', organizationId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/employees')
+  return { success: true }
+}

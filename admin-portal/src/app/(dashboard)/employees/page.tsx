@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import { useEmployees } from '@/hooks/use-employees'
 import AddEmployeeModal from '@/components/employees/add-employee-modal'
+import ViewEmployeeModal from '@/components/employees/view-employee-modal'
+import EditEmployeeModal from '@/components/employees/edit-employee-modal'
+import EmployeeCardDropdown from '@/components/employees/employee-card-dropdown'
 
 const statusStyles: Record<string, string> = {
   'active': 'bg-secondary-container text-on-secondary-container',
@@ -19,6 +22,8 @@ const colorBars: Record<string, string> = {
 export default function EmployeesPage() {
   const { employees, count, loading, error, refetch } = useEmployees()
   const [showAddModal, setShowAddModal] = useState(false)
+  const [viewEmployeeId, setViewEmployeeId] = useState<string | null>(null)
+  const [editEmployeeId, setEditEmployeeId] = useState<string | null>(null)
 
   const initials = (name: string) =>
     name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -138,10 +143,8 @@ export default function EmployeesPage() {
                 </div>
               </div>
               <div className="border-t border-outline-variant bg-surface-container-low px-4 py-2 flex justify-between">
-                <button className="text-xs font-bold text-primary hover:underline">View Profile</button>
-                <button className="text-on-surface-variant hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-lg">more_horiz</span>
-                </button>
+                <button onClick={() => setViewEmployeeId(emp.id)} className="text-xs font-bold text-primary hover:underline">View Profile</button>
+                <EmployeeCardDropdown onEdit={() => setEditEmployeeId(emp.id)} />
               </div>
             </div>
           ))
@@ -168,6 +171,18 @@ export default function EmployeesPage() {
       <AddEmployeeModal
         open={showAddModal}
         onClose={() => { setShowAddModal(false); refetch() }}
+      />
+
+      <ViewEmployeeModal
+        employeeId={viewEmployeeId}
+        onClose={() => setViewEmployeeId(null)}
+        onEdit={(id) => { setViewEmployeeId(null); setEditEmployeeId(id) }}
+      />
+
+      <EditEmployeeModal
+        employeeId={editEmployeeId}
+        onClose={() => setEditEmployeeId(null)}
+        onSaved={() => { setEditEmployeeId(null); refetch() }}
       />
     </div>
   )

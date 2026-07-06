@@ -1,13 +1,7 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
 import { SupabaseProvider } from "@/providers/supabase-provider"
 import "./globals.css"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
 
 export const metadata: Metadata = {
   title: "EasyHR - Admin Portal",
@@ -21,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`h-full ${inter.variable}`}>
+    <html lang="en" className="h-full">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
