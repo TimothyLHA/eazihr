@@ -24,10 +24,16 @@ export type OvertimeStats = {
   active_multiplier: number
 }
 
+export type EmployeeOption = {
+  id: string
+  full_name: string
+}
+
 export function useOvertime() {
   const supabase = useSupabase()
   const { organization } = useOrganization()
   const [entries, setEntries] = useState<OvertimeEntry[]>([])
+  const [employees, setEmployees] = useState<EmployeeOption[]>([])
   const [stats, setStats] = useState<OvertimeStats>({
     pending_count: 0,
     approved_hours: 0,
@@ -44,50 +50,48 @@ export function useOvertime() {
       setLoading(true)
       setError(null)
 
-      const { data, error: fetchError } = await supabase
-        .from('overtime_requests')
-        .select('id, employee_id, date, hours, rate, total_amount, reason, status')
-        .eq('organization_id', organization.id)
-        .order('date', { ascending: false })
+      const orgId = organization.id
+
+      const [{ data, error: fetchError }, { data: employeesRaw, error: employeesError }] = await Promise.all([
+        supabase
+          .from('overtime_requests')
+          .select('id, employee_id, date, hours, rate, total_amount, reason, status, employee:employee_id(id, employee_code, profile:profile_id(full_name))')
+          .eq('organization_id', orgId)
+          .order('date', { ascending: false }),
+        supabase
+          .from('employees')
+          .select('id, profile:profile_id(full_name)')
+          .eq('organization_id', orgId)
+          .eq('status', 'active'),
+      ])
 
       if (fetchError) throw fetchError
+      if (employeesError) throw employeesError
 
       const raw = (data ?? []) as Array<Record<string, unknown>>
 
-      const employeeIds = new Set<string>()
-      raw.forEach((r) => employeeIds.add(r.employee_id as string))
-
-      let employeeMap: Record<string, { full_name: string; employee_code: string }> = {}
-      if (employeeIds.size > 0) {
-        const { data: employees } = await supabase
-          .from('employees')
-          .select('id, employee_code, profile:profile_id(id, email, full_name)')
-          .in('id', Array.from(employeeIds))
-
-        if (employees) {
-          for (const e of (employees as Array<Record<string, unknown>>)) {
-            const p = e.profile as { full_name?: string } | null
-            employeeMap[e.id as string] = {
-              full_name: p?.full_name || (e.employee_code as string) || 'Unknown',
-              employee_code: (e.employee_code as string) ?? '',
-            }
-          }
+      const mapped: OvertimeEntry[] = raw.map((r) => {
+        const emp = r.employee as { id: string; employee_code: string | null; profile: { full_name: string } | null } | null
+        return {
+          id: r.id as string,
+          employee_id: r.employee_id as string,
+          employee_name: emp?.profile?.full_name ?? 'Unknown',
+          employee_code: emp?.employee_code ?? '',
+          date: r.date as string,
+          hours: (r.hours as number) ?? 0,
+          rate: (r.rate as number) ?? 0,
+          total_amount: (r.total_amount as number) ?? 0,
+          reason: (r.reason as string) ?? null,
+          status: (r.status as string) ?? '',
         }
-      }
-
-      const mapped: OvertimeEntry[] = raw.map((r) => ({
-        id: r.id as string,
-        employee_id: r.employee_id as string,
-        employee_name: employeeMap[r.employee_id as string]?.full_name ?? 'Unknown',
-        employee_code: employeeMap[r.employee_id as string]?.employee_code ?? '',
-        date: r.date as string,
-        hours: (r.hours as number) ?? 0,
-        rate: (r.rate as number) ?? 0,
-        total_amount: (r.total_amount as number) ?? 0,
-        reason: (r.reason as string) ?? null,
-        status: (r.status as string) ?? '',
-      }))
+      })
       setEntries(mapped)
+
+      const mappedEmployees = ((employeesRaw ?? []) as Array<Record<string, unknown>>).map((e) => {
+        const profile = e.profile as { full_name: string } | null
+        return { id: e.id as string, full_name: profile?.full_name ?? 'Unknown' }
+      })
+      setEmployees(mappedEmployees)
 
       const pendingCount = mapped.filter((e) => e.status === 'pending').length
       const approvedHours = mapped
@@ -95,7 +99,7 @@ export function useOvertime() {
         .reduce((sum, e) => sum + e.hours, 0)
       const totalPayout = mapped
         .filter((e) => e.status === 'approved')
-        .reduce((sum, e) => sum + e.total_amount, 0)
+        .reduce((sum, e) => sum + (e.total_amount ?? 0), 0)
 
       setStats({
         pending_count: pendingCount,
@@ -114,5 +118,5 @@ export function useOvertime() {
     if (organization?.id) fetchData()
   }, [organization?.id, fetchData])
 
-  return { entries, stats, loading, error, refetch: fetchData }
+  return { entries, employees, stats, loading, error, refetch: fetchData }
 }

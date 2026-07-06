@@ -288,15 +288,27 @@ export type OvertimeRequest = {
   employee_id: string
   organization_id: string
   date: string
-  start_time: string
-  end_time: string
   hours: number
+  rate: number
+  total_amount: number | null
   reason: string | null
   status: 'pending' | 'approved' | 'rejected'
   approved_by: string | null
   approved_at: string | null
   created_at: string
-  updated_at: string
+}
+
+export type OvertimeRequestInsert = {
+  employee_id: string
+  organization_id: string
+  date: string
+  hours: number
+  rate?: number
+  total_amount?: number | null
+  reason?: string | null
+  status?: 'pending' | 'approved' | 'rejected'
+  approved_by?: string | null
+  approved_at?: string | null
 }
 
 // Vehicle types
@@ -393,8 +405,8 @@ export type Database = {
       }
       overtime_requests: {
         Row: OvertimeRequest
-        Insert: Omit<OvertimeRequest, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<OvertimeRequest, 'id' | 'created_at' | 'updated_at'>>
+        Insert: OvertimeRequestInsert
+        Update: Partial<OvertimeRequestInsert>
       }
       vehicles: {
         Row: Vehicle
