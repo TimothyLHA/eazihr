@@ -226,16 +226,18 @@ export type Payslip = {
   id: string
   employee_id: string
   organization_id: string
-  payroll_run_id: string
+  payroll_run_id: string | null
   month: number
   year: number
-  gross_salary: number
-  net_salary: number
+  gross_pay: number
+  deductions: number
+  net_pay: number
+  earnings_breakdown: Record<string, unknown> | null
+  deductions_breakdown: Record<string, unknown> | null
   pdf_url: string | null
-  sent_to_employee: boolean
-  sent_at: string | null
+  status: 'generated' | 'sent' | 'viewed'
+  generated_at: string | null
   created_at: string
-  updated_at: string
 }
 
 // Incentive types
@@ -390,8 +392,8 @@ export type Database = {
       }
       payslips: {
         Row: Payslip
-        Insert: Omit<Payslip, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Payslip, 'id' | 'created_at' | 'updated_at'>>
+        Insert: Omit<Payslip, 'id' | 'created_at' | 'generated_at'>
+        Update: Partial<Omit<Payslip, 'id' | 'created_at' | 'generated_at'>>
       }
       incentives: {
         Row: Incentive
