@@ -55,7 +55,7 @@ export default function SettingsPage() {
 
       const { error: updateError } = await (supabase.from('organizations') as any)
         .update({ name: companyName, settings: newSettings, payroll_config: newPayrollConfig })
-        .eq('id', (org as any).id)
+        .eq('id', org.id)
 
       if (updateError) throw updateError
 

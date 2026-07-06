@@ -5,6 +5,7 @@ import { useSupabase } from '@/providers/supabase-provider'
 import { useOrganization } from '@/providers/org-provider'
 
 export type OrgSettings = {
+  id: string
   name: string
   logo_url: string | null
   settings: Record<string, unknown>
@@ -54,6 +55,7 @@ export function useSettings() {
       const raw = (orgRes.data ?? {}) as Record<string, unknown>
 
       setOrg({
+        id: (raw.id as string) ?? '',
         name: (raw.name as string) ?? '',
         logo_url: (raw.logo_url as string) ?? null,
         settings: (raw.settings ?? {}) as Record<string, unknown>,
