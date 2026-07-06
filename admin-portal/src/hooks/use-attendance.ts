@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useSupabase } from '@/providers/supabase-provider'
 import { useOrganization } from '@/providers/org-provider'
 
@@ -51,9 +51,15 @@ export function useAttendance(params?: FetchParams) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
-  const today = new Date()
-  const dateFrom = params?.dateFrom || new Date(today.getTime() - 30 * 86400000).toISOString().split('T')[0]
-  const dateTo = params?.dateTo || today.toISOString().split('T')[0]
+  const defaults = useMemo(() => {
+    const now = new Date()
+    return {
+      dateFrom: new Date(now.getTime() - 30 * 86400000).toISOString().split('T')[0],
+      dateTo: now.toISOString().split('T')[0],
+    }
+  }, [])
+  const dateFrom = params?.dateFrom || defaults.dateFrom
+  const dateTo = params?.dateTo || defaults.dateTo
   const search = params?.search || ''
   const statusFilter = params?.statusFilter || ''
   const page = params?.page || 1
@@ -146,9 +152,10 @@ export function useAttendance(params?: FetchParams) {
 
       setRecords(mapped)
 
+      const now = new Date()
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      const startOfWeek = new Date(today)
-      startOfWeek.setDate(today.getDate() - today.getDay() + 1)
+      const startOfWeek = new Date(now)
+      startOfWeek.setDate(now.getDate() - now.getDay() + 1)
 
       const weeklyData: WeeklyTrend[] = days.map((day, i) => {
         const date = new Date(startOfWeek)
@@ -175,7 +182,7 @@ export function useAttendance(params?: FetchParams) {
     } finally {
       setLoading(false)
     }
-  }, [organization?.id, supabase, buildEmployeeMap, dateFrom, dateTo, search, statusFilter, page, pageSize, today])
+  }, [organization?.id, supabase, buildEmployeeMap, dateFrom, dateTo, search, statusFilter, page, pageSize])
 
   useEffect(() => {
     if (organization?.id) fetchData()

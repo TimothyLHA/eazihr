@@ -63,6 +63,7 @@ export default function AttendancePage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
+  const [trendPreset, setTrendPreset] = useState('30')
 
   const { records, totalCount, weeklyTrends, lateLogs, loading, error, refetch } = useAttendance({
     dateFrom,
@@ -150,9 +151,10 @@ export default function AttendancePage() {
               <p className="text-xs text-on-surface-variant">Daily comparison of check-ins versus late arrivals.</p>
             </div>
             <select
-              value={dateTo}
+              value={trendPreset}
               onChange={e => {
                 const val = e.target.value
+                setTrendPreset(val)
                 if (val === '7') { setDateFrom(daysAgo(7)); setDateTo(todayStr()) }
                 else if (val === '30') { setDateFrom(daysAgo(30)); setDateTo(todayStr()) }
                 else if (val === '90') { setDateFrom(daysAgo(90)); setDateTo(todayStr()) }
@@ -161,7 +163,7 @@ export default function AttendancePage() {
               className="bg-surface-container-low border-none rounded-lg text-xs font-semibold px-3 py-1.5 outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="7">Last 7 Days</option>
-              <option value="30" selected>Last 30 Days</option>
+              <option value="30">Last 30 Days</option>
               <option value="90">Last 90 Days</option>
             </select>
           </div>
