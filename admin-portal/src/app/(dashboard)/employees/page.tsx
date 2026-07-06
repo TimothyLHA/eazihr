@@ -1,6 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { useEmployees } from '@/hooks/use-employees'
+import AddEmployeeModal from '@/components/employees/add-employee-modal'
 
 const statusStyles: Record<string, string> = {
   'active': 'bg-secondary-container text-on-secondary-container',
@@ -15,7 +17,8 @@ const colorBars: Record<string, string> = {
 }
 
 export default function EmployeesPage() {
-  const { employees, count, loading, error } = useEmployees()
+  const { employees, count, loading, error, refetch } = useEmployees()
+  const [showAddModal, setShowAddModal] = useState(false)
 
   const initials = (name: string) =>
     name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -27,7 +30,7 @@ export default function EmployeesPage() {
           <h1 className="text-xl font-black tracking-tight text-on-surface">Employee Directory</h1>
           <p className="text-xs text-on-surface-variant">Manage and organize your global workforce with precision.</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+        <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
           <span className="material-symbols-outlined text-xl">person_add</span>
           Add New Employee
         </button>
@@ -144,7 +147,8 @@ export default function EmployeesPage() {
           ))
         )}
 
-        <div className="border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center p-8 bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group"
+        <button onClick={() => setShowAddModal(true)}
+          className="border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center p-8 bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group text-left"
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}>
           <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -152,7 +156,7 @@ export default function EmployeesPage() {
           </div>
           <p className="text-sm font-bold text-on-surface">Add Member</p>
           <p className="text-xs text-on-surface-variant text-center mt-1">Expand your department</p>
-        </div>
+        </button>
       </div>
 
       <div className="flex items-center justify-between border-t border-outline-variant pt-6">
@@ -160,6 +164,11 @@ export default function EmployeesPage() {
           Showing <span className="font-bold text-on-surface">{employees.length}</span> of <span className="font-bold text-on-surface">{count}</span> employees
         </p>
       </div>
+
+      <AddEmployeeModal
+        open={showAddModal}
+        onClose={() => { setShowAddModal(false); refetch() }}
+      />
     </div>
   )
 }

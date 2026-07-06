@@ -39,30 +39,33 @@ export type Profile = {
   updated_at: string
 }
 
-// Employee types
+// Employee types (matches SQL schema)
 export type Employee = {
   id: string
   profile_id: string
   organization_id: string
-  employee_id: string
-  first_name: string
-  last_name: string
-  email: string
-  phone: string | null
-  department: string
-  job_title: string
-  manager_id: string | null
-  employment_type: 'full_time' | 'part_time' | 'contract' | 'intern'
-  status: 'active' | 'inactive' | 'on_leave' | 'terminated'
-  hire_date: string
-  termination_date: string | null
-  address: string | null
-  city: string | null
-  country: string | null
-  emergency_contact_name: string | null
-  emergency_contact_phone: string | null
+  employee_code: string | null
+  position: string | null
+  department: string | null
+  hire_date: string | null
+  basic_salary: number | null
+  status: 'active' | 'resigned' | 'suspended'
+  emergency_contact: Json
+  documents: Json
   created_at: string
-  updated_at: string
+}
+
+export type EmployeeInsert = {
+  profile_id: string
+  organization_id: string
+  employee_code?: string | null
+  position?: string | null
+  department?: string | null
+  hire_date?: string | null
+  basic_salary?: number | null
+  status?: 'active' | 'resigned' | 'suspended'
+  emergency_contact?: Json
+  documents?: Json
 }
 
 // Attendance log types
@@ -290,8 +293,8 @@ export type Database = {
       }
       employees: {
         Row: Employee
-        Insert: Omit<Employee, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Employee, 'id' | 'created_at' | 'updated_at'>>
+        Insert: EmployeeInsert
+        Update: Partial<EmployeeInsert>
       }
       attendance_logs: {
         Row: AttendanceLog
