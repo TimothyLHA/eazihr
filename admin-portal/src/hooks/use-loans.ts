@@ -12,6 +12,8 @@ export type LoanEntry = {
   balance: number
   status: string
   purpose: string | null
+  interest_rate: number
+  tenure_months: number
   monthly_emi: number
   created_at: string
   progress: number
@@ -78,6 +80,8 @@ export function useLoans() {
           balance,
           status: (r.status as string) ?? '',
           purpose: (r.purpose as string) ?? null,
+          interest_rate: Number(r.interest_rate) || 0,
+          tenure_months: Number(r.tenure_months) || 0,
           monthly_emi: Number(r.monthly_emi) || 0,
           created_at: (r.created_at as string) ?? '',
           progress: amount > 0 ? Math.round(((amount - balance) / amount) * 100) : 0,
@@ -88,7 +92,7 @@ export function useLoans() {
 
       const total_disbursed = raw.reduce((sum, r) => sum + (Number(r.amount) || 0), 0)
       const pending_count = raw.filter((r) => r.status === 'pending').length
-      const active_count = raw.filter((r) => r.status === 'active').length
+      const active_count = raw.filter((r) => r.status === 'disbursed').length
       const total_emi_collected = raw.reduce((sum, r) => {
         const amt = Number(r.amount) || 0
         const bal = Number(r.balance) || 0

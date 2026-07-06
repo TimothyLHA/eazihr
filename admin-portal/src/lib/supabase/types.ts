@@ -260,14 +260,14 @@ export type Loan = {
   organization_id: string
   amount: number
   interest_rate: number
-  total_amount: number
-  remaining_balance: number
+  tenure_months: number
+  monthly_emi: number
+  balance: number
   purpose: string | null
-  status: 'pending' | 'approved' | 'rejected' | 'active' | 'completed' | 'defaulted'
+  status: 'pending' | 'approved' | 'disbursed' | 'rejected' | 'closed'
   approved_by: string | null
   approved_at: string | null
   created_at: string
-  updated_at: string
 }
 
 // Loan repayment types
@@ -275,11 +275,11 @@ export type LoanRepayment = {
   id: string
   loan_id: string
   amount: number
-  payment_method: string | null
-  reference_number: string | null
-  notes: string | null
+  due_date: string | null
+  paid_at: string | null
+  status: 'pending' | 'paid' | 'overdue'
+  receipt_url: string | null
   created_at: string
-  updated_at: string
 }
 
 // Overtime request types
