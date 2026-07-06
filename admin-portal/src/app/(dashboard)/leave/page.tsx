@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useLeave } from '@/hooks/use-leave'
+import LeaveRequestModal from '@/components/leave/leave-request-modal'
+import { approveLeave, rejectLeave } from '@/lib/actions/leave'
+import type { LeaveBalanceRow, LeaveRequestRow } from '@/hooks/use-leave'
 
 type Tab = 'quotas' | 'taken' | 'pending'
 
@@ -22,6 +25,20 @@ function StatusBadge({ remaining }: { remaining: number }) {
   return (
     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">
       Healthy
+    </span>
+  )
+}
+
+function LeaveStatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    pending: 'bg-warning-container text-warning',
+    approved: 'bg-secondary-container text-secondary',
+    rejected: 'bg-error-container text-error',
+    cancelled: 'bg-surface-container-high text-on-surface-variant',
+  }
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] ?? 'bg-surface-container-high text-on-surface-variant'}`}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   )
 }
@@ -64,9 +81,294 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
   )
 }
 
+type QuotasTabProps = {
+  balances: LeaveBalanceRow[]
+  onRequestLeave: () => void
+}
+
+function QuotasTab({ balances, onRequestLeave }: QuotasTabProps) {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-bold text-on-surface">Employee Leave Quotas</h3>
+        <div className="flex gap-2">
+          <button className="flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-lg text-sm font-medium hover:bg-surface-container-high">
+            <span className="material-symbols-outlined text-lg">filter_list</span>
+            Filter
+          </button>
+          <button
+            onClick={onRequestLeave}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-medium hover:opacity-90"
+          >
+            <span className="material-symbols-outlined text-lg">add</span>
+            New Leave Request
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-surface-container-low border-b border-outline-variant">
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Employee</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Leave Type</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Annual Quota</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Used</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Remaining</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-outline-variant">
+            {balances.map((row) => (
+              <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
+                      {row.employee_name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div>
+                      <span className="text-sm font-bold text-on-surface">{row.employee_name}</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-sm text-on-surface">{row.leave_type}</td>
+                <td className="px-6 py-4 text-sm text-on-surface">{row.allocated_days} Days</td>
+                <td className="px-6 py-4 text-sm text-on-surface">{row.used_days} Days</td>
+                <td className={`px-6 py-4 text-sm font-bold ${row.remaining_days <= 3 ? 'text-error' : 'text-on-surface'}`}>
+                  {row.remaining_days} Days
+                </td>
+                <td className="px-6 py-4">
+                  <StatusBadge remaining={row.remaining_days} />
+                </td>
+              </tr>
+            ))}
+            {balances.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                  No leave balances found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center justify-between px-2">
+        <p className="text-sm text-on-surface-variant">Showing {balances.length} of {balances.length} employees</p>
+        <div className="flex gap-2">
+          <button className="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors">
+            <span className="material-symbols-outlined text-sm">chevron_left</span>
+          </button>
+          <button className="px-3 py-1 border border-primary bg-primary text-on-primary rounded text-sm font-medium">1</button>
+          <button className="px-3 py-1 border border-outline-variant rounded text-sm font-medium hover:bg-surface-container">2</button>
+          <button className="px-3 py-1 border border-outline-variant rounded text-sm font-medium hover:bg-surface-container">3</button>
+          <button className="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors">
+            <span className="material-symbols-outlined text-sm">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const statusFilterOptions = ['all', 'approved', 'rejected', 'cancelled', 'pending'] as const
+
+type TakenTabProps = {
+  requests: LeaveRequestRow[]
+}
+
+function TakenTab({ requests }: TakenTabProps) {
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filtered = requests.filter(r => {
+    if (statusFilter !== 'all' && r.status !== statusFilter) return false
+    if (searchQuery && !r.employee_name.toLowerCase().includes(searchQuery.toLowerCase())) return false
+    return true
+  })
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-bold text-on-surface">Leave History</h3>
+        <div className="flex gap-2">
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-sm text-on-surface-variant">search</span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search employee..."
+              className="w-52 pl-9 pr-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            className="px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none appearance-none cursor-pointer"
+          >
+            {statusFilterOptions.map(opt => (
+              <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-surface-container-low border-b border-outline-variant">
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Employee</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Leave Type</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Duration</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Days</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Reason</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Submitted</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-outline-variant">
+            {filtered.map((row) => (
+              <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
+                      {row.employee_name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <span className="text-sm font-bold text-on-surface">{row.employee_name}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-sm text-on-surface">{row.leave_type}</td>
+                <td className="px-6 py-4 text-sm text-on-surface">
+                  {new Date(row.start_date).toLocaleDateString()} - {new Date(row.end_date).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 text-sm font-bold text-on-surface">{row.days}</td>
+                <td className="px-6 py-4 text-sm text-on-surface-variant max-w-[200px] truncate">{row.reason ?? '-'}</td>
+                <td className="px-6 py-4">
+                  <LeaveStatusBadge status={row.status} />
+                </td>
+                <td className="px-6 py-4 text-sm text-on-surface-variant">
+                  {new Date(row.created_at).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                  {requests.length === 0 ? 'No leave requests found' : 'No requests match your filters'}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+type PendingTabProps = {
+  pending: LeaveRequestRow[]
+  onRefresh: () => void
+}
+
+function PendingTab({ pending, onRefresh }: PendingTabProps) {
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+
+  const handleAction = useCallback(async (id: string, action: 'approve' | 'reject') => {
+    setActionLoading(id)
+    const fd = new FormData()
+    fd.set('id', id)
+    if (action === 'approve') {
+      await approveLeave(null, fd)
+    } else {
+      await rejectLeave(null, fd)
+    }
+    setActionLoading(null)
+    onRefresh()
+  }, [onRefresh])
+
+  if (pending.length === 0) {
+    return (
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center">
+        <div className="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center mb-4">
+          <span className="material-symbols-outlined text-3xl text-primary/40">check_circle</span>
+        </div>
+        <h2 className="text-lg font-semibold text-on-surface mb-2">All Caught Up</h2>
+        <p className="text-sm text-on-surface-variant max-w-sm">No pending leave requests awaiting your review.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-bold text-on-surface">Pending Approvals</h3>
+        <p className="text-sm text-on-surface-variant">{pending.length} request{pending.length !== 1 ? 's' : ''} awaiting review</p>
+      </div>
+      <div className="flex flex-col gap-4">
+        {pending.map(row => (
+          <div key={row.id} className="rounded-xl border border-outline-variant bg-surface-container-lowest p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-sm font-bold text-primary border border-outline-variant shrink-0">
+                  {row.employee_name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div>
+                  <p className="text-base font-bold text-on-surface">{row.employee_name}</p>
+                  <p className="text-sm text-on-surface-variant mt-0.5">{row.leave_type}</p>
+                  <div className="flex items-center gap-4 mt-2 text-sm text-on-surface">
+                    <div className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-base text-on-surface-variant">calendar_today</span>
+                      {new Date(row.start_date).toLocaleDateString()} - {new Date(row.end_date).toLocaleDateString()}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-base text-on-surface-variant">event</span>
+                      {row.days} day{row.days !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                  {row.reason && (
+                    <p className="text-sm text-on-surface-variant mt-2 italic">"{row.reason}"</p>
+                  )}
+                  <p className="text-xs text-on-surface-variant mt-2">
+                    Submitted {new Date(row.created_at).toLocaleDateString()} at {new Date(row.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => handleAction(row.id, 'reject')}
+                  disabled={actionLoading === row.id}
+                  className="flex items-center gap-1.5 px-4 py-2 border border-error/30 text-error rounded-lg text-sm font-bold hover:bg-error/5 transition-colors disabled:opacity-50"
+                >
+                  {actionLoading === row.id ? (
+                    <span className="w-4 h-4 border-2 border-error/30 border-t-error rounded-full animate-spin" />
+                  ) : (
+                    <span className="material-symbols-outlined text-lg">close</span>
+                  )}
+                  Reject
+                </button>
+                <button
+                  onClick={() => handleAction(row.id, 'approve')}
+                  disabled={actionLoading === row.id}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {actionLoading === row.id ? (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <span className="material-symbols-outlined text-lg">check</span>
+                  )}
+                  Approve
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function LeavePage() {
-  const { balances, stats, loading, error, refetch } = useLeave()
+  const { balances, requests, pending, leaveTypes, employees, stats, loading, error, refetch } = useLeave()
   const [activeTab, setActiveTab] = useState<Tab>('quotas')
+  const [showModal, setShowModal] = useState(false)
 
   if (loading) return <Skeleton />
 
@@ -125,116 +427,27 @@ export default function LeavePage() {
       </div>
 
       {activeTab === 'quotas' && (
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-on-surface">Employee Leave Quotas</h3>
-            <div className="flex gap-2">
-              <button className="flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-lg text-sm font-medium hover:bg-surface-container-high">
-                <span className="material-symbols-outlined text-lg">filter_list</span>
-                Filter
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-medium hover:opacity-90">
-                <span className="material-symbols-outlined text-lg">add</span>
-                Adjust Quotas
-              </button>
-            </div>
-          </div>
-          <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-surface-container-low border-b border-outline-variant">
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Employee</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Leave Type</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Annual Quota</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Used</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Remaining</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-outline-variant">
-                {balances.map((row) => (
-                  <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold text-primary border border-outline-variant">
-                          {row.employee_name.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <div>
-                          <span className="text-sm font-bold text-on-surface">{row.employee_name}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.leave_type}</td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.allocated_days} Days</td>
-                    <td className="px-6 py-4 text-sm text-on-surface">{row.used_days} Days</td>
-                    <td className={`px-6 py-4 text-sm font-bold ${row.remaining_days <= 3 ? 'text-error' : 'text-on-surface'}`}>
-                      {row.remaining_days} Days
-                    </td>
-                    <td className="px-6 py-4">
-                      <StatusBadge remaining={row.remaining_days} />
-                    </td>
-                  </tr>
-                ))}
-                {balances.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-on-surface-variant">
-                      No leave balances found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex items-center justify-between px-2">
-            <p className="text-sm text-on-surface-variant">Showing {balances.length} of {balances.length} employees</p>
-            <div className="flex gap-2">
-              <button className="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors">
-                <span className="material-symbols-outlined text-sm">chevron_left</span>
-              </button>
-              <button className="px-3 py-1 border border-primary bg-primary text-on-primary rounded text-sm font-medium">1</button>
-              <button className="px-3 py-1 border border-outline-variant rounded text-sm font-medium hover:bg-surface-container">2</button>
-              <button className="px-3 py-1 border border-outline-variant rounded text-sm font-medium hover:bg-surface-container">3</button>
-              <button className="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors">
-                <span className="material-symbols-outlined text-sm">chevron_right</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="relative h-64 rounded-2xl overflow-hidden mt-4 bg-primary-container">
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-10">
-              <div className="max-w-xl text-center space-y-4">
-                <h2 className="text-3xl font-black text-white">Advanced Policy Engine</h2>
-                <p className="text-white/90 text-lg">Your leave balances are synchronized with the company-wide compliance standards. Precision management for peak performance.</p>
-                <button className="px-6 py-3 bg-white text-primary font-bold rounded-lg hover:opacity-90 transition-all">Configure Policies</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <QuotasTab
+          balances={balances}
+          onRequestLeave={() => setShowModal(true)}
+        />
       )}
 
       {activeTab === 'taken' && (
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center mb-4">
-            <span className="material-symbols-outlined text-3xl text-primary/40">event_busy</span>
-          </div>
-          <h2 className="text-lg font-semibold text-on-surface mb-2">Taken Leave View</h2>
-          <p className="text-sm text-on-surface-variant max-w-sm">Leave usage history by employee.</p>
-        </div>
+        <TakenTab requests={requests} />
       )}
 
       {activeTab === 'pending' && (
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center mb-4">
-            <span className="material-symbols-outlined text-3xl text-primary/40">pending_actions</span>
-          </div>
-          <h2 className="text-lg font-semibold text-on-surface mb-2">Pending Approvals</h2>
-          <p className="text-sm text-on-surface-variant max-w-sm">
-            {stats.pending_requests > 0
-              ? `${stats.pending_requests} leave request${stats.pending_requests > 1 ? 's' : ''} awaiting your review.`
-              : 'No pending leave requests.'}
-          </p>
-        </div>
+        <PendingTab pending={pending} onRefresh={refetch} />
       )}
+
+      <LeaveRequestModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={refetch}
+        leaveTypes={leaveTypes}
+        employees={employees}
+      />
     </div>
   )
 }

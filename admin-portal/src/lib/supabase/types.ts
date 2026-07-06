@@ -123,13 +123,11 @@ export type LeaveType = {
   id: string
   organization_id: string
   name: string
-  description: string | null
   days_allowed: number
   is_paid: boolean
+  carry_forward: boolean
   requires_approval: boolean
-  color: string
   created_at: string
-  updated_at: string
 }
 
 // Leave balance types
@@ -138,13 +136,28 @@ export type LeaveBalance = {
   employee_id: string
   organization_id: string
   leave_type_id: string
-  year: number
-  total_days: number
+  allocated_days: number
   used_days: number
   remaining_days: number
-  carried_forward_days: number
-  created_at: string
-  updated_at: string
+  year: number
+}
+
+export type LeaveBalanceInsert = {
+  employee_id: string
+  organization_id: string
+  leave_type_id: string
+  allocated_days: number
+  used_days?: number
+  year: number
+}
+
+export type LeaveTypeInsert = {
+  organization_id: string
+  name: string
+  days_allowed: number
+  is_paid?: boolean
+  carry_forward?: boolean
+  requires_approval?: boolean
 }
 
 // Leave request types
@@ -155,14 +168,25 @@ export type LeaveRequest = {
   leave_type_id: string
   start_date: string
   end_date: string
-  total_days: number
+  days: number
   reason: string | null
   status: 'pending' | 'approved' | 'rejected' | 'cancelled'
   approved_by: string | null
   approved_at: string | null
-  rejection_reason: string | null
   created_at: string
-  updated_at: string
+}
+
+export type LeaveRequestInsert = {
+  employee_id: string
+  organization_id: string
+  leave_type_id: string
+  start_date: string
+  end_date: string
+  days: number
+  reason?: string | null
+  status?: 'pending' | 'approved' | 'rejected' | 'cancelled'
+  approved_by?: string | null
+  approved_at?: string | null
 }
 
 // Payroll run types
@@ -324,18 +348,18 @@ export type Database = {
       }
       leave_types: {
         Row: LeaveType
-        Insert: Omit<LeaveType, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<LeaveType, 'id' | 'created_at' | 'updated_at'>>
+        Insert: LeaveTypeInsert
+        Update: Partial<LeaveTypeInsert>
       }
       leave_balances: {
         Row: LeaveBalance
-        Insert: Omit<LeaveBalance, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<LeaveBalance, 'id' | 'created_at' | 'updated_at'>>
+        Insert: LeaveBalanceInsert
+        Update: Partial<LeaveBalanceInsert>
       }
       leave_requests: {
         Row: LeaveRequest
-        Insert: Omit<LeaveRequest, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<LeaveRequest, 'id' | 'created_at' | 'updated_at'>>
+        Insert: LeaveRequestInsert
+        Update: Partial<LeaveRequestInsert>
       }
       payroll_runs: {
         Row: PayrollRun
