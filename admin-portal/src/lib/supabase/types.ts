@@ -243,14 +243,12 @@ export type Incentive = {
   id: string
   employee_id: string
   organization_id: string
-  type: 'bonus' | 'commission' | 'performance' | 'referral' | 'other'
+  type: 'bonus' | 'commission' | 'allowance' | 'other'
   amount: number
   description: string | null
-  month: number
-  year: number
+  date: string
   approved_by: string | null
   created_at: string
-  updated_at: string
 }
 
 // Loan types
@@ -397,8 +395,8 @@ export type Database = {
       }
       incentives: {
         Row: Incentive
-        Insert: Omit<Incentive, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Incentive, 'id' | 'created_at' | 'updated_at'>>
+        Insert: Omit<Incentive, 'id' | 'created_at'>
+        Update: Partial<Omit<Incentive, 'id' | 'created_at'>>
       }
       loans: {
         Row: Loan

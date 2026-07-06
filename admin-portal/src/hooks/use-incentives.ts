@@ -22,10 +22,16 @@ export type IncentiveStats = {
   quarterly_growth: number
 }
 
+export type EmployeeOption = {
+  id: string
+  full_name: string
+}
+
 export function useIncentives() {
   const supabase = useSupabase()
   const { organization } = useOrganization()
   const [entries, setEntries] = useState<IncentiveEntry[]>([])
+  const [employees, setEmployees] = useState<EmployeeOption[]>([])
   const [stats, setStats] = useState<IncentiveStats>({
     total_pool: 0,
     average: 0,
@@ -42,31 +48,37 @@ export function useIncentives() {
       setLoading(true)
       setError(null)
 
-      const { data, error: fetchError } = await supabase
-        .from('incentives')
-        .select('id, employee_id, type, amount, description, date, approved_by, created_at')
-        .eq('organization_id', organization.id)
-        .order('date', { ascending: false })
+      const [{ data, error: fetchError }, { data: employeesRaw, error: employeesError }] = await Promise.all([
+        supabase
+          .from('incentives')
+          .select('id, employee_id, type, amount, description, date, approved_by, created_at')
+          .eq('organization_id', organization.id)
+          .order('date', { ascending: false }),
+        supabase
+          .from('employees')
+          .select('id, profile:profile_id(full_name)')
+          .eq('organization_id', organization.id)
+          .eq('status', 'active'),
+      ])
 
       if (fetchError) throw fetchError
+      if (employeesError) throw employeesError
 
       const raw = (data ?? []) as Array<Record<string, unknown>>
+
+      const mappedEmployees = ((employeesRaw ?? []) as Array<Record<string, unknown>>).map((e) => {
+        const profile = e.profile as { full_name: string } | null
+        return { id: e.id as string, full_name: profile?.full_name ?? 'Unknown' }
+      })
+      setEmployees(mappedEmployees)
 
       const employeeIds = new Set<string>()
       raw.forEach((r) => employeeIds.add(r.employee_id as string))
 
       let employeeMap: Record<string, string> = {}
-      if (employeeIds.size > 0) {
-        const { data: employees } = await supabase
-          .from('employees')
-          .select('id, profile:profile_id(id, full_name)')
-          .in('id', Array.from(employeeIds))
-
-        if (employees) {
-          for (const e of (employees as Array<Record<string, unknown>>)) {
-            const p = e.profile as { full_name?: string } | null
-            employeeMap[e.id as string] = p?.full_name || 'Unknown'
-          }
+      for (const emp of mappedEmployees) {
+        if (employeeIds.has(emp.id)) {
+          employeeMap[emp.id] = emp.full_name
         }
       }
 
@@ -131,5 +143,5 @@ export function useIncentives() {
     if (organization?.id) fetchIncentives()
   }, [organization?.id, fetchIncentives])
 
-  return { entries, stats, loading, error, refetch: fetchIncentives }
+  return { entries, employees, stats, loading, error, refetch: fetchIncentives }
 }
