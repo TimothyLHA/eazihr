@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { useLoans, type LoanEntry } from '@/hooks/use-loans'
+import LoanRequestModal from '@/components/loans/loan-request-modal'
 
 const statusConfig: Record<string, { label: string; badge: string; color: string; note: string }> = {
   pending: { label: 'Pending', badge: 'bg-surface-container-highest text-on-surface-variant', color: 'bg-primary', note: 'Awaiting HR Review' },
@@ -97,8 +98,9 @@ function Skeleton() {
 }
 
 export default function LoansPage() {
-  const { entries, stats, loading, error, refetch } = useLoans()
+  const { entries, employees, stats, loading, error, refetch } = useLoans()
 
+  const [showModal, setShowModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [currentPage, setCurrentPage] = useState(1)
@@ -158,7 +160,10 @@ export default function LoansPage() {
             <span className="material-symbols-outlined text-lg">download</span>
             Export CSV
           </button>
-          <button className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-3 text-xs font-bold text-on-primary shadow-sm hover:opacity-90 transition-all">
+          <button
+            onClick={() => setShowModal(true)}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-3 text-xs font-bold text-on-primary shadow-sm hover:opacity-90 transition-all"
+          >
             <span className="material-symbols-outlined text-lg">add_card</span>
             New Loan Request
           </button>
@@ -292,7 +297,10 @@ export default function LoansPage() {
             </div>
           )}
 
-          <div className="rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-lowest p-6 flex flex-col items-center justify-center text-center gap-3 transition hover:bg-surface-container cursor-pointer">
+          <div
+            onClick={() => setShowModal(true)}
+            className="rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-lowest p-6 flex flex-col items-center justify-center text-center gap-3 transition hover:bg-surface-container cursor-pointer"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-highest text-primary">
               <span className="material-symbols-outlined">add</span>
             </div>
@@ -341,6 +349,14 @@ export default function LoansPage() {
           </div>
         </div>
       </div>
+
+      <LoanRequestModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={refetch}
+        employees={employees}
+      />
     </div>
   )
 }
+
