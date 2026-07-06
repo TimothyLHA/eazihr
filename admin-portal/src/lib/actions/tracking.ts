@@ -20,6 +20,8 @@ export async function updateVehicleStatus(
   const status = formData.get('status') as string
   const driverName = formData.get('driver_name') as string
   const location = formData.get('last_location') as string
+  const latRaw = formData.get('lat') as string
+  const lngRaw = formData.get('lng') as string
 
   if (!id || !status) return { error: 'Vehicle ID and status are required.' }
 
@@ -29,7 +31,14 @@ export async function updateVehicleStatus(
     last_updated: new Date().toISOString(),
   }
   if (driverName) updates.driver_name = driverName
-  if (location) updates.last_location = { address: location }
+
+  const locPayload: Record<string, unknown> = {}
+  if (location) locPayload.address = location
+  const lat = parseFloat(latRaw)
+  const lng = parseFloat(lngRaw)
+  if (!isNaN(lat)) locPayload.lat = lat
+  if (!isNaN(lng)) locPayload.lng = lng
+  if (Object.keys(locPayload).length > 0) updates.last_location = locPayload
 
   const { error } = await supabase.from('vehicles').update(updates).eq('id', id)
 

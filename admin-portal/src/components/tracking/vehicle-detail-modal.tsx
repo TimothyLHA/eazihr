@@ -31,21 +31,23 @@ export default function VehicleDetailModal({ open, vehicle, onClose, onSuccess }
 
   const [status, setStatus] = useState(vehicle.status)
   const [driverName, setDriverName] = useState(vehicle.driver_name || '')
-  const [location, setLocation] = useState(
-    vehicle.last_location && typeof vehicle.last_location === 'object'
-      ? String((vehicle.last_location as Record<string, unknown>).address ?? '')
-      : ''
-  )
+  const lastLoc = vehicle.last_location && typeof vehicle.last_location === 'object'
+    ? (vehicle.last_location as Record<string, unknown>)
+    : {}
+  const [location, setLocation] = useState(String(lastLoc.address ?? ''))
+  const [lat, setLat] = useState(String(lastLoc.lat ?? ''))
+  const [lng, setLng] = useState(String(lastLoc.lng ?? ''))
 
   useEffect(() => {
     if (vehicle) {
       setStatus(vehicle.status)
       setDriverName(vehicle.driver_name || '')
-      setLocation(
-        vehicle.last_location && typeof vehicle.last_location === 'object'
-          ? String((vehicle.last_location as Record<string, unknown>).address ?? '')
-          : ''
-      )
+      const loc = vehicle.last_location && typeof vehicle.last_location === 'object'
+        ? (vehicle.last_location as Record<string, unknown>)
+        : {}
+      setLocation(String(loc.address ?? ''))
+      setLat(String(loc.lat ?? ''))
+      setLng(String(loc.lng ?? ''))
     }
   }, [vehicle])
 
@@ -56,6 +58,8 @@ export default function VehicleDetailModal({ open, vehicle, onClose, onSuccess }
     fd.set('status', status)
     fd.set('driver_name', driverName)
     fd.set('last_location', location)
+    fd.set('lat', lat)
+    fd.set('lng', lng)
     const result = await updateVehicleStatus(null, fd)
     if (result?.success) {
       onSuccess()
@@ -149,8 +153,31 @@ export default function VehicleDetailModal({ open, vehicle, onClose, onSuccess }
                   value={location}
                   onChange={e => setLocation(e.target.value)}
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                  placeholder="Current address or coordinates"
+                  placeholder="Current address"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-on-surface mb-1">Latitude</label>
+                  <input
+                    type="text"
+                    value={lat}
+                    onChange={e => setLat(e.target.value)}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    placeholder="e.g. 40.7128"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-on-surface mb-1">Longitude</label>
+                  <input
+                    type="text"
+                    value={lng}
+                    onChange={e => setLng(e.target.value)}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    placeholder="e.g. -74.006"
+                  />
+                </div>
               </div>
             </div>
           </div>

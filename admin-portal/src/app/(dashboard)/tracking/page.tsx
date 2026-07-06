@@ -1,8 +1,11 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useTracking, type VehicleEntry } from '@/hooks/use-tracking'
 import VehicleDetailModal from '@/components/tracking/vehicle-detail-modal'
+
+const FleetMap = dynamic(() => import('@/components/tracking/fleet-map'), { ssr: false })
 
 const STATUS_MAP: Record<string, { display: string; badge: string; action: string; logStatus: string }> = {
   active: { display: 'ON-TRACK', badge: 'bg-secondary/10 text-secondary', action: 'On track update', logStatus: 'ON-TRACK' },
@@ -276,47 +279,11 @@ export default function TrackingPage() {
               <p className="text-[11px] text-on-surface-variant">Real-time location tracking of active vehicles.</p>
             </div>
             <div className="flex items-center gap-2">
-              <button className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-on-surface shadow-sm hover:bg-surface-container transition-colors" title="Zoom in">
-                <span className="material-symbols-outlined text-lg">add</span>
-              </button>
-              <button className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-on-surface shadow-sm hover:bg-surface-container transition-colors" title="Zoom out">
-                <span className="material-symbols-outlined text-lg">remove</span>
-              </button>
-              <button className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-on-surface shadow-sm hover:bg-surface-container transition-colors" title="Recenter">
-                <span className="material-symbols-outlined text-lg">my_location</span>
-              </button>
+              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-secondary animate-pulse" />
+              <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Live</span>
             </div>
           </div>
-          <div className="relative flex-1 overflow-hidden bg-surface-dim">
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-60"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=1400&q=80')" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/10 to-transparent" />
-            <div className="absolute top-6 left-6 rounded-3xl bg-white/90 border border-outline-variant p-4 shadow-2xl">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-secondary animate-pulse" />
-                <p className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Live Syncing</p>
-              </div>
-              <div className="flex items-center gap-2 rounded-full bg-surface-container px-3 py-2 text-[11px] font-semibold text-primary">
-                <span className="material-symbols-outlined text-sm">local_shipping</span>
-                {stats.active_count > 0
-                  ? `${stats.active_count} vehicle${stats.active_count !== 1 ? 's' : ''} active`
-                  : 'No active vehicles'}
-              </div>
-            </div>
-            <div className="absolute bottom-6 left-6 rounded-3xl bg-white/90 border border-outline-variant p-4 shadow-2xl flex flex-col gap-3">
-              <div className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest">
-                <span className="h-2 w-2 rounded-full bg-secondary" /> On-Track
-              </div>
-              <div className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest">
-                <span className="h-2 w-2 rounded-full bg-amber-500" /> Delay Risk
-              </div>
-              <div className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest">
-                <span className="h-2 w-2 rounded-full bg-error" /> Critical Alert
-              </div>
-            </div>
-          </div>
+          <FleetMap vehicles={filtered} />
         </section>
       </div>
 
