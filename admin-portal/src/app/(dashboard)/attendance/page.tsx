@@ -1,6 +1,9 @@
 'use client'
 
+import { useState, useCallback } from 'react'
 import { useAttendance } from '@/hooks/use-attendance'
+import ManualEntryModal from '@/components/attendance/manual-entry-modal'
+import EditAttendanceModal from '@/components/attendance/edit-attendance-modal'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -28,7 +31,7 @@ const statusBadge: Record<string, string> = {
 function formatTime(dt: string | null) {
   if (!dt) return null
   const d = new Date(dt)
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
 }
 
 function formatDate(dateStr: string) {
@@ -44,10 +47,60 @@ function maxValue(items: { on_time: number; late: number }[]) {
   return Math.max(...items.map((i) => i.on_time + i.late), 1)
 }
 
+function todayStr() {
+  return new Date().toISOString().split('T')[0]
+}
+
+function daysAgo(n: number) {
+  const d = new Date()
+  d.setDate(d.getDate() - n)
+  return d.toISOString().split('T')[0]
+}
+
 export default function AttendancePage() {
-  const { records, weeklyTrends, lateLogs, loading, error } = useAttendance()
+  const [dateFrom, setDateFrom] = useState(daysAgo(30))
+  const [dateTo, setDateTo] = useState(todayStr())
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [page, setPage] = useState(1)
+
+  const { records, totalCount, weeklyTrends, lateLogs, loading, error, refetch } = useAttendance({
+    dateFrom,
+    dateTo,
+    search,
+    statusFilter,
+    page,
+    pageSize: 50,
+  })
+
+  const [showManualModal, setShowManualModal] = useState(false)
+  const [editRecordId, setEditRecordId] = useState<string | null>(null)
 
   const barMax = maxValue(weeklyTrends)
+
+  const handleExportCSV = useCallback(() => {
+    const headers = ['Employee', 'Date', 'Check In', 'Check Out', 'Status', 'Notes']
+    const rows = records.map((r) => [
+      r.employee_name,
+      r.date,
+      formatTime(r.check_in) || '',
+      formatTime(r.check_out) || '',
+      statusLabel[r.status] || r.status,
+      r.notes || '',
+    ])
+    const csv = [headers.join(','), ...rows.map((r) => r.map((c) => `"${c}"`).join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `attendance_${dateFrom}_${dateTo}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [records, dateFrom, dateTo])
+
+  const handleRefresh = useCallback(() => {
+    refetch()
+  }, [refetch])
 
   return (
     <div className="space-y-6">
@@ -57,10 +110,26 @@ export default function AttendancePage() {
           <p className="text-xs text-on-surface-variant">Real-time oversight of personnel movement and precision logging.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest text-xs font-semibold hover:bg-surface-container-low transition-all">
+          <div className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-1.5">
+            <span className="material-symbols-outlined text-sm text-on-surface-variant">calendar_today</span>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={e => { setDateFrom(e.target.value); setPage(1) }}
+              className="bg-transparent text-xs text-on-surface outline-none w-28"
+            />
+            <span className="text-xs text-on-surface-variant">—</span>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={e => { setDateTo(e.target.value); setPage(1) }}
+              className="bg-transparent text-xs text-on-surface outline-none w-28"
+            />
+          </div>
+          <button onClick={handleExportCSV} className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest text-xs font-semibold hover:bg-surface-container-low transition-all">
             <span className="material-symbols-outlined text-lg">download</span> Export CSV
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold shadow-sm hover:opacity-90 transition-all">
+          <button onClick={() => setShowManualModal(true)} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold shadow-sm hover:opacity-90 transition-all">
             <span className="material-symbols-outlined text-lg">add</span> New Manual Entry
           </button>
         </div>
@@ -80,9 +149,20 @@ export default function AttendancePage() {
               <h3 className="text-xl font-semibold text-on-surface">Weekly Attendance Trends</h3>
               <p className="text-xs text-on-surface-variant">Daily comparison of check-ins versus late arrivals.</p>
             </div>
-            <select className="bg-surface-container-low border-none rounded-lg text-xs font-semibold px-3 py-1.5 outline-none focus:ring-2 focus:ring-primary">
-              <option>Last 7 Days</option>
-              <option>Last 30 Days</option>
+            <select
+              value={dateTo}
+              onChange={e => {
+                const val = e.target.value
+                if (val === '7') { setDateFrom(daysAgo(7)); setDateTo(todayStr()) }
+                else if (val === '30') { setDateFrom(daysAgo(30)); setDateTo(todayStr()) }
+                else if (val === '90') { setDateFrom(daysAgo(90)); setDateTo(todayStr()) }
+                setPage(1)
+              }}
+              className="bg-surface-container-low border-none rounded-lg text-xs font-semibold px-3 py-1.5 outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
             </select>
           </div>
           <div className="flex-1 flex items-end justify-between gap-4 h-64 px-4">
@@ -95,7 +175,6 @@ export default function AttendancePage() {
               ))
             ) : (
               weeklyTrends.map((bar, i) => {
-                const total = bar.on_time + bar.late
                 const onTimePct = barMax > 0 ? (bar.on_time / barMax) * 100 : 0
                 const latePct = barMax > 0 ? (bar.late / barMax) * 100 : 0
                 return (
@@ -111,6 +190,9 @@ export default function AttendancePage() {
                       style={{ height: `${onTimePct}%` }}
                     />
                     <span className="mt-2 text-[10px] text-on-surface-variant">{days[i]}</span>
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      {bar.on_time} on time, {bar.late} late
+                    </div>
                   </div>
                 )
               })
@@ -161,12 +243,9 @@ export default function AttendancePage() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-on-surface">{log.employee_name}</p>
-                        <p className="text-xs text-on-surface-variant">{log.minutes}m late</p>
+                        <p className="text-xs text-on-surface-variant">{log.minutes}m late — {formatDate(log.date)}</p>
                       </div>
                     </div>
-                    <button className="p-1 hover:bg-amber-200 rounded-full text-amber-700 transition-colors">
-                      <span className="material-symbols-outlined text-sm">notifications_active</span>
-                    </button>
                   </div>
                   {log.reason && (
                     <div className="mt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between">
@@ -178,26 +257,48 @@ export default function AttendancePage() {
               ))
             )}
           </div>
-          <button className="w-full mt-4 py-3 text-center text-xs font-semibold text-primary hover:bg-surface-container-low rounded-lg transition-colors border border-dashed border-outline-variant">
+          <button
+            onClick={() => {
+              document.getElementById('attendance-table')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className="w-full mt-4 py-3 text-center text-xs font-semibold text-primary hover:bg-surface-container-low rounded-lg transition-colors border border-dashed border-outline-variant"
+          >
             View All Late Logs
           </button>
         </div>
 
-        <div className="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-outline-variant flex items-center justify-between">
+        <div id="attendance-table" className="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-outline-variant flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-6">
               <h3 className="text-xl font-semibold text-on-surface">Attendance Records</h3>
               <nav className="flex gap-1 bg-surface-container-low p-1 rounded-lg">
-                <button className="px-4 py-1.5 rounded-md bg-surface-container-lowest shadow-sm text-xs font-semibold text-primary">All Entries</button>
-                <button className="px-4 py-1.5 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors">On-Site</button>
-                <button className="px-4 py-1.5 rounded-md text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors">Remote</button>
+                {['', 'on_time', 'late', 'absent', 'half_day'].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => { setStatusFilter(s); setPage(1) }}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                      statusFilter === s
+                        ? 'bg-surface-container-lowest shadow-sm text-primary'
+                        : 'text-on-surface-variant hover:text-primary'
+                    }`}
+                  >
+                    {s === '' ? 'All' : s === 'on_time' ? 'On Time' : s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ')}
+                  </button>
+                ))}
               </nav>
             </div>
-            <div className="flex items-center gap-2">
-              <button className="p-2 hover:bg-surface-container-low rounded-full transition-colors">
-                <span className="material-symbols-outlined text-on-surface-variant text-lg">filter_list</span>
-              </button>
-              <button className="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-initial">
+                <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">search</span>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => { setSearch(e.target.value); setPage(1) }}
+                  placeholder="Search employee..."
+                  className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-xs outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <button onClick={handleRefresh} className="p-2 hover:bg-surface-container-low rounded-full transition-colors">
                 <span className="material-symbols-outlined text-on-surface-variant text-lg">refresh</span>
               </button>
             </div>
@@ -211,13 +312,14 @@ export default function AttendancePage() {
                   <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check In</th>
                   <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Check Out</th>
                   <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
+                  <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/30">
                 {loading ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      {Array.from({ length: 5 }).map((_, j) => (
+                      {Array.from({ length: 6 }).map((_, j) => (
                         <td key={j} className="px-4 py-3">
                           <div className="h-4 w-24 bg-surface-container rounded" />
                         </td>
@@ -226,7 +328,7 @@ export default function AttendancePage() {
                   ))
                 ) : records.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-on-surface-variant">
                       No attendance records found.
                     </td>
                   </tr>
@@ -235,7 +337,11 @@ export default function AttendancePage() {
                     const checkInTime = formatTime(r.check_in)
                     const checkOutTime = formatTime(r.check_out)
                     return (
-                      <tr key={r.id} className="hover:bg-surface-container-low/20 transition-colors group">
+                      <tr
+                        key={r.id}
+                        onClick={() => setEditRecordId(r.id)}
+                        className="hover:bg-surface-container-low/20 transition-colors group cursor-pointer"
+                      >
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[10px]">
@@ -267,10 +373,13 @@ export default function AttendancePage() {
                             <span className="text-on-surface-variant/40">&mdash;</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-4 py-3">
                           <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${statusBadge[r.status] || 'bg-surface-container text-on-surface-variant'}`}>
                             {statusLabel[r.status] || r.status}
                           </span>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-on-surface-variant max-w-[150px] truncate">
+                          {r.notes || <span className="text-on-surface-variant/40">&mdash;</span>}
                         </td>
                       </tr>
                     )
@@ -280,18 +389,37 @@ export default function AttendancePage() {
             </table>
           </div>
           <div className="p-4 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
-            <span className="text-xs text-on-surface-variant">Showing {records.length} records</span>
+            <span className="text-xs text-on-surface-variant">Showing {records.length} of {totalCount} records</span>
             <div className="flex gap-2">
-              <button className="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low disabled:opacity-30 opacity-30 cursor-not-allowed">
+              <button
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page <= 1}
+                className="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed"
+              >
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
               </button>
-              <button className="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low">
+              <button
+                onClick={() => setPage(page + 1)}
+                disabled={records.length < 50}
+                className="p-2 border border-outline-variant rounded-md hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed"
+              >
                 <span className="material-symbols-outlined text-sm">chevron_right</span>
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <ManualEntryModal
+        open={showManualModal}
+        onClose={() => { setShowManualModal(false); refetch() }}
+      />
+
+      <EditAttendanceModal
+        recordId={editRecordId}
+        onClose={() => setEditRecordId(null)}
+        onSaved={() => { setEditRecordId(null); refetch() }}
+      />
     </div>
   )
 }

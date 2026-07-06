@@ -68,7 +68,7 @@ export type EmployeeInsert = {
   documents?: Json
 }
 
-// Attendance log types
+// Attendance log types (matches SQL schema)
 export type AttendanceLog = {
   id: string
   employee_id: string
@@ -76,30 +76,46 @@ export type AttendanceLog = {
   date: string
   check_in: string | null
   check_out: string | null
-  check_in_location: string | null
-  check_out_location: string | null
-  status: 'present' | 'absent' | 'late' | 'half_day' | 'remote'
-  late_minutes: number | null
-  early_departure_minutes: number | null
-  overtime_minutes: number | null
+  status: 'on_time' | 'late' | 'absent' | 'half_day'
+  shift_type: string | null
+  location: Json
   notes: string | null
   created_at: string
-  updated_at: string
 }
 
-// Late log types
+export type AttendanceLogInsert = {
+  employee_id: string
+  organization_id: string
+  date: string
+  check_in?: string | null
+  check_out?: string | null
+  status?: 'on_time' | 'late' | 'absent' | 'half_day'
+  shift_type?: string | null
+  location?: Json
+  notes?: string | null
+}
+
+// Late log types (matches SQL schema)
 export type LateLog = {
   id: string
   employee_id: string
   organization_id: string
+  attendance_log_id: string | null
   date: string
+  check_in_time: string | null
   minutes_late: number
   reason: string | null
-  excused: boolean
-  excused_by: string | null
-  excused_at: string | null
   created_at: string
-  updated_at: string
+}
+
+export type LateLogInsert = {
+  employee_id: string
+  organization_id: string
+  attendance_log_id?: string | null
+  date: string
+  check_in_time?: string | null
+  minutes_late?: number
+  reason?: string | null
 }
 
 // Leave type types
@@ -298,13 +314,13 @@ export type Database = {
       }
       attendance_logs: {
         Row: AttendanceLog
-        Insert: Omit<AttendanceLog, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<AttendanceLog, 'id' | 'created_at' | 'updated_at'>>
+        Insert: AttendanceLogInsert
+        Update: Partial<AttendanceLogInsert>
       }
       late_logs: {
         Row: LateLog
-        Insert: Omit<LateLog, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<LateLog, 'id' | 'created_at' | 'updated_at'>>
+        Insert: LateLogInsert
+        Update: Partial<LateLogInsert>
       }
       leave_types: {
         Row: LeaveType
