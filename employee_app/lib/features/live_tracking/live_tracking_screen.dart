@@ -15,7 +15,7 @@ class LiveTrackingScreen extends ConsumerStatefulWidget {
   ConsumerState<LiveTrackingScreen> createState() => _LiveTrackingScreenState();
 }
 
-class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> {
+class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> with WidgetsBindingObserver {
   GoogleMapController? _mapController;
   Position? _currentPosition;
   StreamSubscription<Position>? _positionStream;
@@ -24,20 +24,30 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> {
   bool _isTracking = false;
   bool _isLocationSharing = true;
   bool _isLoading = true;
+  bool _hasChecked = false;
   String? _error;
   LocationPermission? _permission;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkFeatureEnabled();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _positionStream?.cancel();
     _tripTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _error != null) {
+      _retry();
+    }
   }
 
   Future<void> _checkFeatureEnabled() async {
@@ -46,10 +56,15 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> {
       final org = orgAsync.valueOrNull;
       if (org == null) { setState(() { _error = 'Organization not found'; _isLoading = false; }); return; }
       final featureConfig = org.featureConfig;
-      final liveTrackingEnabled = featureConfig['live_tracking'] ?? false;
+      final liveTrackingEnabled = featureConfig['live_tracking'] ?? true;
       if (!liveTrackingEnabled) { setState(() { _error = 'Live tracking is not enabled for your organization'; _isLoading = false; }); return; }
       await _checkPermissions();
     } catch (e) { setState(() { _error = e.toString(); _isLoading = false; }); }
+  }
+
+  Future<void> _retry() async {
+    setState(() { _isLoading = true; _error = null; _hasChecked = false; });
+    await _checkFeatureEnabled();
   }
 
   Future<void> _checkPermissions() async {
@@ -482,15 +497,51 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.location_off, size: 64, color: AppColors.error),
-            const SizedBox(height: 16),
+            Container(
+              width: 80, height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.error.withAlpha(20),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Icon(Icons.location_off, size: 40, color: AppColors.error),
+            ),
+            const SizedBox(height: 20),
+            Text('Location Required',
+              style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.onSurface)),
+            const SizedBox(height: 8),
             Text(_error!, textAlign: TextAlign.center,
               style: GoogleFonts.inter(fontSize: 14, color: AppColors.onSurfaceVariant)),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => Geolocator.openAppSettings(),
-              icon: const Icon(Icons.settings),
-              label: const Text('Open Settings'),
+            const SizedBox(height: 28),
+            SizedBox(
+              width: double.infinity, height: 50,
+              child: ElevatedButton.icon(
+                onPressed: () => Geolocator.openAppSettings(),
+                icon: const Icon(Icons.settings),
+                label: Text('Open Settings',
+                  style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity, height: 50,
+              child: OutlinedButton.icon(
+                onPressed: _retry,
+                icon: const Icon(Icons.refresh),
+                label: Text('Retry',
+                  style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600)),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    side: BorderSide(color: AppColors.primary.withAlpha(50)),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
