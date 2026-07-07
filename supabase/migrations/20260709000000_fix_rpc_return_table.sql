@@ -1,7 +1,19 @@
 -- Fix: generate synthetic email from employee code instead of looking up profiles.email
 -- Matches the format used by admin-portal's generateEmployeeAccount
 
-drop function if exists public.get_email_by_employee_code;
+do $$
+declare
+  f record;
+begin
+  for f in
+    select proname, oid::regprocedure as sig
+    from pg_proc
+    where pronamespace = 'public'::regnamespace
+      and proname = 'get_email_by_employee_code'
+  loop
+    execute 'drop function ' || f.sig || ' cascade';
+  end loop;
+end $$;
 
 create or replace function public.get_email_by_employee_code(
   p_slug text,
