@@ -1,19 +1,7 @@
--- Fix: generate synthetic email from employee code instead of looking up profiles.email
--- Matches the format used by admin-portal's generateEmployeeAccount
+-- Fix: return table row so .single() returns a Map, not a scalar.
+-- Look up the actual auth email from profiles (matching addEmployee flow).
 
-do $$
-declare
-  f record;
-begin
-  for f in
-    select proname, oid::regprocedure as sig
-    from pg_proc
-    where pronamespace = 'public'::regnamespace
-      and proname = 'get_email_by_employee_code'
-  loop
-    execute 'drop function ' || f.sig || ' cascade';
-  end loop;
-end $$;
+drop function if exists public.get_email_by_employee_code(p_slug text, p_employee_code text);
 
 create or replace function public.get_email_by_employee_code(
   p_slug text,
@@ -26,8 +14,9 @@ set search_path = public
 as $$
 begin
   return query
-  select concat(e.employee_code, '@org.easyhr.app') as email
+  select p.email
   from employees e
+  join profiles p on p.id = e.profile_id
   join organizations o on o.id = e.organization_id
   where o.slug = p_slug
     and e.employee_code = p_employee_code
