@@ -24,11 +24,15 @@ class QuickActionsGrid extends ConsumerWidget {
         final featureConfig = org.featureConfig;
         final overtimeEnabled = featureConfig['overtime'] ?? true;
         final trackingEnabled = featureConfig['live_tracking'] ?? true;
+        final loansEnabled = featureConfig['loans'] ?? true;
         if (overtimeEnabled) {
           actions.insert(1, _Action(Icons.timer_outlined, 'Overtime', '/overtime'));
         }
         if (trackingEnabled) {
           actions.insert(2, _Action(Icons.location_on, 'Tracking', '/live-tracking'));
+        }
+        if (loansEnabled) {
+          actions.add(_Action(Icons.account_balance, 'Loans', '/loans'));
         }
       },
     );

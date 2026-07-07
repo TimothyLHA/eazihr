@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-glow {
+            box-shadow: 0 0 15px rgba(6, 95, 70, 0.2);
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(255, 248, 231, 0.9) 0%, rgba(255, 248, 231, 0) 15%, rgba(255, 248, 231, 0) 85%, rgba(255, 248, 231, 1) 100%);
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: contain;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#065f46",
+                        "surface-container-highest": "#e9e2d2",
+                        "on-surface": "#002116",
+                        "secondary": "#1b6b4f",
+                        "inverse-on-surface": "#f7f0df",
+                        "surface-variant": "#e9e2d2",
+                        "on-background": "#002116",
+                        "tertiary-container": "#1d5d49",
+                        "tertiary-fixed-dim": "#95d3ba",
+                        "surface-dim": "#e0dac9",
+                        "tertiary-fixed": "#b0f0d6",
+                        "error-container": "#ffdad6",
+                        "background": "#fff9ec",
+                        "primary-container": "#065f46",
+                        "outline-variant": "#bec9c2",
+                        "primary-fixed": "#a6f2d1",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#065f46",
+                        "on-primary-fixed-variant": "#00513b",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#8bd6b4",
+                        "inverse-primary": "#8bd6b6",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#a7f3d0",
+                        "tertiary": "#004533",
+                        "on-secondary-fixed": "#002115",
+                        "surface-bright": "#fff9ec",
+                        "primary-fixed-dim": "#8bd6b6",
+                        "on-secondary-fixed-variant": "#00513a",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#a6f2cf",
+                        "surface-container-low": "#faf3e2",
+                        "inverse-surface": "#333025",
+                        "surface-container-high": "#eee8d7",
+                        "surface": "#fff8e7",
+                        "on-tertiary-container": "#95d4ba",
+                        "on-surface-variant": "#3f4944",
+                        "outline": "#6f7973",
+                        "surface-container": "#f4eddd",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002117",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#1b6b51",
+                        "on-tertiary-fixed-variant": "#0b513d",
+                        "on-primary-fixed": "#002116",
+                        "secondary-container": "#a7f3d0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "sidebar-width": "280px",
+                        "margin-page": "40px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface select-none">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter h-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_lkSrRv97LVyMzV0Pdc0QwYIlIC9m7RMARube3sZaAfbRfe_sSdsop3sAuA3O329fKZ6cMBMgmBTh2khj7J8zsweC-yt_FqrqmzcsCIUSWxszvtwWed-KoSNiaqm2ifkXIGE9TjwaOYbYIr95jL0mQrEjZ9pKfMX-IhAEBGKMuWZe8XcCO2fNPlHqyOrNmY6Wfzx0Af3PQUdP-KR1qcnvQQH_6eAJvFqSTGj2xNS2LtRpitdkbhtpZTQt6ywhywSL98YL2QN0gEk"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Executive HR</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150 text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="pt-16 pb-24 min-h-screen flex flex-col">
+<!-- Map Canvas Section -->
+<section class="relative w-full h-[442px] overflow-hidden">
+<div class="absolute inset-0 bg-surface-container-low">
+<div class="w-full h-full bg-cover bg-center grayscale brightness-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzUZaBC919_XrImMNNixsoJxagpJfYXQMiMlpz-VIZ9T6gvSXxD5zVJrJjI0FvUNz0M46qPvLH4bD9VEBz2sULnLSs5Hi4FnkLBvVcSy2ddlVhD4O3IFU67vbW_lyxFUd-0o-aBdN2Ra2tlWNRqyBTHHLl4n5_4EORw8z7yYRSPdpzcQPDHYH6dOtIO0i4pTEeTFUQ5Lmry8FFRR3dxyx1TEQWjUigTjX_3c2SWiaPYs1gZFdMnh-riXfy3u2eCQUtpwuGpS_bNRw')"></div>
+<!-- Interactive Map UI Overlays -->
+<div class="map-gradient-overlay absolute inset-0 pointer-events-none"></div>
+<!-- Floating Map Controls -->
+<div class="absolute top-4 right-4 flex flex-col gap-2">
+<button class="bg-surface/90 backdrop-blur-md w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-primary active:scale-95 border border-outline-variant">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="bg-surface/90 backdrop-blur-md w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-primary active:scale-95 border border-outline-variant">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Active Sync Indicator -->
+<div class="absolute top-4 left-4">
+<div class="bg-primary text-white px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg backdrop-blur-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Direct Sync with Admin Portal</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Control & Details Panel -->
+<section class="px-gutter -mt-8 relative z-10 flex flex-col gap-6">
+<!-- Main Toggle Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<h2 class="font-title-md text-title-md text-primary">Location Sharing</h2>
+<p class="text-on-surface-variant font-caption text-caption">Manage your real-time visibility</p>
+</div>
+<!-- Custom Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="share-toggle" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Active Trip Indicator (Conditional) -->
+<div class="mt-6 p-4 bg-secondary-container rounded-lg border border-secondary/20 flex items-center gap-4" id="active-trip-status">
+<div class="bg-primary text-white p-2 rounded-full">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-secondary-container font-label-md text-label-md uppercase font-bold">Active Trip Mode</span>
+<span class="text-on-secondary-container font-body-md text-body-md opacity-90">Currently transmitting secure telemetry.</span>
+</div>
+</div>
+</div>
+<!-- Bento Detail Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Status Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex flex-col gap-3">
+<span class="material-symbols-outlined text-secondary">insights</span>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Current Status</p>
+<p class="text-primary font-title-md text-title-md mt-1">En Route</p>
+</div>
+</div>
+<!-- Since Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex flex-col gap-3">
+<span class="material-symbols-outlined text-secondary">schedule</span>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Active Since</p>
+<p class="text-primary font-title-md text-title-md mt-1">08:42 AM</p>
+</div>
+</div>
+<!-- Destination Card -->
+<div class="col-span-2 bg-surface-container-lowest p-5 rounded-xl border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-secondary-container p-3 rounded-full">
+<span class="material-symbols-outlined text-primary">warehouse</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase">Destination</p>
+<p class="text-primary font-title-md text-title-md">North Warehouse</p>
+</div>
+</div>
+<button class="text-primary font-label-md text-label-md border border-primary/20 px-4 py-2 rounded-full hover:bg-secondary-container transition-colors">
+                        EDIT
+                    </button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary py-4 rounded-xl text-white font-body-lg text-body-lg font-semibold active:scale-[0.98] transition-transform shadow-lg shadow-primary/20">
+                Complete Current Trip
+            </button>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-2 pb-safe bg-surface z-50 rounded-t-xl border-t border-outline-variant shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-secondary-container rounded-lg transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-primary rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_note</span>
+<span class="font-label-md text-label-md mt-1">Leave</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-secondary-container rounded-lg transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md mt-1">Payslips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-secondary-container rounded-lg transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        const toggle = document.getElementById('share-toggle');
+        const statusPanel = document.getElementById('active-trip-status');
+
+        toggle.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                statusPanel.style.opacity = '1';
+                statusPanel.style.transform = 'translateY(0)';
+            } else {
+                statusPanel.style.opacity = '0.4';
+                statusPanel.style.transform = 'translateY(2px)';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('opacity-0');
+            setTimeout(() => {
+                document.body.classList.remove('opacity-0');
+                document.body.classList.add('transition-opacity', 'duration-500', 'opacity-100');
+            }, 10);
+        });
+    </script>
+</body></html>

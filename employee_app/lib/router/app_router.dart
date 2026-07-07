@@ -16,6 +16,7 @@ import 'package:employee_app/features/overtime/overtime_screen.dart';
 import 'package:employee_app/features/overtime/request_overtime_screen.dart';
 import 'package:employee_app/features/attendance_history/attendance_history_screen.dart';
 import 'package:employee_app/features/live_tracking/live_tracking_screen.dart';
+import 'package:employee_app/features/loans/loans_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -125,6 +126,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/live-tracking',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const LiveTrackingScreen(),
+      ),
+      GoRoute(
+        path: '/loans',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const LoansScreen(),
       ),
     ],
   );

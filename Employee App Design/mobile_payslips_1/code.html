@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Payslips - HR Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-error": "#ffffff",
+                "on-secondary-container": "#065f46",
+                "surface-container-highest": "#e9e2d2",
+                "on-surface": "#002116",
+                "secondary": "#1b6b4f",
+                "inverse-on-surface": "#f7f0df",
+                "surface-variant": "#e9e2d2",
+                "on-background": "#002116",
+                "tertiary-container": "#1d5d49",
+                "tertiary-fixed-dim": "#95d3ba",
+                "surface-dim": "#e0dac9",
+                "tertiary-fixed": "#b0f0d6",
+                "error-container": "#ffdad6",
+                "background": "#FFF8E7",
+                "primary-container": "#065f46",
+                "outline-variant": "#bec9c2",
+                "primary-fixed": "#a6f2d1",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#065f46",
+                "on-primary-fixed-variant": "#00513b",
+                "on-error-container": "#93000a",
+                "secondary-fixed-dim": "#8bd6b4",
+                "inverse-primary": "#8bd6b6",
+                "on-tertiary": "#ffffff",
+                "on-primary-container": "#A7F3D0",
+                "tertiary": "#004533",
+                "on-secondary-fixed": "#002115",
+                "surface-bright": "#FFF8E7",
+                "primary-fixed-dim": "#8bd6b6",
+                "on-secondary-fixed-variant": "#00513a",
+                "on-primary": "#ffffff",
+                "secondary-fixed": "#a6f2cf",
+                "surface-container-low": "#faf3e2",
+                "inverse-surface": "#333025",
+                "surface-container-high": "#eee8d7",
+                "surface": "#FFF8E7",
+                "on-tertiary-container": "#95d4ba",
+                "on-surface-variant": "#3f4944",
+                "outline": "#6f7973",
+                "surface-container": "#f4eddd",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed": "#002117",
+                "on-secondary": "#ffffff",
+                "surface-tint": "#065f46",
+                "on-tertiary-fixed-variant": "#0b513d",
+                "on-primary-fixed": "#002116",
+                "secondary-container": "#A7F3D0"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "md": "24px",
+                "container-max": "1280px",
+                "lg": "48px",
+                "sm": "12px",
+                "xs": "4px",
+                "base": "8px",
+                "gutter": "24px",
+                "xl": "80px",
+                "sidebar-width": "280px",
+                "unit": "8px",
+                "margin-page": "40px"
+        },
+        "fontFamily": {
+                "label-sm": ["Inter"],
+                "headline-md": ["Inter"],
+                "headline-lg": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "body-md": ["Inter"],
+                "label-md": ["Inter"],
+                "headline-sm": ["Inter"],
+                "body-sm": ["Inter"],
+                "body-lg": ["Inter"],
+                "title-md": ["Inter"],
+                "caption": ["Inter"]
+        },
+        "fontSize": {
+                "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .payslip-card-gradient {
+            background: linear-gradient(135deg, #065F46 0%, #002116 100%);
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full bg-surface dark:bg-surface-container-low border-b border-surface-container-high flex justify-between items-center px-gutter h-16 z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of Alex Sterling, a diverse corporate professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYGZbBR1icx3O1hn0-A3t5KhW9_eBtS2PnQjztglm6H1QzH8Pzy-RaoLl2d5p7_bSmQ3xn9_8R4S214xqWPf825CU0nwPTjwCZdbUZd67HU5z7Hotj-PjP4nJs3fLaTj_aWjUKrC041Ojr-thk3qOXevthz_ey_5yKuHcNmCL1fpTYcfXdbkIeapFYxCPWwSVx-80-BJ3MC32pZKXd76HRWLZcJUU8UVe63endR4C5FCeLP325jw6J6Aeih6pTlb5zWTyrffy3WTY"/>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">HR Portal</span>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-gutter space-y-6">
+<!-- Header Section -->
+<section class="mt-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Payroll</h1>
+<p class="font-body-md text-on-surface-variant">View and download your salary statements.</p>
+</section>
+<!-- Most Recent Payslip Bento Summary -->
+<section class="payslip-card-gradient rounded-xl p-6 text-on-primary shadow-lg relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="font-label-md text-label-md uppercase tracking-widest text-secondary-container opacity-90">Latest Statement</span>
+<h2 class="font-title-md text-title-md mt-1 text-white">October 2023</h2>
+</div>
+<span class="material-symbols-outlined text-secondary-container">verified</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="space-y-1">
+<p class="font-label-md text-label-md text-secondary-container opacity-80">Gross Pay</p>
+<p class="font-title-md text-title-md text-white">$8,450.00</p>
+</div>
+<div class="space-y-1">
+<p class="font-label-md text-label-md text-secondary-container opacity-80">Net Pay</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-secondary-container font-bold">$6,120.45</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-sm">calendar_month</span>
+<span class="font-caption text-caption text-secondary-container">Paid on Oct 28, 2023</span>
+</div>
+<button class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-lg font-label-md text-label-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        PDF
+                    </button>
+</div>
+</div>
+</section>
+<!-- Archive Filter Tabs -->
+<section class="flex gap-2 overflow-x-auto scroll-hide py-2">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap">2023</button>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap">2022</button>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap">2021</button>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap">Bonuses</button>
+</section>
+<!-- Archive List -->
+<section class="space-y-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-title-md text-title-md text-primary">Archive</h3>
+<span class="font-caption text-caption text-outline">12 Documents</span>
+</div>
+<!-- List Item: September -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center justify-between shadow-sm hover:bg-surface-container-high transition-colors duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">September 2023</p>
+<p class="font-caption text-caption text-on-surface-variant">$6,120.45 • PDF</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+<!-- List Item: August -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center justify-between shadow-sm hover:bg-surface-container-high transition-colors duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">August 2023</p>
+<p class="font-caption text-caption text-on-surface-variant">$5,980.20 • PDF</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+<!-- List Item: July -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center justify-between shadow-sm hover:bg-surface-container-high transition-colors duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">July 2023</p>
+<p class="font-caption text-caption text-on-surface-variant">$6,120.45 • PDF</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+<!-- List Item: June -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex items-center justify-between shadow-sm hover:bg-surface-container-high transition-colors duration-200 opacity-80">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">June 2023</p>
+<p class="font-caption text-caption text-on-surface-variant">$6,120.45 • PDF</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</section>
+<!-- Tax Documents Callout -->
+<section class="bg-secondary-container border border-primary/10 rounded-xl p-4 flex items-start gap-4">
+<span class="material-symbols-outlined text-primary mt-1">info</span>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-secondary-container">Tax Season (2022)</p>
+<p class="font-caption text-caption text-on-secondary-container/80 mt-1">Your annual W-2 and tax forms for 2022 are now available in the Tax section of your profile.</p>
+<button class="mt-2 text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                    Go to Tax Forms <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-surface shadow-[0_-4px_12px_rgba(6,95,70,0.08)] border-t border-surface-container-high rounded-t-2xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 transition-transform">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-md text-label-md">Schedule</span>
+</button>
+<!-- ACTIVE TAB: Payroll -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1.5 active:scale-90 transition-transform shadow-sm">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Payroll</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 transition-transform">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Team</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for download buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('.material-symbols-outlined');
+                if (icon && icon.innerText.includes('download')) {
+                    const originalContent = this.innerHTML;
+                    this.innerHTML = '<span class="material-symbols-outlined animate-spin text-primary">sync</span>' + (this.innerText.includes('PDF') ? ' PDF' : '');
+                    setTimeout(() => {
+                        this.innerHTML = '<span class="material-symbols-outlined text-primary">check_circle</span>' + (this.innerText.includes('PDF') ? ' DONE' : '');
+                        setTimeout(() => {
+                            this.innerHTML = originalContent;
+                        }, 2000);
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body></html>
