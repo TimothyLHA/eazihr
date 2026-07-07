@@ -44,7 +44,7 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
       .select('profile_id')
       .eq('id', empId)
       .eq('organization_id', orgId)
-      .single()
+      .single<{ profile_id: string | null }>()
     if (emp?.profile_id) {
       const { data: prof } = await supabase
         .from('profiles')
@@ -71,8 +71,9 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
         if (error) {
           setFetchError(error.message)
         } else if (data) {
-          setEmployee(data as unknown as EmployeeData)
-          checkAccount(data.id, organization.id)
+          const emp = data as unknown as EmployeeData
+          setEmployee(emp)
+          checkAccount(emp.id, organization.id)
         }
         setLoading(false)
       })

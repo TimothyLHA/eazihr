@@ -231,6 +231,7 @@ export default function AddEmployeeModal({ open, onClose }: Props) {
             </button>
           </div>
         </form>
+      )}
       </div>
     </div>
   )
