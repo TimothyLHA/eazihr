@@ -2,11 +2,19 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
+import { createClient as createServerClient } from '../supabase/server'
 
 function getAnonClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+function getAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 }
 
@@ -159,7 +167,7 @@ export async function generateEmployeeAccount(
     return { error: 'Employee ID and organization are required.' }
   }
 
-  const supabase = getAnonClient()
+  const supabase = await createServerClient()
 
   const { data: employee, error: empError } = await supabase
     .from('employees')
@@ -253,7 +261,7 @@ export async function resetEmployeePassword(
     return { error: 'Password must be at least 6 characters.' }
   }
 
-  const supabase = getAnonClient()
+  const supabase = await createServerClient()
 
   const { data: employee, error: empError } = await supabase
     .from('employees')
@@ -262,14 +270,19 @@ export async function resetEmployeePassword(
     .eq('organization_id', organizationId)
     .single()
 
-  if (empError || !employee?.profile_id) {
+  if (empError) {
+    return { error: `Error looking up employee: ${empError.message}` }
+  }
+
+  if (!employee?.profile_id) {
     return { error: 'Employee not found or no login account exists.' }
   }
 
-  const adminClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+  const adminClient = getAdminClient()
+
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return { error: 'Server configuration error: SUPABASE_SERVICE_ROLE_KEY not set.' }
+  }
 
   const { error: updateError } = await adminClient.auth.admin.updateUserById(
     employee.profile_id,
