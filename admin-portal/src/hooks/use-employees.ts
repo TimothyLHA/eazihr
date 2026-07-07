@@ -13,6 +13,7 @@ export type EmployeeCard = {
   phone: string
   status: string
   employee_code: string
+  profile_id: string | null
 }
 
 export function useEmployees() {
@@ -48,7 +49,7 @@ export function useEmployees() {
       setCount(total ?? 0)
       setEmployees(
         ((data ?? []) as Array<Record<string, unknown>>).map((e) => {
-          const p = e.profile as { email: string; full_name: string } | null
+          const p = e.profile as { id: string; email: string; full_name: string } | null
           return {
             id: e.id as string,
             name: p?.full_name || (e.employee_code as string) || 'Unknown',
@@ -58,6 +59,7 @@ export function useEmployees() {
             phone: '',
             status: (e.status as string) ?? 'active',
             employee_code: (e.employee_code as string) ?? '',
+            profile_id: p?.id ?? null,
           }
         })
       )

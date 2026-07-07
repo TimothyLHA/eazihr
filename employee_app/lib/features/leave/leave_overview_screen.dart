@@ -6,6 +6,8 @@ import 'package:employee_app/providers/leave_provider.dart';
 import 'package:employee_app/providers/organization_provider.dart';
 import 'package:employee_app/features/auth/providers/auth_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:employee_app/core/theme/app_theme.dart';
 
 class LeaveOverviewScreen extends ConsumerWidget {
   const LeaveOverviewScreen({super.key});
@@ -15,305 +17,382 @@ class LeaveOverviewScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final balancesAsync = ref.watch(leaveBalancesProvider);
     final requestsAsync = ref.watch(leaveRequestsProvider);
-    final orgAsync = ref.watch(organizationProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Leave'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: () => context.push('/leave/apply'),
-            tooltip: 'Apply for Leave',
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(leaveBalancesProvider);
-          ref.invalidate(leaveRequestsProvider);
-          await Future.delayed(const Duration(milliseconds: 500));
-        },
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Leave Balance Section
-            Text('Leave Balances', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 12),
-            balancesAsync.when(
-              data: (balances) {
-                if (balances.isEmpty) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Center(
-                        child: Text('No leave balances found', style: theme.textTheme.bodyMedium),
-                      ),
-                    ),
-                  );
-                }
-                return Column(
-                  children: balances.map((balance) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _BalanceCard(balance: balance),
-                    );
-                  }).toList(),
-                );
-              },
-              loading: () => const Column(
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(leaveBalancesProvider);
+            ref.invalidate(leaveRequestsProvider);
+          },
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: [
+              const SizedBox(height: 12),
+              _buildTopBar(context),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Card(child: SizedBox(height: 80, child: Center(child: CircularProgressIndicator(strokeWidth: 2)))),
-                  SizedBox(height: 12),
-                  Card(child: SizedBox(height: 80, child: Center(child: CircularProgressIndicator(strokeWidth: 2)))),
-                ],
-              ),
-              error: (e, _) => Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.cloud_off, size: 32),
-                      const SizedBox(height: 8),
-                      Text('Could not load balances', style: theme.textTheme.bodySmall),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () => ref.invalidate(leaveBalancesProvider),
-                        child: const Text('Retry'),
-                      ),
+                      Text('Leave Requests',
+                        style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                      Text('Manage your time off',
+                        style: GoogleFonts.inter(fontSize: 14, color: AppColors.onSurfaceVariant)),
                     ],
                   ),
+                  ElevatedButton.icon(
+                    onPressed: () => context.push('/leave/apply'),
+                    icon: const Icon(Icons.add, size: 18),
+                    label: Text('Submit New',
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text('REMAINING BALANCE',
+                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.outline, letterSpacing: 1)),
+              const SizedBox(height: 12),
+              balancesAsync.when(
+                data: (balances) => _buildBalanceGrid(balances),
+                loading: () => const SizedBox(
+                  height: 200,
+                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                ),
+                error: (e, _) => _buildErrorCard('Could not load balances'),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('RECENT REQUESTS',
+                    style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.outline, letterSpacing: 1)),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Text('View All',
+                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              requestsAsync.when(
+                data: (requests) => _buildRequestsList(requests, theme),
+                loading: () => const SizedBox(
+                  height: 120,
+                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                ),
+                error: (e, _) => _buildErrorCard('Could not load requests'),
+              ),
+              const SizedBox(height: 16),
+              _buildPolicyReminder(),
+              const SizedBox(height: 80),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/leave/apply'),
+        backgroundColor: AppColors.primary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: const Icon(Icons.add, color: AppColors.onPrimary),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 40, height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.outlineVariant),
+                image: const DecorationImage(
+                  image: NetworkImage(''),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
+            const SizedBox(width: 12),
+            Text('HR Portal',
+              style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.primary)),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_outlined, color: AppColors.onSurfaceVariant),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
 
-            const SizedBox(height: 24),
+  Widget _buildBalanceGrid(List<LeaveBalanceModel> balances) {
+    if (balances.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+        ),
+        child: Center(
+          child: Text('No leave balances found',
+            style: GoogleFonts.inter(fontSize: 14, color: AppColors.onSurfaceVariant)),
+        ),
+      );
+    }
 
-            // Leave Requests Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('My Requests', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-                TextButton(
-                  onPressed: () => context.push('/leave/apply'),
-                  child: const Text('New Request'),
-                ),
-              ],
+    final annual = balances.isNotEmpty ? balances.first : null;
+    final rest = balances.length > 1 ? balances.sublist(1).take(2).toList() : [];
+
+    return Column(
+      children: [
+        if (annual != null)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.primaryContainer,
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(height: 12),
-            requestsAsync.when(
-              data: (requests) {
-                if (requests.isEmpty) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Icon(Icons.card_travel, size: 48, color: theme.colorScheme.onSurface.withAlpha(60)),
-                            const SizedBox(height: 12),
-                            Text('No leave requests yet', style: theme.textTheme.bodyMedium),
-                          ],
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ANNUAL LEAVE',
+                      style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.onPrimaryContainer, letterSpacing: 1.2)),
+                    const SizedBox(height: 8),
+                    Text('${annual.remainingDays}',
+                      style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.w700, color: Colors.white)),
+                    Text('days remaining',
+                      style: GoogleFonts.inter(fontSize: 14, color: AppColors.onPrimaryContainer)),
+                    const SizedBox(height: 16),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        height: 6,
+                        color: AppColors.onPrimaryContainer.withAlpha(40),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: annual.allocatedDays > 0
+                              ? (annual.remainingDays / annual.allocatedDays).clamp(0.0, 1.0)
+                              : 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryContainer,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  );
-                }
-                return Column(
-                  children: requests.map((request) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _RequestCard(request: request),
-                    );
-                  }).toList(),
-                );
-              },
-              loading: () => const Card(
-                child: SizedBox(height: 120, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
-              ),
-              error: (e, _) => Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      const Icon(Icons.cloud_off, size: 32),
-                      const SizedBox(height: 8),
-                      Text('Could not load requests', style: theme.textTheme.bodySmall),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () => ref.invalidate(leaveRequestsProvider),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              ),
+                Positioned(
+                  right: -16,
+                  bottom: -16,
+                  child: Icon(Icons.beach_access, size: 100, color: Colors.white.withAlpha(25)),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BalanceCard extends StatelessWidget {
-  final LeaveBalanceModel balance;
-
-  const _BalanceCard({required this.balance});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final progress = balance.allocatedDays > 0
-        ? balance.usedDays / balance.allocatedDays
-        : 0.0;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    _getLeaveTypeName(balance.leaveTypeId),
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-                  ),
+          ),
+        if (rest.isNotEmpty)
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.8,
+            ),
+            itemCount: rest.length,
+            itemBuilder: (context, index) {
+              final balance = rest[index];
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${balance.remainingDays} left',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          index == 0 ? Icons.medical_services : Icons.home_work,
+                          size: 18,
+                          color: index == 0 ? AppColors.error : AppColors.secondary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(index == 0 ? 'Sick' : 'Remote',
+                          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.onSurfaceVariant)),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('${balance.remainingDays}',
+                          style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.onSurface)),
+                        const SizedBox(width: 4),
+                        Text('days',
+                          style: GoogleFonts.inter(fontSize: 10, color: AppColors.onSurfaceVariant)),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                progress > 0.8 ? theme.colorScheme.error : theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${balance.usedDays} used',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withAlpha(150),
-                  ),
-                ),
-                Text(
-                  '${balance.allocatedDays} total',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withAlpha(150),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              );
+            },
+          ),
+      ],
     );
   }
 
-  String _getLeaveTypeName(String leaveTypeId) {
-    // This is a placeholder - in a real app, you'd map leaveTypeId to name
-    // For now, we'll extract from the ID or use a default
-    return 'Leave'; // TODO: Implement proper leave type name mapping
-  }
-}
-
-class _RequestCard extends StatelessWidget {
-  final LeaveRequestModel request;
-
-  const _RequestCard({required this.request});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final statusColor = _getStatusColor(request.status);
-    final statusLabel = _getStatusLabel(request.status);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    _getLeaveTypeName(request.leaveTypeId),
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: statusColor.withAlpha(30),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    statusLabel,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: statusColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  '${_formatDate(request.startDate)} - ${_formatDate(request.endDate)}',
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.hourglass_empty, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  '${request.days} day${request.days != 1 ? 's' : ''}',
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
-            ),
-            if (request.reason != null && request.reason!.isNotEmpty) ...[
+  Widget _buildRequestsList(List<LeaveRequestModel> requests, ThemeData theme) {
+    if (requests.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(Icons.card_travel, size: 40, color: AppColors.onSurfaceVariant.withAlpha(100)),
               const SizedBox(height: 8),
-              Text(
-                request.reason!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withAlpha(150),
-                  fontStyle: FontStyle.italic,
+              Text('No leave requests yet',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.onSurfaceVariant)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: requests.take(5).map((request) {
+        final statusColor = _getStatusColor(request.status);
+        final statusLabel = _getStatusLabel(request.status);
+        final statusIcon = _getStatusIcon(request.status);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48, height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryContainer.withAlpha(80),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                child: Icon(Icons.calendar_month, color: AppColors.secondary, size: 24),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(_getLeaveTypeName(request.leaveTypeId),
+                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.onSurface)),
+                    const SizedBox(height: 2),
+                    Text('${_formatDate(request.startDate)} - ${_formatDate(request.endDate)} \u2022 ${request.days} day${request.days != 1 ? 's' : ''}',
+                      style: GoogleFonts.inter(fontSize: 12, color: AppColors.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: statusColor.withAlpha(30),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(statusIcon, size: 12, color: statusColor),
+                        const SizedBox(width: 4),
+                        Text(statusLabel,
+                          style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: statusColor, letterSpacing: 0.3)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildPolicyReminder() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.primaryContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, color: AppColors.onPrimary, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Next Company Holiday',
+                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.onPrimary)),
+                const SizedBox(height: 4),
+                Text("Founders' Day is on Nov 15th. The office will be closed.",
+                  style: GoogleFonts.inter(fontSize: 14, color: AppColors.primaryFixed, height: 1.5)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorCard(String message) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            const Icon(Icons.cloud_off, size: 32, color: AppColors.onSurfaceVariant),
+            const SizedBox(height: 8),
+            Text(message, style: GoogleFonts.inter(fontSize: 13, color: AppColors.onSurfaceVariant)),
           ],
         ),
       ),
@@ -322,27 +401,28 @@ class _RequestCard extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status) {
-      case 'approved':
-        return Colors.green;
-      case 'rejected':
-        return Colors.red;
-      case 'pending':
-        return Colors.orange;
-      default:
-        return Colors.grey;
+      case 'approved': return AppColors.secondary;
+      case 'rejected': return AppColors.error;
+      case 'pending': return AppColors.onSurfaceVariant;
+      default: return AppColors.outline;
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status) {
+      case 'approved': return Icons.check_circle;
+      case 'rejected': return Icons.cancel;
+      case 'pending': return Icons.schedule;
+      default: return Icons.help;
     }
   }
 
   String _getStatusLabel(String status) {
     switch (status) {
-      case 'approved':
-        return 'Approved';
-      case 'rejected':
-        return 'Rejected';
-      case 'pending':
-        return 'Pending';
-      default:
-        return status;
+      case 'approved': return 'Approved';
+      case 'rejected': return 'Rejected';
+      case 'pending': return 'Pending';
+      default: return status;
     }
   }
 
@@ -350,11 +430,10 @@ class _RequestCard extends StatelessWidget {
     final date = DateTime.tryParse(isoDate);
     if (date == null) return isoDate;
     final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
+    return '${date.day} ${months[date.month - 1]}';
   }
 
   String _getLeaveTypeName(String leaveTypeId) {
-    // This is a placeholder - in a real app, you'd map leaveTypeId to name
-    return 'Leave'; // TODO: Implement proper leave type name mapping
+    return 'Leave';
   }
 }

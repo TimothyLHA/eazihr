@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useEmployees } from '@/hooks/use-employees'
 import { useOrganization } from '@/providers/org-provider'
+import { generateEmployeeAccount, type GenerateAccountResult } from '@/lib/actions/employees'
 import AddEmployeeModal from '@/components/employees/add-employee-modal'
 import ViewEmployeeModal from '@/components/employees/view-employee-modal'
 import EditEmployeeModal from '@/components/employees/edit-employee-modal'
@@ -28,6 +29,15 @@ export default function EmployeesPage() {
   const [viewEmployeeId, setViewEmployeeId] = useState<string | null>(null)
   const [editEmployeeId, setEditEmployeeId] = useState<string | null>(null)
   const [resetEmployee, setResetEmployee] = useState<{ id: string; name: string } | null>(null)
+  const [generatingId, setGeneratingId] = useState<string | null>(null)
+  const [accountResult, setAccountResult] = useState<GenerateAccountResult & { employeeName: string } | null>(null)
+
+  const handleGenerateAccount = async (empId: string, empName: string) => {
+    setGeneratingId(empId)
+    const result = await generateEmployeeAccount(empId, organization?.id ?? '')
+    setGeneratingId(null)
+    setAccountResult({ ...result, employeeName: empName })
+  }
 
   const initials = (name: string) =>
     name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -148,7 +158,12 @@ export default function EmployeesPage() {
               </div>
               <div className="border-t border-outline-variant bg-surface-container-low px-4 py-2 flex justify-between">
                 <button onClick={() => setViewEmployeeId(emp.id)} className="text-xs font-bold text-primary hover:underline">View Profile</button>
-                <EmployeeCardDropdown onEdit={() => setEditEmployeeId(emp.id)} onResetPassword={() => setResetEmployee({ id: emp.id, name: emp.name })} />
+                <EmployeeCardDropdown
+                  onEdit={() => setEditEmployeeId(emp.id)}
+                  onResetPassword={() => setResetEmployee({ id: emp.id, name: emp.name })}
+                  onGenerateAccount={() => handleGenerateAccount(emp.id, emp.name)}
+                  hasAccount={!!emp.profile_id}
+                />
               </div>
             </div>
           ))
@@ -196,6 +211,53 @@ export default function EmployeesPage() {
         onClose={() => setResetEmployee(null)}
         onDone={() => setResetEmployee(null)}
       />
+
+      {accountResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setAccountResult(null)}>
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-xl max-w-md w-full mx-4 p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${accountResult.success ? 'bg-secondary-container text-secondary' : 'bg-error-container text-error'}`}>
+                <span className="material-symbols-outlined">{accountResult.success ? 'check_circle' : 'error'}</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-on-surface">{accountResult.success ? 'Account Generated' : 'Failed'}</h3>
+                <p className="text-sm text-on-surface-variant">{accountResult.employeeName}</p>
+              </div>
+            </div>
+            {accountResult.error && (
+              <p className="text-sm text-error mb-4">{accountResult.error}</p>
+            )}
+            {accountResult.success && accountResult.credentials && (
+              <div className="bg-surface-container rounded-xl p-4 space-y-3 mb-4">
+                <div>
+                  <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider">Email</p>
+                  <p className="text-sm font-bold text-on-surface select-all">{accountResult.credentials.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider">Temporary Password</p>
+                  <p className="text-sm font-bold text-on-surface select-all font-mono tracking-wider">{accountResult.credentials.password}</p>
+                </div>
+                <div className="bg-primary-container text-primary-container-contrast text-xs rounded-lg px-3 py-2 flex items-start gap-2">
+                  <span className="material-symbols-outlined text-base mt-0.5">info</span>
+                  <span>Share these credentials securely with the employee. They can sign in using their employee code and this temporary password.</span>
+                </div>
+              </div>
+            )}
+            <button onClick={() => setAccountResult(null)} className="w-full py-2.5 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {generatingId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-xl p-6 flex items-center gap-3">
+            <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm font-semibold text-on-surface">Generating account...</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

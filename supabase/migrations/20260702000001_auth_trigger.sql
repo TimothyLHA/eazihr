@@ -16,7 +16,7 @@ BEGIN
   END IF;
 
   INSERT INTO public.profiles (
-    user_id,
+    id,
     email,
     role,
     organization_id,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:employee_app/data/models/attendance_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:employee_app/core/theme/app_theme.dart';
 
 enum CheckInAction { idling, checkingIn, checkingOut }
 
@@ -21,134 +23,147 @@ class CheckInCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isCheckedIn = attendance != null && attendance!.checkIn != null && attendance!.checkOut == null;
     final isCheckedOut = attendance != null && attendance!.checkIn != null && attendance!.checkOut != null;
     final isIdle = action == CheckInAction.idling;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                _StatusIndicator(
-                  isCheckedIn: isCheckedIn,
-                  isPulsing: action == CheckInAction.idling && (isCheckedIn || !isCheckedOut),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        isCheckedOut
-                            ? 'Checked Out'
-                            : isCheckedIn
-                                ? 'Checked In'
-                                : 'Not Checked In',
-                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        attendance?.checkIn != null
-                            ? 'Since ${attendance!.checkIn!.substring(11, 19)}'
-                            : 'Tap the button to mark your attendance',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withAlpha(150),
-                        ),
-                      ),
-                    ],
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest.withAlpha(230),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withAlpha(8),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              if (!isCheckedOut)
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.secondary.withAlpha(15),
                   ),
                 ),
-              ],
-            ),
-            if (error != null) ...[
-              const SizedBox(height: 12),
-              Text(
-                error!,
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+              Container(
+                width: 88,
+                height: 88,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isCheckedIn ? Icons.logout : Icons.location_on,
+                  size: 40,
+                  color: AppColors.onPrimary,
+                ),
               ),
             ],
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: !isIdle ? null : (isCheckedIn ? onCheckOut : onCheckIn),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isCheckedIn ? theme.colorScheme.error : theme.colorScheme.secondary,
-                  foregroundColor: theme.colorScheme.onError,
-                  minimumSize: const Size(0, 52),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                ),
-                child: _buildButtonChild(isCheckedIn, isCheckedOut),
-              ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            isCheckedOut
+                ? 'Checked Out'
+                : isCheckedIn
+                    ? 'Checked In'
+                    : 'Check In / Out',
+            style: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.secondary,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                isCheckedIn
+                    ? 'Since ${attendance!.checkIn!.substring(11, 16)}'
+                    : 'GPS Active: Site B-12',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.secondary,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          if (error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(error!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+            ),
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: !isIdle ? null : (isCheckedIn ? onCheckOut : onCheckIn),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isCheckedIn ? AppColors.error : AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 4,
+                shadowColor: (isCheckedIn ? AppColors.error : AppColors.primary).withAlpha(50),
+              ),
+              child: _buildButtonChild(isCheckedIn, isCheckedOut),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            isCheckedIn
+                ? 'Tap to check out from site'
+                : isCheckedOut
+                    ? 'Tap to start your shift'
+                    : 'Tap to check in to site',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildButtonChild(bool isCheckedIn, bool isCheckedOut) {
-    if (action == CheckInAction.checkingIn) {
-      return const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
-          SizedBox(width: 8),
-          Text('Checking In...'),
-        ],
+    if (action == CheckInAction.checkingIn || action == CheckInAction.checkingOut) {
+      return const SizedBox(
+        height: 22, width: 22,
+        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
       );
     }
-    if (action == CheckInAction.checkingOut) {
-      return const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
-          SizedBox(width: 8),
-          Text('Checking Out...'),
-        ],
-      );
-    }
-    if (error != null) {
-      return const Text('Retry');
-    }
-    if (isCheckedIn) {
-      return const Text('Check Out of Site');
-    }
-    if (isCheckedOut) {
-      return const Text('Check In to Site');
-    }
-    return const Text('Check In to Site');
-  }
-}
-
-class _StatusIndicator extends StatelessWidget {
-  final bool isCheckedIn;
-  final bool isPulsing;
-
-  const _StatusIndicator({required this.isCheckedIn, required this.isPulsing});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = isCheckedIn ? theme.colorScheme.error : theme.colorScheme.secondary;
-
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        color: color.withAlpha(25),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        isCheckedIn ? Icons.logout : Icons.login,
-        color: color,
-        size: 28,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          isCheckedIn ? 'Check Out of Site' : 'Check In to Site',
+          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(width: 8),
+        Icon(isCheckedIn ? Icons.logout : Icons.login, size: 20),
+      ],
     );
   }
 }
