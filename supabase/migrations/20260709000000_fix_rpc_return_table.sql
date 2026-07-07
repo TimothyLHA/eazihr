@@ -1,5 +1,5 @@
--- Fix: return table row instead of scalar text so .single() returns a Map
--- This prevents "type 'String' is not a subtype of type 'Map<dynamic, dynamic>'"
+-- Fix: generate synthetic email from employee code instead of looking up profiles.email
+-- Matches the format used by admin-portal's generateEmployeeAccount
 
 drop function if exists public.get_email_by_employee_code;
 
@@ -14,9 +14,8 @@ set search_path = public
 as $$
 begin
   return query
-  select p.email
+  select concat(e.employee_code, '@org.easyhr.app') as email
   from employees e
-  join profiles p on p.id = e.profile_id
   join organizations o on o.id = e.organization_id
   where o.slug = p_slug
     and e.employee_code = p_employee_code
