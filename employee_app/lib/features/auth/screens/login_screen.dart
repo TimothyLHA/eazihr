@@ -35,15 +35,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       final notifier = ref.read(authNotifierProvider.notifier);
 
-      final orgId = await notifier.getOrgIdBySlug(_orgCodeController.text.trim());
-      if (orgId.isEmpty) {
-        throw Exception('Organization not found. Check your organization code.');
-      }
-
       await notifier.signInWithEmployeeCode(
+        slug: _orgCodeController.text.trim(),
         employeeCode: _empIdController.text.trim(),
         password: _passwordController.text,
-        organizationId: orgId,
       );
       if (!mounted) return;
       context.go('/');

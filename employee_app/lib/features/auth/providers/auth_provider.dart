@@ -31,19 +31,15 @@ class AuthNotifier extends StateNotifier<AuthStatus> {
     await _authRepository.signIn(email: email, password: password);
   }
 
-  Future<String> getOrgIdBySlug(String slug) async {
-    return _authRepository.getOrgIdBySlug(slug);
-  }
-
   Future<void> signInWithEmployeeCode({
+    required String slug,
     required String employeeCode,
     required String password,
-    required String organizationId,
   }) async {
     await _authRepository.signInWithEmployeeCode(
+      slug: slug,
       employeeCode: employeeCode,
       password: password,
-      organizationId: organizationId,
     );
   }
 

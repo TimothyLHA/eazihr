@@ -21,22 +21,17 @@ class AuthRepository {
     return response;
   }
 
-  Future<String> getOrgIdBySlug(String slug) async {
-    final result = await _client.rpc('get_org_id_by_slug', params: {
-      'p_slug': slug,
-    }).single();
-    return result as String;
-  }
-
   Future<AuthResponse> signInWithEmployeeCode({
+    required String slug,
     required String employeeCode,
     required String password,
-    required String organizationId,
   }) async {
-    final email = await _client.rpc('get_email_by_employee_code', params: {
-      'p_org_id': organizationId,
+    final result = await _client.rpc('sign_in_employee', params: {
+      'p_slug': slug,
       'p_employee_code': employeeCode,
-    }).single() as String?;
+      'p_password': password,
+    }).single();
+    final email = result['sign_in_employee'] as String?;
 
     if (email == null || email.isEmpty) {
       throw Exception('Employee ID not found or account inactive');

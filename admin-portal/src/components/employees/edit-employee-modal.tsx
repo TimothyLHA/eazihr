@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState, useRef, useActionState, useCallback } from 'react'
-import { updateEmployee, generateEmployeeAccount, resetEmployeePassword, type EmployeeActionResult, type GenerateAccountResult } from '@/lib/actions/employees'
+import { useEffect, useState, useRef, useActionState } from 'react'
+import { updateEmployee, type EmployeeActionResult } from '@/lib/actions/employees'
 import { useSupabase } from '@/providers/supabase-provider'
 import { useOrganization } from '@/providers/org-provider'
 
@@ -14,7 +14,6 @@ type Props = {
 type EmployeeData = {
   id: string
   employee_code: string | null
-  profile_id: string | null
   position: string | null
   department: string | null
   hire_date: string | null
@@ -29,37 +28,11 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
   const [employee, setEmployee] = useState<EmployeeData | null>(null)
   const [loading, setLoading] = useState(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
-  const [hasAccount, setHasAccount] = useState<boolean | null>(null)
-  const [genState, setGenState] = useState<GenerateAccountResult | null>(null)
-  const [genLoading, setGenLoading] = useState(false)
-  const [showResetPassword, setShowResetPassword] = useState(false)
-  const [newPassword, setNewPassword] = useState('')
-  const [resetState, setResetState] = useState<{ success?: boolean; error?: string } | null>(null)
-  const [resetLoading, setResetLoading] = useState(false)
   const ref = useRef<HTMLFormElement>(null)
   const [state, formAction, pending] = useActionState<EmployeeActionResult, FormData>(
     updateEmployee,
     null
   )
-
-  const checkAccount = useCallback(async (empId: string, orgId: string) => {
-    const { data: emp } = await supabase
-      .from('employees')
-      .select('profile_id')
-      .eq('id', empId)
-      .eq('organization_id', orgId)
-      .single<{ profile_id: string | null }>()
-    if (emp?.profile_id) {
-      const { data: prof } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', emp.profile_id)
-        .single()
-      setHasAccount(!!prof)
-    } else {
-      setHasAccount(false)
-    }
-  }, [supabase])
 
   useEffect(() => {
     if (!employeeId || !organization?.id) return
@@ -67,7 +40,7 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
     setFetchError(null)
     supabase
       .from('employees')
-      .select('id, employee_code, profile_id, position, department, hire_date, basic_salary, status, emergency_contact')
+      .select('id, employee_code, position, department, hire_date, basic_salary, status, emergency_contact')
       .eq('id', employeeId)
       .eq('organization_id', organization.id)
       .single()
@@ -75,40 +48,17 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
         if (error) {
           setFetchError(error.message)
         } else if (data) {
-          const emp = data as unknown as EmployeeData
-          setEmployee(emp)
-          checkAccount(emp.id, organization.id)
+          setEmployee(data as unknown as EmployeeData)
         }
         setLoading(false)
       })
-  }, [employeeId, organization?.id, supabase, checkAccount])
+  }, [employeeId, organization?.id, supabase])
 
   useEffect(() => {
     if (state?.success) {
       onSaved()
     }
   }, [state?.success, onSaved])
-
-  const handleGenerateAccount = async () => {
-    if (!employeeId || !organization?.id) return
-    setGenLoading(true)
-    setGenState(null)
-    const result = await generateEmployeeAccount(employeeId, organization.id)
-    setGenState(result)
-    setGenLoading(false)
-    if (result.success) {
-      setHasAccount(true)
-    }
-  }
-
-  const handleResetPassword = async () => {
-    if (!employeeId || !organization?.id || !newPassword) return
-    setResetLoading(true)
-    setResetState(null)
-    const result = await resetEmployeePassword(employeeId, organization.id, newPassword)
-    setResetState(result)
-    setResetLoading(false)
-  }
 
   if (!employeeId) return null
 
@@ -241,94 +191,6 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
                 </div>
               </div>
             </div>
-
-            {hasAccount !== null && (
-              <div className="border-t border-outline-variant pt-4">
-                {hasAccount ? (
-                  <div className="space-y-3">
-                    <div className="rounded-lg bg-secondary-container text-secondary p-3 text-sm flex items-center gap-2">
-                      <span className="material-symbols-outlined text-lg">check_circle</span>
-                      Login account exists
-                    </div>
-                    {!showResetPassword ? (
-                      <button
-                        type="button"
-                        onClick={() => setShowResetPassword(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-error text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
-                      >
-                        <span className="material-symbols-outlined text-lg">lock_reset</span>
-                        Reset Password
-                      </button>
-                    ) : (
-                      <div className="space-y-2 p-3 rounded-lg bg-surface-container">
-                        <label className="block text-sm font-semibold text-on-surface mb-1">New Password</label>
-                        <input
-                          type="text"
-                          value={newPassword}
-                          onChange={e => setNewPassword(e.target.value)}
-                          placeholder="Enter new password (min 6 chars)"
-                          className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                        />
-                        {resetState?.error && (
-                          <div className="rounded-lg bg-error-container text-error p-2 text-xs">{resetState.error}</div>
-                        )}
-                        {resetState?.success && (
-                          <div className="rounded-lg bg-secondary-container text-secondary p-2 text-xs">Password reset successfully!</div>
-                        )}
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={handleResetPassword}
-                            disabled={resetLoading || !newPassword}
-                            className="flex items-center gap-1 px-3 py-1.5 bg-error text-white rounded-lg font-bold text-xs hover:opacity-90 transition-opacity disabled:opacity-50"
-                          >
-                            {resetLoading ? (
-                              <><span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Resetting...</>
-                            ) : 'Set Password'}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setShowResetPassword(false); setNewPassword(''); setResetState(null) }}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="rounded-lg bg-surface-container p-3 text-sm text-on-surface-variant">
-                      This employee does not have a login account for the mobile app.
-                    </div>
-                    {genState?.error && (
-                      <div className="rounded-lg bg-error-container text-error p-3 text-sm">{genState.error}</div>
-                    )}
-                    {genState?.success && genState.credentials ? (
-                      <div className="rounded-lg bg-primary-container text-primary p-3 text-sm space-y-1">
-                        <p className="font-bold">Account Created</p>
-                        <p>Employee ID: <span className="font-mono font-bold">{genState.credentials.employeeCode}</span></p>
-                        <p>Password: <span className="font-mono font-bold">{genState.credentials.password}</span></p>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleGenerateAccount}
-                        disabled={genLoading}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
-                      >
-                        {genLoading ? (
-                          <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating...</>
-                        ) : (
-                          <><span className="material-symbols-outlined text-lg">person_add</span> Generate Login Account</>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
 
             <div className="flex items-center justify-end gap-3 p-6 pt-4 border-t border-outline-variant">
               <button type="button" onClick={onClose} disabled={pending}

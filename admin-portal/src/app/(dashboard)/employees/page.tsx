@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { useEmployees } from '@/hooks/use-employees'
+import { useOrganization } from '@/providers/org-provider'
 import AddEmployeeModal from '@/components/employees/add-employee-modal'
 import ViewEmployeeModal from '@/components/employees/view-employee-modal'
 import EditEmployeeModal from '@/components/employees/edit-employee-modal'
 import EmployeeCardDropdown from '@/components/employees/employee-card-dropdown'
+import ResetPasswordModal from '@/components/employees/reset-password-modal'
 
 const statusStyles: Record<string, string> = {
   'active': 'bg-secondary-container text-on-secondary-container',
@@ -21,9 +23,11 @@ const colorBars: Record<string, string> = {
 
 export default function EmployeesPage() {
   const { employees, count, loading, refreshing, error, refetch } = useEmployees()
+  const { organization } = useOrganization()
   const [showAddModal, setShowAddModal] = useState(false)
   const [viewEmployeeId, setViewEmployeeId] = useState<string | null>(null)
   const [editEmployeeId, setEditEmployeeId] = useState<string | null>(null)
+  const [resetEmployee, setResetEmployee] = useState<{ id: string; name: string } | null>(null)
 
   const initials = (name: string) =>
     name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -144,7 +148,7 @@ export default function EmployeesPage() {
               </div>
               <div className="border-t border-outline-variant bg-surface-container-low px-4 py-2 flex justify-between">
                 <button onClick={() => setViewEmployeeId(emp.id)} className="text-xs font-bold text-primary hover:underline">View Profile</button>
-                <EmployeeCardDropdown onEdit={() => setEditEmployeeId(emp.id)} />
+                <EmployeeCardDropdown onEdit={() => setEditEmployeeId(emp.id)} onResetPassword={() => setResetEmployee({ id: emp.id, name: emp.name })} />
               </div>
             </div>
           ))
@@ -183,6 +187,14 @@ export default function EmployeesPage() {
         employeeId={editEmployeeId}
         onClose={() => setEditEmployeeId(null)}
         onSaved={() => { setEditEmployeeId(null); refetch() }}
+      />
+
+      <ResetPasswordModal
+        employeeId={resetEmployee?.id ?? null}
+        organizationId={organization?.id ?? ''}
+        employeeName={resetEmployee?.name ?? ''}
+        onClose={() => setResetEmployee(null)}
+        onDone={() => setResetEmployee(null)}
       />
     </div>
   )
