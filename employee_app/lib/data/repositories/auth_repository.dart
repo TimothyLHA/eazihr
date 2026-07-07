@@ -31,12 +31,7 @@ class AuthRepository {
       'p_employee_code': employeeCode,
     }).single();
 
-    String? email;
-    if (result is Map) {
-      email = result['get_email_by_employee_code'] as String?;
-    } else {
-      email = result as String?;
-    }
+    final email = (result as Map)['email'] as String?;
 
     if (email == null || email.isEmpty) {
       throw Exception('Employee ID not found or account inactive');
