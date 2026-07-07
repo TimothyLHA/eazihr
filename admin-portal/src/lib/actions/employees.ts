@@ -278,11 +278,11 @@ export async function resetEmployeePassword(
     return { error: 'Employee not found or no login account exists.' }
   }
 
-  const adminClient = getAdminClient()
-
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return { error: 'Server configuration error: SUPABASE_SERVICE_ROLE_KEY not set.' }
   }
+
+  const adminClient = getAdminClient()
 
   const { error: updateError } = await adminClient.auth.admin.updateUserById(
     employee.profile_id,
