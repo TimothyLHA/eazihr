@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useActionState, useEffect } from 'react'
+import { useRef, useActionState, useEffect, useState } from 'react'
 import { addEmployee, type EmployeeActionResult } from '@/lib/actions/employees'
 import { useOrganization } from '@/providers/org-provider'
 
@@ -15,17 +15,23 @@ export default function AddEmployeeModal({ open, onClose }: Props) {
     addEmployee,
     null
   )
+  const [showCredentials, setShowCredentials] = useState<{ email: string; password: string } | null>(null)
   const { organization } = useOrganization()
 
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success && state.credentials) {
+      setShowCredentials(state.credentials)
+    } else if (state?.success) {
       ref.current?.reset()
       onClose()
     }
-  }, [state?.success, onClose])
+  }, [state?.success, onClose, state])
 
   const handleClose = () => {
-    if (!pending) onClose()
+    if (!pending) {
+      setShowCredentials(null)
+      onClose()
+    }
   }
 
   if (!open) return null
@@ -47,18 +53,31 @@ export default function AddEmployeeModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <form ref={ref} action={formAction}>
+        {showCredentials ? (
+          <div className="p-6 space-y-4">
+            <div className="rounded-lg bg-secondary-container text-secondary p-4 text-sm">
+              Employee added successfully!
+            </div>
+            <div className="rounded-lg bg-primary-container text-primary p-4 text-sm space-y-2">
+              <p className="font-bold">Login Credentials</p>
+              <p>Employee ID: <span className="font-mono font-bold">{showCredentials.email.split('@')[0]}</span></p>
+              <p>Password: <span className="font-mono font-bold">{showCredentials.password}</span></p>
+              <p className="text-xs mt-2 text-primary/70">Share these credentials with the employee. They can change their password after first login.</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="w-full px-6 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
+            >
+              Done
+            </button>
+          </div>
+        ) : (<form ref={ref} action={formAction}>
           <input type="hidden" name="organization_id" value={organization?.id ?? ''} />
           <div className="p-6 space-y-5">
             {state?.error && (
               <div className="rounded-lg bg-error-container text-error p-3 text-sm">
                 {state.error}
-              </div>
-            )}
-
-            {state?.success && (
-              <div className="rounded-lg bg-secondary-container text-secondary p-3 text-sm">
-                Employee added successfully! An invite email has been sent.
               </div>
             )}
 

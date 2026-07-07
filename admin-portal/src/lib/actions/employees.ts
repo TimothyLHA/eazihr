@@ -10,7 +10,7 @@ function getAnonClient() {
   )
 }
 
-export type EmployeeActionResult = { error: string; success?: undefined } | { success: boolean; error?: undefined } | null
+export type EmployeeActionResult = { error: string; success?: undefined; credentials?: undefined } | { success: boolean; error?: undefined; credentials?: { email: string; password: string } } | null
 
 export async function addEmployee(
   _prevState: EmployeeActionResult,
@@ -90,7 +90,13 @@ export async function addEmployee(
   }
 
   revalidatePath('/employees')
-  return { success: true }
+  return {
+    success: true,
+    credentials: {
+      email,
+      password: tempPassword,
+    },
+  }
 }
 
 export async function updateEmployee(
@@ -137,4 +143,99 @@ export async function updateEmployee(
 
   revalidatePath('/employees')
   return { success: true }
+}
+
+export type GenerateAccountResult = {
+  success?: boolean
+  error?: string
+  credentials?: { email: string; password: string; employeeCode: string }
+}
+
+export async function generateEmployeeAccount(
+  employeeId: string,
+  organizationId: string
+): Promise<GenerateAccountResult> {
+  if (!employeeId || !organizationId) {
+    return { error: 'Employee ID and organization are required.' }
+  }
+
+  const supabase = getAnonClient()
+
+  const { data: employee, error: empError } = await supabase
+    .from('employees')
+    .select('id, employee_code, profile_id')
+    .eq('id', employeeId)
+    .eq('organization_id', organizationId)
+    .single()
+
+  if (empError || !employee) {
+    return { error: empError?.message || 'Employee not found.' }
+  }
+
+  if (employee.profile_id) {
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', employee.profile_id)
+      .single()
+
+    if (existingProfile) {
+      return { error: 'Employee already has a login account.' }
+    }
+  }
+
+  const employeeCode = employee.employee_code || employeeId.slice(0, 8)
+  const email = `${employeeCode}@org.easyhr.app`
+  const tempPassword = crypto.randomUUID().slice(0, 12) + 'Aa1!'
+
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email,
+    password: tempPassword,
+    options: {
+      data: {
+        organization_id: organizationId,
+        role: 'employee',
+        full_name: '',
+      },
+    },
+  })
+
+  if (authError) {
+    return { error: authError.message }
+  }
+
+  const profileId = authData.user?.id
+  if (!profileId) {
+    return { error: 'Failed to create user account.' }
+  }
+
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .update({ full_name: '', role: 'employee' })
+    .eq('id', profileId)
+
+  if (profileError) {
+    return { error: profileError.message }
+  }
+
+  const { error: linkError } = await supabase
+    .from('employees')
+    .update({ profile_id: profileId })
+    .eq('id', employeeId)
+    .eq('organization_id', organizationId)
+
+  if (linkError) {
+    return { error: linkError.message }
+  }
+
+  revalidatePath('/employees')
+
+  return {
+    success: true,
+    credentials: {
+      email,
+      password: tempPassword,
+      employeeCode: employeeCode,
+    },
+  }
 }

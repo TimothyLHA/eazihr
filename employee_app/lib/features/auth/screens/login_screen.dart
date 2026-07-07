@@ -13,14 +13,16 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _orgCodeController = TextEditingController(text: 'easyhr-demo');
+  final _empIdController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _orgCodeController.dispose();
+    _empIdController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -31,10 +33,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(authNotifierProvider.notifier).signIn(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          );
+      final notifier = ref.read(authNotifierProvider.notifier);
+
+      final orgId = await notifier.getOrgIdBySlug(_orgCodeController.text.trim());
+      if (orgId.isEmpty) {
+        throw Exception('Organization not found. Check your organization code.');
+      }
+
+      await notifier.signInWithEmployeeCode(
+        employeeCode: _empIdController.text.trim(),
+        password: _passwordController.text,
+        organizationId: orgId,
+      );
       if (!mounted) return;
       context.go('/');
     } catch (e) {
@@ -99,16 +109,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       const SizedBox(height: 24),
                       TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _orgCodeController,
+                        keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
+                          labelText: 'Organization Code',
+                          prefixIcon: Icon(Icons.business),
                         ),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Email is required';
-                          if (!v.contains('@')) return 'Enter a valid email';
+                          if (v == null || v.trim().isEmpty) return 'Organization code is required';
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _empIdController,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: 'Employee ID',
+                          prefixIcon: Icon(Icons.badge_outlined),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) return 'Employee ID is required';
+                          if (!RegExp(r'^\d+$').hasMatch(v.trim())) return 'Enter numbers only';
                           return null;
                         },
                       ),
@@ -144,18 +168,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _handleLogin,
-                        child: _isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text('Sign In'),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _handleLogin,
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Sign In'),
+                        ),
                       ),
                     ],
                   ),

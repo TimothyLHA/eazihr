@@ -31,6 +31,22 @@ class AuthNotifier extends StateNotifier<AuthStatus> {
     await _authRepository.signIn(email: email, password: password);
   }
 
+  Future<String> getOrgIdBySlug(String slug) async {
+    return _authRepository.getOrgIdBySlug(slug);
+  }
+
+  Future<void> signInWithEmployeeCode({
+    required String employeeCode,
+    required String password,
+    required String organizationId,
+  }) async {
+    await _authRepository.signInWithEmployeeCode(
+      employeeCode: employeeCode,
+      password: password,
+      organizationId: organizationId,
+    );
+  }
+
   Future<void> signUp({
     required String email,
     required String password,
@@ -52,6 +68,7 @@ class AuthNotifier extends StateNotifier<AuthStatus> {
     state = AuthStatus.unauthenticated;
   }
 
+  String? get userId => _authRepository.userId;
   String? get organizationId => _authRepository.organizationId;
   String? get userRole => _authRepository.userRole;
 }
