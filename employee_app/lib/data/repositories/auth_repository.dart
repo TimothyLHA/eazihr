@@ -26,12 +26,11 @@ class AuthRepository {
     required String employeeCode,
     required String password,
   }) async {
-    final result = await _client.rpc('sign_in_employee', params: {
+    final result = await _client.rpc('get_email_by_employee_code', params: {
       'p_slug': slug,
       'p_employee_code': employeeCode,
-      'p_password': password,
     }).single();
-    final email = result['sign_in_employee'] as String?;
+    final email = result['get_email_by_employee_code'] as String?;
 
     if (email == null || email.isEmpty) {
       throw Exception('Employee ID not found or account inactive');
