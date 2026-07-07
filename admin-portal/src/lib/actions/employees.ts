@@ -239,3 +239,46 @@ export async function generateEmployeeAccount(
     },
   }
 }
+
+export async function resetEmployeePassword(
+  employeeId: string,
+  organizationId: string,
+  newPassword: string
+): Promise<{ success?: boolean; error?: string }> {
+  if (!employeeId || !organizationId || !newPassword) {
+    return { error: 'Employee ID, organization, and new password are required.' }
+  }
+
+  if (newPassword.length < 6) {
+    return { error: 'Password must be at least 6 characters.' }
+  }
+
+  const supabase = getAnonClient()
+
+  const { data: employee, error: empError } = await supabase
+    .from('employees')
+    .select('profile_id')
+    .eq('id', employeeId)
+    .eq('organization_id', organizationId)
+    .single()
+
+  if (empError || !employee?.profile_id) {
+    return { error: 'Employee not found or no login account exists.' }
+  }
+
+  const adminClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  const { error: updateError } = await adminClient.auth.admin.updateUserById(
+    employee.profile_id,
+    { password: newPassword }
+  )
+
+  if (updateError) {
+    return { error: updateError.message }
+  }
+
+  return { success: true }
+}

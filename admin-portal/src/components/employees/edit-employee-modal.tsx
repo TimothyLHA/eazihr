@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, useActionState, useCallback } from 'react'
-import { updateEmployee, generateEmployeeAccount, type EmployeeActionResult, type GenerateAccountResult } from '@/lib/actions/employees'
+import { updateEmployee, generateEmployeeAccount, resetEmployeePassword, type EmployeeActionResult, type GenerateAccountResult } from '@/lib/actions/employees'
 import { useSupabase } from '@/providers/supabase-provider'
 import { useOrganization } from '@/providers/org-provider'
 
@@ -32,6 +32,10 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
   const [hasAccount, setHasAccount] = useState<boolean | null>(null)
   const [genState, setGenState] = useState<GenerateAccountResult | null>(null)
   const [genLoading, setGenLoading] = useState(false)
+  const [showResetPassword, setShowResetPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState('')
+  const [resetState, setResetState] = useState<{ success?: boolean; error?: string } | null>(null)
+  const [resetLoading, setResetLoading] = useState(false)
   const ref = useRef<HTMLFormElement>(null)
   const [state, formAction, pending] = useActionState<EmployeeActionResult, FormData>(
     updateEmployee,
@@ -95,6 +99,15 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
     if (result.success) {
       setHasAccount(true)
     }
+  }
+
+  const handleResetPassword = async () => {
+    if (!employeeId || !organization?.id || !newPassword) return
+    setResetLoading(true)
+    setResetState(null)
+    const result = await resetEmployeePassword(employeeId, organization.id, newPassword)
+    setResetState(result)
+    setResetLoading(false)
   }
 
   if (!employeeId) return null
@@ -232,9 +245,57 @@ export default function EditEmployeeModal({ employeeId, onClose, onSaved }: Prop
             {hasAccount !== null && (
               <div className="border-t border-outline-variant pt-4">
                 {hasAccount ? (
-                  <div className="rounded-lg bg-secondary-container text-secondary p-3 text-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-lg">check_circle</span>
-                    Login account exists
+                  <div className="space-y-3">
+                    <div className="rounded-lg bg-secondary-container text-secondary p-3 text-sm flex items-center gap-2">
+                      <span className="material-symbols-outlined text-lg">check_circle</span>
+                      Login account exists
+                    </div>
+                    {!showResetPassword ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowResetPassword(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-error text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
+                      >
+                        <span className="material-symbols-outlined text-lg">lock_reset</span>
+                        Reset Password
+                      </button>
+                    ) : (
+                      <div className="space-y-2 p-3 rounded-lg bg-surface-container">
+                        <label className="block text-sm font-semibold text-on-surface mb-1">New Password</label>
+                        <input
+                          type="text"
+                          value={newPassword}
+                          onChange={e => setNewPassword(e.target.value)}
+                          placeholder="Enter new password (min 6 chars)"
+                          className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                        />
+                        {resetState?.error && (
+                          <div className="rounded-lg bg-error-container text-error p-2 text-xs">{resetState.error}</div>
+                        )}
+                        {resetState?.success && (
+                          <div className="rounded-lg bg-secondary-container text-secondary p-2 text-xs">Password reset successfully!</div>
+                        )}
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={handleResetPassword}
+                            disabled={resetLoading || !newPassword}
+                            className="flex items-center gap-1 px-3 py-1.5 bg-error text-white rounded-lg font-bold text-xs hover:opacity-90 transition-opacity disabled:opacity-50"
+                          >
+                            {resetLoading ? (
+                              <><span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Resetting...</>
+                            ) : 'Set Password'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setShowResetPassword(false); setNewPassword(''); setResetState(null) }}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-3">
