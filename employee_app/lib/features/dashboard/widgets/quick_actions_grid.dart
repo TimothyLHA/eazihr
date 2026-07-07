@@ -22,8 +22,8 @@ class QuickActionsGrid extends ConsumerWidget {
     orgAsync.whenOrNull(
       data: (org) {
         final featureConfig = org.featureConfig;
-        final overtimeEnabled = featureConfig['overtime'] ?? false;
-        final trackingEnabled = featureConfig['live_tracking'] ?? false;
+        final overtimeEnabled = featureConfig['overtime'] ?? true;
+        final trackingEnabled = featureConfig['live_tracking'] ?? true;
         if (overtimeEnabled) {
           actions.insert(1, _Action(Icons.timer_outlined, 'Overtime', '/overtime'));
         }
