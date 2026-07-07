@@ -20,7 +20,7 @@ const colorBars: Record<string, string> = {
 }
 
 export default function EmployeesPage() {
-  const { employees, count, loading, error, refetch } = useEmployees()
+  const { employees, count, loading, refreshing, error, refetch } = useEmployees()
   const [showAddModal, setShowAddModal] = useState(false)
   const [viewEmployeeId, setViewEmployeeId] = useState<string | null>(null)
   const [editEmployeeId, setEditEmployeeId] = useState<string | null>(null)
@@ -82,7 +82,7 @@ export default function EmployeesPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {loading ? (
+        {loading && employees.length === 0 ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
               <div className="h-2 bg-surface-container w-full" />

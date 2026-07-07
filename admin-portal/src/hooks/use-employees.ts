@@ -21,13 +21,15 @@ export function useEmployees() {
   const [employees, setEmployees] = useState<EmployeeCard[]>([])
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const fetchEmployees = useCallback(async () => {
+  const fetchEmployees = useCallback(async (isInitial = false) => {
     if (!organization?.id) return
 
     try {
-      setLoading(true)
+      if (isInitial) setLoading(true)
+      else setRefreshing(true)
       setError(null)
 
       const { count: total } = await supabase
@@ -62,13 +64,14 @@ export function useEmployees() {
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch employees'))
     } finally {
-      setLoading(false)
+      if (isInitial) setLoading(false)
+      else setRefreshing(false)
     }
   }, [organization?.id, supabase])
 
   useEffect(() => {
-    if (organization?.id) fetchEmployees()
+    if (organization?.id) fetchEmployees(true)
   }, [organization?.id, fetchEmployees])
 
-  return { employees, count, loading, error, refetch: fetchEmployees }
+  return { employees, count, loading, refreshing, error, refetch: () => fetchEmployees(false) }
 }
