@@ -22,9 +22,13 @@ class QuickActionsGrid extends ConsumerWidget {
     orgAsync.whenOrNull(
       data: (org) {
         final featureConfig = org.featureConfig;
-        final liveTrackingEnabled = featureConfig['live_tracking'] ?? false;
-        if (liveTrackingEnabled) {
-          actions.insert(1, _Action(Icons.location_on, 'Live Track', '/live-tracking'));
+        final overtimeEnabled = featureConfig['overtime'] ?? false;
+        final trackingEnabled = featureConfig['live_tracking'] ?? false;
+        if (overtimeEnabled) {
+          actions.insert(1, _Action(Icons.timer_outlined, 'Overtime', '/overtime'));
+        }
+        if (trackingEnabled) {
+          actions.insert(2, _Action(Icons.location_on, 'Tracking', '/live-tracking'));
         }
       },
     );

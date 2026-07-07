@@ -365,56 +365,113 @@ class _LiveTrackingScreenState extends ConsumerState<LiveTrackingScreen> {
   }
 
   Widget _buildBentoGrid() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.insights, color: AppColors.secondary, size: 22),
-                const SizedBox(height: 12),
-                Text('Current Status',
-                  style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
-                    color: AppColors.onSurfaceVariant, letterSpacing: 0.5)),
-                const SizedBox(height: 4),
-                Text('En Route',
-                  style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primary)),
-              ],
-            ),
-          ),
+        Row(
+          children: [
+            Expanded(child: _buildStatusCard()),
+            const SizedBox(width: 12),
+            Expanded(child: _buildSinceCard()),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.schedule, color: AppColors.secondary, size: 22),
-                const SizedBox(height: 12),
-                Text('Active Since',
-                  style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
-                    color: AppColors.onSurfaceVariant, letterSpacing: 0.5)),
-                const SizedBox(height: 4),
-                Text(_isTracking ? _formatDuration(_tripDuration) : '--:--',
-                  style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primary)),
-              ],
-            ),
-          ),
-        ),
+        const SizedBox(height: 12),
+        _buildDestinationCard(),
       ],
+    );
+  }
+
+  Widget _buildStatusCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.insights, color: AppColors.secondary, size: 22),
+          const SizedBox(height: 12),
+          Text('Current Status',
+            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
+              color: AppColors.onSurfaceVariant, letterSpacing: 0.5)),
+          const SizedBox(height: 4),
+          Text(_isTracking ? 'En Route' : 'Idle',
+            style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSinceCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.schedule, color: AppColors.secondary, size: 22),
+          const SizedBox(height: 12),
+          Text('Active Since',
+            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
+              color: AppColors.onSurfaceVariant, letterSpacing: 0.5)),
+          const SizedBox(height: 4),
+          Text(_isTracking ? _formatDuration(_tripDuration) : '--:--',
+            style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDestinationCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant.withAlpha(80)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.secondaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.warehouse, color: AppColors.primary, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Destination',
+                  style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
+                    color: AppColors.onSurfaceVariant, letterSpacing: 0.5)),
+                const SizedBox(height: 2),
+                Text('North Warehouse',
+                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary)),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(color: AppColors.primary.withAlpha(50)),
+            ),
+            child: Text('EDIT',
+              style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700,
+                color: AppColors.primary, letterSpacing: 0.8)),
+          ),
+        ],
+      ),
     );
   }
 
