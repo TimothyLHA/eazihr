@@ -117,10 +117,10 @@ export default function EmployeesPage() {
           </div>
         ) : (
           employees.map((emp) => (
-            <div key={emp.id} className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden hover:shadow-md transition-shadow group"
+            <div key={emp.id} className="bg-surface-container-lowest border border-outline-variant rounded-xl hover:shadow-md transition-shadow group"
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}>
-              <div className={`h-2 ${colorBars[emp.status] || 'bg-surface-container'} w-full`} />
+              <div className={`h-2 rounded-t-xl ${colorBars[emp.status] || 'bg-surface-container'} w-full`} />
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-16 h-16 rounded-full border-2 border-surface-container-highest bg-surface-container flex items-center justify-center text-sm font-bold text-primary">
