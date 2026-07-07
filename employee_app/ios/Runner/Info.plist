@@ -24,6 +24,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>EasyHR uses your location to track your trips and show your position on the map.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>EasyHR uses your location in the background to continuously track your active trips.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>EasyHR uses your location in the background to continuously track your active trips.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
